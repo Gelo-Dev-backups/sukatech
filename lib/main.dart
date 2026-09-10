@@ -1,0 +1,29 @@
+import 'package:flutter/material.dart';
+
+import 'data/user_store.dart';
+import 'screens/splash_screen.dart';
+import 'settings/app_settings.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // The on-device user (created once, on first launch) and saved settings
+  // back everything downstream — Dashboard, Profile, the settings toggles —
+  // so both are ready before the widget tree ever builds a frame.
+  await Future.wait([UserStore.load(), AppSettings.load()]);
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'sukatech',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      home: const SplashScreen(),
+    );
+  }
+}
