@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../navigation/fade_route.dart';
+import 'lesson_measurement_tools.dart';
 import 'lessons_intro_screen.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
@@ -128,6 +129,12 @@ class LessonsScreen extends StatelessWidget {
               Navigator.of(
                 context,
               ).push(fadeRoute((_) => const LessonsIntroScreen()));
+              return;
+            }
+            if (index == 1) {
+              Navigator.of(
+                context,
+              ).push(fadeRoute((_) => const LessonsMeasurementTools()));
               return;
             }
             pushUnderDevelopment(
