@@ -1,3 +1,6 @@
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'screens/dashboard_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/profile_screen.dart';
@@ -10,3 +13,12 @@ const List<String> allAppAssetPaths = [
   ...DashboardScreen.assetPaths,
   ...ProfileScreen.assetPaths,
 ];
+
+/// Safely precaches either a raster image (PNG/JPG/WebP) or an SVG vector asset.
+Future<void> precacheAppAsset(String path, BuildContext context) {
+  if (path.toLowerCase().endsWith('.svg')) {
+    return vg.loadPicture(SvgAssetLoader(path), null);
+  }
+  return precacheImage(AssetImage(path), context);
+}
+

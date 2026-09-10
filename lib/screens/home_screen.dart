@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _precacheAllAppAssets() async {
     final paths = {...HomeScreen.assetPaths, ...allAppAssetPaths};
     await Future.wait([
-      for (final path in paths) precacheImage(AssetImage(path), context),
+      for (final path in paths) precacheAppAsset(path, context),
     ]);
     if (!mounted) return;
     _appAssetsReady = true;

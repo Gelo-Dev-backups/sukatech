@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
+import '../assets_manifest.dart';
 import '../navigation/fade_route.dart';
 import 'home_screen.dart';
 import 'onboarding_screen.dart';
@@ -59,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (!mounted) return;
     await Future.wait([
-      for (final path in assetPaths) precacheImage(AssetImage(path), context),
+      for (final path in assetPaths) precacheAppAsset(path, context),
     ]);
     if (!mounted) return;
     _nextScreenReady = true;
