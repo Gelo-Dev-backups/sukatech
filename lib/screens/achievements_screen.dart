@@ -39,19 +39,7 @@ class AchievementsScreen extends StatelessWidget {
                 child: DecoratedBox(decoration: BoxDecoration(color: _navy)),
               ),
             ),
-            // Back Button
-            Positioned(
-              left: 18,
-              top: 56,
-              child: IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: Colors.white,
-                  size: 24,
-                ),
-              ),
-            ),
+
             // Page Title
             const Positioned(
               left: 0,
@@ -121,6 +109,19 @@ class AchievementsScreen extends StatelessWidget {
                   final isUnlocked = unlockedIds.contains(ach.id);
                   return _AchievementCard(achievement: ach, isUnlocked: isUnlocked, user: user);
                 },
+              ),
+            ),
+            // Back Button
+            Positioned(
+              left: 18,
+              top: 56,
+              child: IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: Colors.white,
+                  size: 24,
+                ),
               ),
             ),
           ],
