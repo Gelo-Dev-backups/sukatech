@@ -68,6 +68,16 @@ class LessonsMeasurementToolsPart7 extends StatelessWidget {
   }
 }
 
+/// Standalone entry point or tab representation for Lesson 2, Part 8 (Quick Review).
+class LessonsMeasurementToolsPart8 extends StatelessWidget {
+  const LessonsMeasurementToolsPart8({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const LessonsMeasurementTools(initialTab: 7);
+  }
+}
+
 class LessonsMeasurementTools extends StatefulWidget {
   const LessonsMeasurementTools({super.key, this.initialTab = 0});
 
@@ -79,7 +89,7 @@ class LessonsMeasurementTools extends StatefulWidget {
 }
 
 class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
-  static const _tabCount = 6;
+  static const _tabCount = 7;
   static const _navy = Color(0xFF061D3F);
   static const _progressGreen = Color(0xFF05831C);
   static const _lessonTitle = 'Lesson 2: Measuring Tools';
@@ -182,9 +192,21 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
       return;
     }
 
-    // Advanced past tab 6 (Part 7 - Folding Rule)
+    if (_currentTab == 6) {
+      setState(() => _saving = true);
+      await _saveProgress(7);
+      if (!mounted) return;
+      setState(() {
+        _saving = false;
+        _currentTab = 7;
+        _progressStep = 7;
+      });
+      return;
+    }
+
+    // Advanced past tab 7 (Part 8 - Quick Review)
     setState(() => _saving = true);
-    await _saveProgress(6);
+    await _saveProgress(7);
     if (!mounted) return;
     setState(() => _saving = false);
     pushUnderDevelopment(context, title: 'Measuring Tools - Next Part');
@@ -222,6 +244,9 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
     }
     if (_currentTab == 6) {
       return _buildFoldingRuleTab(context);
+    }
+    if (_currentTab == 7) {
+      return _buildQuickReviewTab(context);
     }
     return _buildIntroTab(context);
   }
@@ -2312,6 +2337,331 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
 
         // Real Interactive Bottom Navigation Bar
         const DashboardBottomNavBar(currentTab: DashboardTab.lesson),
+      ],
+    );
+  }
+
+  /// Tab 7 (Part 8): Quick Review
+  Widget _buildQuickReviewTab(BuildContext context) {
+    return DesignCanvas(
+      width: 409,
+      height: 849,
+      backgroundColor: Colors.white,
+      children: [
+        // Top navy header bar
+        const Positioned(
+          left: 0,
+          top: 0,
+          child: SizedBox(
+            width: 409,
+            height: 122,
+            child: DecoratedBox(decoration: BoxDecoration(color: _navy)),
+          ),
+        ),
+
+        // Back button (returns to Tab 6)
+        Positioned(
+          left: 18,
+          top: 55,
+          child: IconButton(
+            onPressed: () => _selectTab(6),
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+            ),
+          ),
+        ),
+
+        // Screen title
+        const Positioned(
+          left: 70,
+          right: 20,
+          top: 69,
+          child: Text(
+            'Lesson 2 - Measuring Tools',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.54,
+            ),
+          ),
+        ),
+
+        // Lesson Progress label
+        const Positioned(
+          left: 28,
+          top: 135,
+          child: Text(
+            'Lesson Progress',
+            style: TextStyle(
+              color: _navy,
+              fontSize: 16,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w600,
+              height: 1.25,
+              letterSpacing: 0.48,
+            ),
+          ),
+        ),
+
+        // Step count (7/7)
+        Positioned(
+          right: 28,
+          top: 134,
+          child: Text(
+            '$_progressStep/$_tabCount',
+            textAlign: TextAlign.right,
+            style: const TextStyle(
+              color: _navy,
+              fontSize: 14,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.42,
+            ),
+          ),
+        ),
+
+        // Progress bar
+        Positioned(
+          left: 26,
+          top: 163,
+          child: _ProgressBar(step: _progressStep, tabCount: _tabCount),
+        ),
+
+        // Divider under progress
+        const Positioned(
+          left: 28,
+          top: 192,
+          child: SizedBox(width: 354, child: Divider(color: Color(0x3A000000))),
+        ),
+
+        // Quick Review title
+        const Positioned(
+          left: 0,
+          right: 0,
+          top: 216,
+          child: Text(
+            'Quick Review',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: _navy,
+              fontSize: 24,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.72,
+            ),
+          ),
+        ),
+
+        // Quick Review subtitle
+        const Positioned(
+          left: 26,
+          right: 26,
+          top: 262,
+          child: Text(
+            'These tools are used to measure length, check angles, and ensure accuracy and straightness in construction and woodworking.',
+            style: TextStyle(
+              color: _navy,
+              fontSize: 14,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w600,
+              height: 1.43,
+              letterSpacing: 0.42,
+            ),
+          ),
+        ),
+
+        // Summary Comparison Table
+        Positioned(
+          left: 23,
+          top: 341,
+          child: Container(
+            width: 364,
+            clipBehavior: Clip.antiAlias,
+            decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+              shadows: const [
+                BoxShadow(
+                  color: Color(0x19000000),
+                  blurRadius: 0,
+                  offset: Offset(0, 0),
+                  spreadRadius: 1,
+                ),
+                BoxShadow(
+                  color: Color(0x19000000),
+                  blurRadius: 6,
+                  offset: Offset(0, 4),
+                  spreadRadius: -1,
+                ),
+                BoxShadow(
+                  color: Color(0x19000000),
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                  spreadRadius: -2,
+                ),
+              ],
+            ),
+            child: Table(
+              border: TableBorder.all(
+                color: const Color(0xFFCBD5E1),
+                width: 1,
+              ),
+              columnWidths: const {
+                0: FlexColumnWidth(1),
+                1: FlexColumnWidth(1),
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: [
+                // Table Header
+                TableRow(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFD1DBEA),
+                  ),
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 14,
+                      ),
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        'Tool',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 14,
+                      ),
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        'Main Use',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // Row 1: Tape Measure
+                _buildQuickReviewTableRow(
+                  tool: 'Tape Measure',
+                  use: 'Measures long distances',
+                ),
+                // Row 2: Try Square
+                _buildQuickReviewTableRow(
+                  tool: 'Try Square',
+                  use: 'Checks 90° angles',
+                ),
+                // Row 3: Straight Edge
+                _buildQuickReviewTableRow(
+                  tool: 'Straight Edge',
+                  use: 'Checks straightness',
+                ),
+                // Row 4: Vernier Caliper
+                _buildQuickReviewTableRow(
+                  tool: 'Vernier Caliper',
+                  use: 'Measures small objects accurately',
+                ),
+                // Row 5: Folding Rule
+                _buildQuickReviewTableRow(
+                  tool: 'Folding Rule',
+                  use: 'Measures length and folds\nfor storage',
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Bottom divider above navigation buttons
+        const Positioned(
+          left: 28,
+          top: 655,
+          child: SizedBox(width: 354, child: Divider(color: Color(0x3A000000))),
+        ),
+
+        // PREVIOUS button
+        Positioned(
+          left: 16,
+          top: 681,
+          child: _IntroNavButton(
+            label: 'PREVIOUS',
+            backgroundColor: Colors.white,
+            foregroundColor: _navy,
+            borderColor: _navy,
+            disabled: _saving,
+            onPressed: () => _selectTab(6),
+          ),
+        ),
+
+        // NEXT button
+        Positioned(
+          left: 270,
+          top: 681,
+          child: _IntroNavButton(
+            label: 'NEXT',
+            backgroundColor: _navy,
+            foregroundColor: Colors.white,
+            disabled: _saving,
+            onPressed: _advance,
+          ),
+        ),
+
+        // Real Interactive Bottom Navigation Bar
+        const DashboardBottomNavBar(currentTab: DashboardTab.lesson),
+      ],
+    );
+  }
+
+  TableRow _buildQuickReviewTableRow({
+    required String tool,
+    required String use,
+  }) {
+    return TableRow(
+      decoration: const BoxDecoration(color: Colors.white),
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          alignment: Alignment.centerLeft,
+          child: Text(
+            tool,
+            style: const TextStyle(
+              color: _navy,
+              fontSize: 13,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          alignment: Alignment.centerLeft,
+          child: Text(
+            use,
+            style: const TextStyle(
+              color: _navy,
+              fontSize: 13,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
+              height: 1.25,
+            ),
+          ),
+        ),
       ],
     );
   }
