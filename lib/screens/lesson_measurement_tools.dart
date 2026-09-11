@@ -58,6 +58,15 @@ class LessonsMeasurementToolsPart6 extends StatelessWidget {
   }
 }
 
+/// Standalone entry point or tab representation for Lesson 2, Part 7 (Folding Rule).
+class LessonsMeasurementToolsPart7 extends StatelessWidget {
+  const LessonsMeasurementToolsPart7({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const LessonsMeasurementTools(initialTab: 6);
+  }
+}
 
 class LessonsMeasurementTools extends StatefulWidget {
   const LessonsMeasurementTools({super.key, this.initialTab = 0});
@@ -70,7 +79,7 @@ class LessonsMeasurementTools extends StatefulWidget {
 }
 
 class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
-  static const _tabCount = 5;
+  static const _tabCount = 6;
   static const _navy = Color(0xFF061D3F);
   static const _progressGreen = Color(0xFF05831C);
   static const _lessonTitle = 'Lesson 2: Measuring Tools';
@@ -161,9 +170,21 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
       return;
     }
 
-    // Advanced past tab 5 (Part 6 - Vernier Caliper)
+    if (_currentTab == 5) {
+      setState(() => _saving = true);
+      await _saveProgress(6);
+      if (!mounted) return;
+      setState(() {
+        _saving = false;
+        _currentTab = 6;
+        _progressStep = 6;
+      });
+      return;
+    }
+
+    // Advanced past tab 6 (Part 7 - Folding Rule)
     setState(() => _saving = true);
-    await _saveProgress(5);
+    await _saveProgress(6);
     if (!mounted) return;
     setState(() => _saving = false);
     pushUnderDevelopment(context, title: 'Measuring Tools - Next Part');
@@ -198,6 +219,9 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
     }
     if (_currentTab == 5) {
       return _buildVernierCaliperTab(context);
+    }
+    if (_currentTab == 6) {
+      return _buildFoldingRuleTab(context);
     }
     return _buildIntroTab(context);
   }
@@ -1954,6 +1978,322 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
             borderColor: _navy,
             disabled: _saving,
             onPressed: () => _selectTab(4),
+          ),
+        ),
+
+        // NEXT button
+        Positioned(
+          left: 270,
+          top: 681,
+          child: _IntroNavButton(
+            label: 'NEXT',
+            backgroundColor: _navy,
+            foregroundColor: Colors.white,
+            disabled: _saving,
+            onPressed: _advance,
+          ),
+        ),
+
+        // Real Interactive Bottom Navigation Bar
+        const DashboardBottomNavBar(currentTab: DashboardTab.lesson),
+      ],
+    );
+  }
+
+  /// Tab 6 (Part 7): 6. Folding Rule
+  Widget _buildFoldingRuleTab(BuildContext context) {
+    return DesignCanvas(
+      width: 409,
+      height: 849,
+      backgroundColor: Colors.white,
+      children: [
+        // Top navy header bar
+        const Positioned(
+          left: 0,
+          top: 0,
+          child: SizedBox(
+            width: 409,
+            height: 122,
+            child: DecoratedBox(decoration: BoxDecoration(color: _navy)),
+          ),
+        ),
+
+        // Back button (returns to Tab 5)
+        Positioned(
+          left: 18,
+          top: 55,
+          child: IconButton(
+            onPressed: () => _selectTab(5),
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+            ),
+          ),
+        ),
+
+        // Screen title
+        const Positioned(
+          left: 70,
+          right: 20,
+          top: 69,
+          child: Text(
+            'Lesson 2 - Measuring Tools',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.54,
+            ),
+          ),
+        ),
+
+        // Lesson Progress label
+        const Positioned(
+          left: 28,
+          top: 135,
+          child: Text(
+            'Lesson Progress',
+            style: TextStyle(
+              color: _navy,
+              fontSize: 16,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w600,
+              height: 1.25,
+              letterSpacing: 0.48,
+            ),
+          ),
+        ),
+
+        // Step count (6/6)
+        Positioned(
+          right: 28,
+          top: 134,
+          child: Text(
+            '$_progressStep/$_tabCount',
+            textAlign: TextAlign.right,
+            style: const TextStyle(
+              color: _navy,
+              fontSize: 14,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.42,
+            ),
+          ),
+        ),
+
+        // Progress bar
+        Positioned(
+          left: 26,
+          top: 163,
+          child: _ProgressBar(step: _progressStep, tabCount: _tabCount),
+        ),
+
+        // Divider under progress
+        const Positioned(
+          left: 28,
+          top: 192,
+          child: SizedBox(width: 354, child: Divider(color: Color(0x3A000000))),
+        ),
+
+        // Measuring Tools section category heading
+        const Positioned(
+          left: 0,
+          right: 0,
+          top: 216,
+          child: Text(
+            'Measuring Tools',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: _navy,
+              fontSize: 24,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.72,
+            ),
+          ),
+        ),
+
+        // 6. Folding Rule title
+        const Positioned(
+          left: 31,
+          top: 273,
+          child: Text(
+            '6. Folding Rule',
+            style: TextStyle(
+              color: _navy,
+              fontSize: 16,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              height: 1.25,
+              letterSpacing: 0.48,
+            ),
+          ),
+        ),
+
+        // Tool description
+        const Positioned(
+          left: 36,
+          top: 304,
+          child: SizedBox(
+            width: 203,
+            child: Text(
+              'Used to measure length. It has sections that fold together.',
+              style: TextStyle(
+                color: _navy,
+                fontSize: 15,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w600,
+                height: 1.33,
+                letterSpacing: 0.45,
+              ),
+            ),
+          ),
+        ),
+
+        // Tool Image (folding-rule)
+        Positioned(
+          left: 235,
+          top: 254,
+          child: Image.asset(
+            'lib/assets/images/folding-rule.png',
+            width: 145,
+            height: 145,
+            fit: BoxFit.contain,
+          ),
+        ),
+
+        // Uses section
+        const Positioned(
+          left: 31,
+          top: 361,
+          child: SizedBox(
+            width: 354,
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Uses:\n',
+                    style: TextStyle(
+                      color: _navy,
+                      fontSize: 15,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w800,
+                      height: 1.3,
+                      letterSpacing: -0.15,
+                    ),
+                  ),
+                  TextSpan(
+                    text:
+                        '• Measuring wood\n• Measuring short and medium lengths\n• Carpentry work\n• Marking measurements',
+                    style: TextStyle(
+                      color: _navy,
+                      fontSize: 15,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w500,
+                      height: 1.33,
+                      letterSpacing: 0.45,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // Safety Tips section
+        const Positioned(
+          left: 31,
+          top: 477,
+          child: SizedBox(
+            width: 354,
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Safety Tips:\n',
+                    style: TextStyle(
+                      color: _navy,
+                      fontSize: 15,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w800,
+                      height: 1.3,
+                      letterSpacing: -0.15,
+                    ),
+                  ),
+                  TextSpan(
+                    text:
+                        '• Be careful with the folding joints.\n• Keep fingers away from the joints.\n• Do not force the rule.\n• Fold and store it properly.',
+                    style: TextStyle(
+                      color: _navy,
+                      fontSize: 15,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w500,
+                      height: 1.33,
+                      letterSpacing: 0.45,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // Remember callout
+        const Positioned(
+          left: 20,
+          right: 20,
+          top: 600,
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: 'Remember\n',
+                  style: TextStyle(
+                    color: _navy,
+                    fontSize: 15,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w800,
+                    height: 1.3,
+                    letterSpacing: -0.15,
+                  ),
+                ),
+                TextSpan(
+                  text: 'Folding Rule = Foldable Measuring',
+                  style: TextStyle(
+                    color: _navy,
+                    fontSize: 15,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w500,
+                    height: 1.33,
+                    letterSpacing: 0.45,
+                  ),
+                ),
+              ],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+
+        // Bottom divider above navigation buttons
+        const Positioned(
+          left: 28,
+          top: 655,
+          child: SizedBox(width: 354, child: Divider(color: Color(0x3A000000))),
+        ),
+
+        // PREVIOUS button
+        Positioned(
+          left: 16,
+          top: 681,
+          child: _IntroNavButton(
+            label: 'PREVIOUS',
+            backgroundColor: Colors.white,
+            foregroundColor: _navy,
+            borderColor: _navy,
+            disabled: _saving,
+            onPressed: () => _selectTab(5),
           ),
         ),
 
