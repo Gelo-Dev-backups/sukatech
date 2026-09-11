@@ -18,6 +18,16 @@ class LessonsMeasurementToolsPart2 extends StatelessWidget {
   }
 }
 
+/// Standalone entry point or tab representation for Lesson 2, Part 3 (Steel Rule).
+class LessonsMeasurementToolsPart3 extends StatelessWidget {
+  const LessonsMeasurementToolsPart3({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const LessonsMeasurementTools(initialTab: 2);
+  }
+}
+
 class LessonsMeasurementTools extends StatefulWidget {
   const LessonsMeasurementTools({super.key, this.initialTab = 0});
 
@@ -31,24 +41,32 @@ class LessonsMeasurementTools extends StatefulWidget {
 class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
   static const _tabCount = 5;
   static const _navy = Color(0xFF061D3F);
-  static const _accent = Color(0xFFFFA500);
+  static const _progressGreen = Color(0xFF05831C);
   static const _lessonTitle = 'Lesson 2: Measuring Tools';
 
   late int _currentTab;
   late int _progressStep;
   bool _saving = false;
 
+  int _stepForTab(int tab) {
+    if (tab == 0) return 0;
+    return tab.clamp(1, _tabCount);
+  }
+
   @override
   void initState() {
     super.initState();
     _currentTab = widget.initialTab.clamp(0, _tabCount);
-    _progressStep = _currentTab;
+    _progressStep = _stepForTab(_currentTab);
   }
 
   void _selectTab(int tab) {
     setState(() {
       _currentTab = tab.clamp(0, _tabCount);
-      _progressStep = _currentTab;
+      final tabStep = _stepForTab(_currentTab);
+      if (tabStep > _progressStep) {
+        _progressStep = tabStep;
+      }
     });
   }
 
@@ -67,9 +85,21 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
       return;
     }
 
-    // Advanced past tab 1 (Part 2)
+    if (_currentTab == 1) {
+      setState(() => _saving = true);
+      await _saveProgress(2);
+      if (!mounted) return;
+      setState(() {
+        _saving = false;
+        _currentTab = 2;
+        _progressStep = 2;
+      });
+      return;
+    }
+
+    // Advanced past tab 2 (Part 3)
     setState(() => _saving = true);
-    await _saveProgress(2);
+    await _saveProgress(3);
     if (!mounted) return;
     setState(() => _saving = false);
     pushUnderDevelopment(context, title: 'Measuring Tools - Next Part');
@@ -92,6 +122,9 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
   Widget build(BuildContext context) {
     if (_currentTab == 1) {
       return _buildTapeMeasureTab(context);
+    }
+    if (_currentTab == 2) {
+      return _buildSteelRuleTab(context);
     }
     return _buildIntroTab(context);
   }
@@ -164,11 +197,11 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
 
         // Step count
         Positioned(
-          left: 345,
+          right: 28,
           top: 134,
           child: Text(
             '$_progressStep/$_tabCount',
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.right,
             style: const TextStyle(
               color: _navy,
               fontSize: 14,
@@ -183,28 +216,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
         Positioned(
           left: 26,
           top: 163,
-          child: Container(
-            width: 356,
-            height: 11,
-            decoration: BoxDecoration(
-              color: const Color(0xBAD9D9D9),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: FractionallySizedBox(
-                widthFactor: _tabCount == 0
-                    ? 0
-                    : (_progressStep / _tabCount).clamp(0.0, 1.0),
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: _accent,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          child: _ProgressBar(step: _progressStep, tabCount: _tabCount),
         ),
 
         // Divider under progress
@@ -379,11 +391,11 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
 
         // Step count (1/5)
         Positioned(
-          left: 345,
+          right: 28,
           top: 134,
           child: Text(
             '$_progressStep/$_tabCount',
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.right,
             style: const TextStyle(
               color: _navy,
               fontSize: 14,
@@ -398,28 +410,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
         Positioned(
           left: 26,
           top: 163,
-          child: Container(
-            width: 356,
-            height: 11,
-            decoration: BoxDecoration(
-              color: const Color(0xBAD9D9D9),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: FractionallySizedBox(
-                widthFactor: _tabCount == 0
-                    ? 0
-                    : (_progressStep / _tabCount).clamp(0.0, 1.0),
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: _accent,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          child: _ProgressBar(step: _progressStep, tabCount: _tabCount),
         ),
 
         // Divider under progress
@@ -647,6 +638,322 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
       ],
     );
   }
+
+  /// Tab 2 (Part 3): 2. Steel Rule
+  Widget _buildSteelRuleTab(BuildContext context) {
+    return DesignCanvas(
+      width: 409,
+      height: 849,
+      backgroundColor: Colors.white,
+      children: [
+        // Top navy header bar
+        const Positioned(
+          left: 0,
+          top: 0,
+          child: SizedBox(
+            width: 409,
+            height: 122,
+            child: DecoratedBox(decoration: BoxDecoration(color: _navy)),
+          ),
+        ),
+
+        // Back button (returns to Tab 1)
+        Positioned(
+          left: 18,
+          top: 55,
+          child: IconButton(
+            onPressed: () => _selectTab(1),
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+            ),
+          ),
+        ),
+
+        // Screen title
+        const Positioned(
+          left: 70,
+          right: 20,
+          top: 69,
+          child: Text(
+            'Lesson 2 - Measuring Tools',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.54,
+            ),
+          ),
+        ),
+
+        // Lesson Progress label
+        const Positioned(
+          left: 28,
+          top: 135,
+          child: Text(
+            'Lesson Progress',
+            style: TextStyle(
+              color: _navy,
+              fontSize: 16,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w600,
+              height: 1.25,
+              letterSpacing: 0.48,
+            ),
+          ),
+        ),
+
+        // Step count (2/5)
+        Positioned(
+          right: 28,
+          top: 134,
+          child: Text(
+            '$_progressStep/$_tabCount',
+            textAlign: TextAlign.right,
+            style: const TextStyle(
+              color: _navy,
+              fontSize: 14,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.42,
+            ),
+          ),
+        ),
+
+        // Progress bar
+        Positioned(
+          left: 26,
+          top: 163,
+          child: _ProgressBar(step: _progressStep, tabCount: _tabCount),
+        ),
+
+        // Divider under progress
+        const Positioned(
+          left: 28,
+          top: 192,
+          child: SizedBox(width: 354, child: Divider(color: Color(0x3A000000))),
+        ),
+
+        // Measuring Tools section category heading
+        const Positioned(
+          left: 0,
+          right: 0,
+          top: 216,
+          child: Text(
+            'Measuring Tools',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: _navy,
+              fontSize: 24,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.72,
+            ),
+          ),
+        ),
+
+        // 2. Steel Rule title
+        const Positioned(
+          left: 31,
+          top: 273,
+          child: Text(
+            '2. Steel Rule',
+            style: TextStyle(
+              color: _navy,
+              fontSize: 16,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              height: 1.25,
+              letterSpacing: 0.48,
+            ),
+          ),
+        ),
+
+        // Tool description
+        const Positioned(
+          left: 40,
+          top: 306,
+          child: SizedBox(
+            width: 203,
+            child: Text(
+              'A rigid metal tool used to measure short distances.',
+              style: TextStyle(
+                color: _navy,
+                fontSize: 15,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w600,
+                height: 1.33,
+                letterSpacing: 0.45,
+              ),
+            ),
+          ),
+        ),
+
+        // Tool Image (steel-rule)
+        Positioned(
+          left: 256,
+          top: 265,
+          child: Image.asset(
+            'lib/assets/images/steel-rule.png',
+            width: 113,
+            height: 113,
+            fit: BoxFit.contain,
+          ),
+        ),
+
+        // Uses section
+        const Positioned(
+          left: 31,
+          top: 372,
+          child: SizedBox(
+            width: 354,
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Uses:\n',
+                    style: TextStyle(
+                      color: _navy,
+                      fontSize: 15,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w800,
+                      height: 1.3,
+                      letterSpacing: -0.15,
+                    ),
+                  ),
+                  TextSpan(
+                    text:
+                        '• Measuring small pieces of wood\n• Measuring metal or plastic\n• Making straight measurement marks\n• Measuring short lengths',
+                    style: TextStyle(
+                      color: _navy,
+                      fontSize: 15,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w500,
+                      height: 1.33,
+                      letterSpacing: 0.45,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // Safety Tips section
+        const Positioned(
+          left: 31,
+          top: 483,
+          child: SizedBox(
+            width: 354,
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Safety Tips:\n',
+                    style: TextStyle(
+                      color: _navy,
+                      fontSize: 15,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w800,
+                      height: 1.3,
+                      letterSpacing: -0.15,
+                    ),
+                  ),
+                  TextSpan(
+                    text:
+                        '• Handle the edges carefully.\n• Do not bend the rule.\n• Keep it clean.\n• Do not use it as a cutting tool.',
+                    style: TextStyle(
+                      color: _navy,
+                      fontSize: 15,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w500,
+                      height: 1.33,
+                      letterSpacing: 0.45,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // Remember callout
+        const Positioned(
+          left: 28,
+          right: 28,
+          top: 600,
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: 'Remember\n',
+                  style: TextStyle(
+                    color: _navy,
+                    fontSize: 15,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w800,
+                    height: 1.3,
+                    letterSpacing: -0.15,
+                  ),
+                ),
+                TextSpan(
+                  text: 'Steel Rule = Short Measurements',
+                  style: TextStyle(
+                    color: _navy,
+                    fontSize: 15,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w500,
+                    height: 1.33,
+                    letterSpacing: 0.45,
+                  ),
+                ),
+              ],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+
+        // Bottom divider above navigation buttons
+        const Positioned(
+          left: 28,
+          top: 655,
+          child: SizedBox(width: 354, child: Divider(color: Color(0x3A000000))),
+        ),
+
+        // PREVIOUS button
+        Positioned(
+          left: 16,
+          top: 681,
+          child: _IntroNavButton(
+            label: 'PREVIOUS',
+            backgroundColor: Colors.white,
+            foregroundColor: _navy,
+            borderColor: _navy,
+            disabled: _saving,
+            onPressed: () => _selectTab(1),
+          ),
+        ),
+
+        // NEXT button
+        Positioned(
+          left: 270,
+          top: 681,
+          child: _IntroNavButton(
+            label: 'NEXT',
+            backgroundColor: _navy,
+            foregroundColor: Colors.white,
+            disabled: _saving,
+            onPressed: _advance,
+          ),
+        ),
+
+        // Real Interactive Bottom Navigation Bar
+        const DashboardBottomNavBar(currentTab: DashboardTab.lesson),
+      ],
+    );
+  }
 }
 
 class _IntroNavButton extends StatelessWidget {
@@ -702,6 +1009,43 @@ class _IntroNavButton extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ProgressBar extends StatelessWidget {
+  const _ProgressBar({required this.step, required this.tabCount});
+
+  final int step;
+  final int tabCount;
+
+  @override
+  Widget build(BuildContext context) {
+    final percent = tabCount == 0 ? 0.0 : (step / tabCount).clamp(0.0, 1.0);
+    return SizedBox(
+      width: 356,
+      height: 11,
+      child: Stack(
+        children: [
+          Container(
+            width: 356,
+            height: 11,
+            decoration: BoxDecoration(
+              color: const Color(0xBAD9D9D9),
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          if (percent > 0)
+            Container(
+              width: (356 * percent).clamp(11.0, 356.0),
+              height: 11,
+              decoration: BoxDecoration(
+                color: _LessonsMeasurementToolsState._progressGreen,
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+        ],
       ),
     );
   }
