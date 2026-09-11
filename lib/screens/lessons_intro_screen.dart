@@ -28,7 +28,10 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
   @override
   void initState() {
     super.initState();
-    _currentTab = widget.initialTab.clamp(0, _tabCount + 4);
+    // Restore last active tab from UserStore if available (lesson-specific)
+    final savedTab = UserStore.current.value?.lessonLastTabs[_lessonTitle];
+    final restoredTab = savedTab ?? widget.initialTab;
+    _currentTab = restoredTab.clamp(0, _tabCount + 4);
     _progressStep = _stepForTab(_currentTab);
   }
 
@@ -228,7 +231,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
     final nextTab = _currentTab + 1;
     final nextStep = _stepForTab(nextTab);
     setState(() => _saving = true);
-    await _saveProgress(nextStep);
+    await _saveProgress(nextStep, nextTab);
     if (!mounted) return;
     if (nextTab > _tabCount + 4) {
       setState(() => _saving = false);
@@ -242,16 +245,29 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
     });
   }
 
-  Future<void> _saveProgress(int step) async {
+  Future<void> _saveProgress(int step, int newTab) async {
     await UserStore.mutate((user) {
       final nextPercent = (step * 100 / _tabCount).round();
+      final newTabs = Map<String, int>.from(user.lessonLastTabs);
+      newTabs[_lessonTitle] = newTab;
+
+      // Idempotent completion: only count lesson once
+      final completed = List<String>.from(user.completedLessonsList);
+      int newLessonsCompleted = user.lessonsCompleted;
+      if (step >= _tabCount && !completed.contains(_lessonTitle)) {
+        completed.add(_lessonTitle);
+        newLessonsCompleted++;
+      }
+
       return user.copyWith(
         currentLessonTitle: _lessonTitle,
         currentLessonProgressPercent:
             user.currentLessonProgressPercent > nextPercent
             ? user.currentLessonProgressPercent
             : nextPercent,
-        lessonsCompleted: step >= _tabCount ? 1 : user.lessonsCompleted,
+        lessonsCompleted: newLessonsCompleted,
+        completedLessonsList: completed,
+        lessonLastTabs: newTabs,
       );
     });
   }
@@ -270,6 +286,12 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
     setState(() {
       _currentTab = tab;
       _progressStep = _stepForTab(tab);
+    });
+    // Persist the active tab for this lesson
+    UserStore.mutate((user) {
+      final newTabs = Map<String, int>.from(user.lessonLastTabs);
+      newTabs[_lessonTitle] = tab;
+      return user.copyWith(lessonLastTabs: newTabs);
     });
   }
 

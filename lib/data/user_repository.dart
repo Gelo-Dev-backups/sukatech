@@ -31,6 +31,8 @@ class UserRepository {
       'overall_progress_percent': 0,
       'current_lesson_title': 'Lesson 1: Introduction to Measurement',
       'current_lesson_progress_percent': 0,
+      'completed_lessons': '[]',
+      'lesson_last_tabs': '{}',
     });
     final created = await db.query('users', where: 'id = ?', whereArgs: [id]);
     return AppUser.fromMap(created.first);

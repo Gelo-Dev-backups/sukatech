@@ -78,6 +78,16 @@ class LessonsMeasurementToolsPart8 extends StatelessWidget {
   }
 }
 
+/// Standalone entry point or tab representation for Lesson 2, Part 9 (Lesson Summary).
+class LessonsMeasurementToolsPart9 extends StatelessWidget {
+  const LessonsMeasurementToolsPart9({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const LessonsMeasurementTools(initialTab: 8);
+  }
+}
+
 class LessonsMeasurementTools extends StatefulWidget {
   const LessonsMeasurementTools({super.key, this.initialTab = 0});
 
@@ -89,7 +99,7 @@ class LessonsMeasurementTools extends StatefulWidget {
 }
 
 class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
-  static const _tabCount = 7;
+  static const _tabCount = 8;
   static const _navy = Color(0xFF061D3F);
   static const _progressGreen = Color(0xFF05831C);
   static const _lessonTitle = 'Lesson 2: Measuring Tools';
@@ -106,7 +116,11 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
   @override
   void initState() {
     super.initState();
-    _currentTab = widget.initialTab.clamp(0, _tabCount);
+    // Always restore last active tab from UserStore (lesson-specific).
+    // widget.initialTab is only used if no persisted tab exists yet.
+    final savedTab = UserStore.current.value?.lessonLastTabs[_lessonTitle];
+    final restoredTab = savedTab ?? widget.initialTab;
+    _currentTab = restoredTab.clamp(0, _tabCount);
     _progressStep = _stepForTab(_currentTab);
   }
 
@@ -115,6 +129,15 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
       _currentTab = tab.clamp(0, _tabCount);
       _progressStep = _stepForTab(_currentTab);
     });
+    _persistActiveTab(_currentTab);
+  }
+
+  Future<void> _persistActiveTab(int tab) async {
+    await UserStore.mutate((user) {
+      final newTabs = Map<String, int>.from(user.lessonLastTabs);
+      newTabs[_lessonTitle] = tab;
+      return user.copyWith(lessonLastTabs: newTabs);
+    });
   }
 
   Future<void> _advance() async {
@@ -122,7 +145,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
 
     if (_currentTab == 0) {
       setState(() => _saving = true);
-      await _saveProgress(1);
+      await _saveProgress(1, 1);
       if (!mounted) return;
       setState(() {
         _saving = false;
@@ -134,7 +157,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
 
     if (_currentTab == 1) {
       setState(() => _saving = true);
-      await _saveProgress(2);
+      await _saveProgress(2, 2);
       if (!mounted) return;
       setState(() {
         _saving = false;
@@ -146,7 +169,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
 
     if (_currentTab == 2) {
       setState(() => _saving = true);
-      await _saveProgress(3);
+      await _saveProgress(3, 3);
       if (!mounted) return;
       setState(() {
         _saving = false;
@@ -158,7 +181,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
 
     if (_currentTab == 3) {
       setState(() => _saving = true);
-      await _saveProgress(4);
+      await _saveProgress(4, 4);
       if (!mounted) return;
       setState(() {
         _saving = false;
@@ -170,7 +193,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
 
     if (_currentTab == 4) {
       setState(() => _saving = true);
-      await _saveProgress(5);
+      await _saveProgress(5, 5);
       if (!mounted) return;
       setState(() {
         _saving = false;
@@ -182,7 +205,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
 
     if (_currentTab == 5) {
       setState(() => _saving = true);
-      await _saveProgress(6);
+      await _saveProgress(6, 6);
       if (!mounted) return;
       setState(() {
         _saving = false;
@@ -194,7 +217,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
 
     if (_currentTab == 6) {
       setState(() => _saving = true);
-      await _saveProgress(7);
+      await _saveProgress(7, 7);
       if (!mounted) return;
       setState(() {
         _saving = false;
@@ -204,23 +227,58 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
       return;
     }
 
-    // Advanced past tab 7 (Part 8 - Quick Review)
+    if (_currentTab == 7) {
+      setState(() => _saving = true);
+      await _saveProgress(8, 8);
+      if (!mounted) return;
+      setState(() {
+        _saving = false;
+        _currentTab = 8;
+        _progressStep = 8;
+      });
+      return;
+    }
+
+    // Advanced past tab 8 (Part 9 - Lesson Summary / DONE)
     setState(() => _saving = true);
-    await _saveProgress(7);
+    await UserStore.mutate((user) {
+      final newTabs = Map<String, int>.from(user.lessonLastTabs);
+      newTabs[_lessonTitle] = 8;
+      
+      final completed = List<String>.from(user.completedLessonsList);
+      int newLessonsCompleted = user.lessonsCompleted;
+      
+      if (!completed.contains(_lessonTitle)) {
+        completed.add(_lessonTitle);
+        newLessonsCompleted++;
+      }
+
+      return user.copyWith(
+        currentLessonTitle: _lessonTitle,
+        currentLessonProgressPercent: 100,
+        lessonsCompleted: newLessonsCompleted,
+        completedLessonsList: completed,
+        lessonLastTabs: newTabs,
+      );
+    });
     if (!mounted) return;
     setState(() => _saving = false);
-    pushUnderDevelopment(context, title: 'Measuring Tools - Next Part');
+    Navigator.of(context).pop();
   }
 
-  Future<void> _saveProgress(int step) async {
+  Future<void> _saveProgress(int step, int newTab) async {
     await UserStore.mutate((user) {
       final nextPercent = (step * 100 / _tabCount).round();
+      final newTabs = Map<String, int>.from(user.lessonLastTabs);
+      newTabs[_lessonTitle] = newTab;
+      
       return user.copyWith(
         currentLessonTitle: _lessonTitle,
         currentLessonProgressPercent:
             user.currentLessonProgressPercent > nextPercent
             ? user.currentLessonProgressPercent
             : nextPercent,
+        lessonLastTabs: newTabs,
       );
     });
   }
@@ -247,6 +305,9 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
     }
     if (_currentTab == 7) {
       return _buildQuickReviewTab(context);
+    }
+    if (_currentTab == 8) {
+      return _buildSummaryTab(context);
     }
     return _buildIntroTab(context);
   }
@@ -2662,6 +2723,194 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
             ),
           ),
         ),
+      ],
+    );
+  }
+
+  /// Tab 8 (Part 9): Lesson Summary
+  Widget _buildSummaryTab(BuildContext context) {
+    return DesignCanvas(
+      width: 409,
+      height: 849,
+      backgroundColor: Colors.white,
+      children: [
+        // Top navy header bar
+        const Positioned(
+          left: 0,
+          top: 0,
+          child: SizedBox(
+            width: 409,
+            height: 122,
+            child: DecoratedBox(decoration: BoxDecoration(color: _navy)),
+          ),
+        ),
+
+        // Back button (returns to Tab 7)
+        Positioned(
+          left: 18,
+          top: 55,
+          child: IconButton(
+            onPressed: () => _selectTab(7),
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+            ),
+          ),
+        ),
+
+        // Screen title
+        const Positioned(
+          left: 70,
+          right: 20,
+          top: 69,
+          child: Text(
+            'Lesson 2 - Measuring Tools',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.54,
+            ),
+          ),
+        ),
+
+        // Lesson Progress label
+        const Positioned(
+          left: 28,
+          top: 135,
+          child: Text(
+            'Lesson Progress',
+            style: TextStyle(
+              color: _navy,
+              fontSize: 16,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w600,
+              height: 1.25,
+              letterSpacing: 0.48,
+            ),
+          ),
+        ),
+
+        // Step count (8/8)
+        Positioned(
+          right: 28,
+          top: 134,
+          child: Text(
+            '$_progressStep/$_tabCount',
+            textAlign: TextAlign.right,
+            style: const TextStyle(
+              color: _navy,
+              fontSize: 14,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.42,
+            ),
+          ),
+        ),
+
+        // Progress bar
+        Positioned(
+          left: 26,
+          top: 163,
+          child: _ProgressBar(step: _progressStep, tabCount: _tabCount),
+        ),
+
+        // Divider under progress
+        const Positioned(
+          left: 28,
+          top: 192,
+          child: SizedBox(width: 354, child: Divider(color: Color(0x3A000000))),
+        ),
+
+        // Lesson Summary heading
+        const Positioned(
+          left: 0,
+          right: 0,
+          top: 216,
+          child: Text(
+            'Lesson Summary',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: _navy,
+              fontSize: 24,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.72,
+            ),
+          ),
+        ),
+
+        // Summary content text
+        const Positioned(
+          left: 28,
+          top: 270,
+          child: SizedBox(
+            width: 354,
+            child: Text(
+              '      In this lesson, we learned about common measuring tools and their functions. We learned that each tool is used for a specific purpose. A tape measure is used for long measurements, a steel rule and folding rule are used for measuring lengths, a try square checks 90° angles, a straight edge checks straightness, and a vernier caliper makes accurate measurements of small objects.\n\nWe also learned the importance of choosing the correct measuring tool and using it safely. Proper handling, cleaning, and storage of tools help keep them in good condition and prevent accidents.',
+              style: TextStyle(
+                color: _navy,
+                fontSize: 14,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w600,
+                height: 1.64,
+                letterSpacing: 0.42,
+              ),
+            ),
+          ),
+        ),
+
+        // Bottom divider above navigation buttons
+        const Positioned(
+          left: 28,
+          top: 655,
+          child: SizedBox(width: 354, child: Divider(color: Color(0x3A000000))),
+        ),
+
+        // PREVIOUS button
+        Positioned(
+          left: 16,
+          top: 681,
+          child: _IntroNavButton(
+            label: 'PREVIOUS',
+            backgroundColor: Colors.white,
+            foregroundColor: _navy,
+            borderColor: _navy,
+            disabled: _saving,
+            onPressed: () => _selectTab(7),
+          ),
+        ),
+
+        // PRACTICE button
+        Positioned(
+          left: 144,
+          top: 681,
+          child: _IntroNavButton(
+            label: 'PRACTICE',
+            backgroundColor: const Color(0xFFFFA500),
+            foregroundColor: _navy,
+            disabled: _saving,
+            onPressed: () => pushUnderDevelopment(context, title: 'Practice'),
+          ),
+        ),
+
+        // DONE button
+        Positioned(
+          left: 270,
+          top: 681,
+          child: _IntroNavButton(
+            label: 'DONE',
+            backgroundColor: _navy,
+            foregroundColor: Colors.white,
+            disabled: _saving,
+            onPressed: _advance,
+          ),
+        ),
+
+        // Real Interactive Bottom Navigation Bar
+        const DashboardBottomNavBar(currentTab: DashboardTab.lesson),
       ],
     );
   }

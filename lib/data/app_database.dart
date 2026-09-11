@@ -17,7 +17,7 @@ class AppDatabase {
   factory AppDatabase.withPath(String path) => AppDatabase._(path);
 
   static const _fileName = 'sukatech.db';
-  static const _version = 1;
+  static const _version = 2;
 
   final String? _explicitPath;
   Database? _database;
@@ -26,7 +26,17 @@ class AppDatabase {
 
   Future<Database> _open() async {
     final path = _explicitPath ?? join((await getApplicationDocumentsDirectory()).path, _fileName);
-    return openDatabase(path, version: _version, onCreate: _createSchema);
+    return openDatabase(
+      path,
+      version: _version,
+      onCreate: _createSchema,
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute("ALTER TABLE users ADD COLUMN completed_lessons TEXT NOT NULL DEFAULT '[]'");
+          await db.execute("ALTER TABLE users ADD COLUMN lesson_last_tabs TEXT NOT NULL DEFAULT '{}'");
+        }
+      },
+    );
   }
 
   Future<void> _createSchema(Database db, int version) async {
@@ -41,7 +51,9 @@ class AppDatabase {
         xp_earned INTEGER NOT NULL DEFAULT 0,
         overall_progress_percent INTEGER NOT NULL DEFAULT 0,
         current_lesson_title TEXT NOT NULL DEFAULT '',
-        current_lesson_progress_percent INTEGER NOT NULL DEFAULT 0
+        current_lesson_progress_percent INTEGER NOT NULL DEFAULT 0,
+        completed_lessons TEXT NOT NULL DEFAULT '[]',
+        lesson_last_tabs TEXT NOT NULL DEFAULT '{}'
       )
     ''');
     await db.execute('''

@@ -15,6 +15,8 @@ void main() {
         'overall_progress_percent': 25,
         'current_lesson_title': 'Lesson 1: Introduction to Measurement',
         'current_lesson_progress_percent': 10,
+        'completed_lessons': '["Lesson 1"]',
+        'lesson_last_tabs': '{"Lesson 1": 2}',
       });
 
       expect(user.id, 1);
@@ -27,6 +29,8 @@ void main() {
       expect(user.overallProgressPercent, 25);
       expect(user.currentLessonTitle, 'Lesson 1: Introduction to Measurement');
       expect(user.currentLessonProgressPercent, 10);
+      expect(user.completedLessonsList, ['Lesson 1']);
+      expect(user.lessonLastTabs, {'Lesson 1': 2});
     });
 
     test('toMap round-trips through fromMap unchanged', () {
@@ -41,6 +45,8 @@ void main() {
         overallProgressPercent: 45,
         currentLessonTitle: 'Lesson 2: Rulers',
         currentLessonProgressPercent: 20,
+        completedLessonsList: ['Lesson 1'],
+        lessonLastTabs: {'Lesson 1': 2, 'Lesson 2': 1},
       );
 
       final rebuilt = AppUser.fromMap(original.toMap());
@@ -58,6 +64,8 @@ void main() {
         rebuilt.currentLessonProgressPercent,
         original.currentLessonProgressPercent,
       );
+      expect(rebuilt.completedLessonsList, original.completedLessonsList);
+      expect(rebuilt.lessonLastTabs, original.lessonLastTabs);
     });
 
     test('copyWith only changes the fields passed to it', () {
@@ -72,6 +80,8 @@ void main() {
         overallProgressPercent: 80,
         currentLessonTitle: 'Lesson 1: Introduction to Measurement',
         currentLessonProgressPercent: 60,
+        completedLessonsList: [],
+        lessonLastTabs: {},
       );
 
       final reset = original.copyWith(
@@ -95,6 +105,8 @@ void main() {
       expect(reset.name, original.name);
       expect(reset.title, original.title);
       expect(reset.currentLessonTitle, original.currentLessonTitle);
+      expect(reset.completedLessonsList, original.completedLessonsList);
+      expect(reset.lessonLastTabs, original.lessonLastTabs);
     });
   });
 }

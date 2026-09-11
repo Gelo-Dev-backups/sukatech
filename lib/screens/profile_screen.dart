@@ -300,6 +300,8 @@ class ProfileScreen extends StatelessWidget {
         xpEarned: 0,
         overallProgressPercent: 0,
         currentLessonProgressPercent: 0,
+        completedLessonsList: [],
+        lessonLastTabs: {},
       ),
     );
   }

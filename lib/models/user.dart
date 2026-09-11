@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// The single on-device learner profile, backed by the `users` table.
 class AppUser {
   const AppUser({
@@ -11,6 +13,8 @@ class AppUser {
     required this.overallProgressPercent,
     required this.currentLessonTitle,
     required this.currentLessonProgressPercent,
+    required this.completedLessonsList,
+    required this.lessonLastTabs,
   });
 
   final int id;
@@ -23,6 +27,8 @@ class AppUser {
   final int overallProgressPercent;
   final String currentLessonTitle;
   final int currentLessonProgressPercent;
+  final List<String> completedLessonsList;
+  final Map<String, int> lessonLastTabs;
 
   factory AppUser.fromMap(Map<String, Object?> map) {
     return AppUser(
@@ -36,6 +42,8 @@ class AppUser {
       overallProgressPercent: map['overall_progress_percent'] as int,
       currentLessonTitle: map['current_lesson_title'] as String,
       currentLessonProgressPercent: map['current_lesson_progress_percent'] as int,
+      completedLessonsList: List<String>.from(jsonDecode(map['completed_lessons'] as String)),
+      lessonLastTabs: Map<String, int>.from(jsonDecode(map['lesson_last_tabs'] as String)),
     );
   }
 
@@ -50,6 +58,8 @@ class AppUser {
     'overall_progress_percent': overallProgressPercent,
     'current_lesson_title': currentLessonTitle,
     'current_lesson_progress_percent': currentLessonProgressPercent,
+    'completed_lessons': jsonEncode(completedLessonsList),
+    'lesson_last_tabs': jsonEncode(lessonLastTabs),
   };
 
   AppUser copyWith({
@@ -62,6 +72,8 @@ class AppUser {
     int? overallProgressPercent,
     String? currentLessonTitle,
     int? currentLessonProgressPercent,
+    List<String>? completedLessonsList,
+    Map<String, int>? lessonLastTabs,
   }) {
     return AppUser(
       id: id,
@@ -75,6 +87,8 @@ class AppUser {
       currentLessonTitle: currentLessonTitle ?? this.currentLessonTitle,
       currentLessonProgressPercent:
           currentLessonProgressPercent ?? this.currentLessonProgressPercent,
+      completedLessonsList: completedLessonsList ?? this.completedLessonsList,
+      lessonLastTabs: lessonLastTabs ?? this.lessonLastTabs,
     );
   }
 }
