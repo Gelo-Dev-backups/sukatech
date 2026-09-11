@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../data/user_store.dart';
 import '../navigation/fade_route.dart';
 import 'lesson_measurement_tools.dart';
 import 'lessons_intro_screen.dart';
@@ -141,6 +142,9 @@ class LessonsScreen extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () {
+            final flatTitle = lesson.title.replaceAll('\n', ' ');
+            UserStore.mutate((user) => user.copyWith(currentLessonTitle: flatTitle));
+            
             if (index == 0) {
               Navigator.of(
                 context,
@@ -155,7 +159,7 @@ class LessonsScreen extends StatelessWidget {
             }
             pushUnderDevelopment(
               context,
-              title: lesson.title.replaceAll('\n', ' '),
+              title: flatTitle,
             );
           },
           child: Container(
@@ -236,7 +240,7 @@ class LessonsScreen extends StatelessWidget {
                       Row(
                         children: [
                           const Icon(
-                            Icons.schedule_rounded,
+                           Icons.schedule_rounded,
                             size: 14,
                             color: _navy,
                           ),

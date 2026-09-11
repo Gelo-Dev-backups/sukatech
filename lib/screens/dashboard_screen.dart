@@ -132,7 +132,13 @@ class DashboardScreen extends StatelessWidget {
 
   // --- Overall progress card -----------------------------------------
 
-  static List<Widget> _progressCard(AppUser user) => [
+  static List<Widget> _progressCard(AppUser user) {
+    final totalLessons = 6;
+    final int calculatedProgress = ((user.lessonsCompleted * 100 / totalLessons) + 
+                                    (user.currentLessonProgressPercent / totalLessons))
+                                   .clamp(0, 100).toInt();
+                                   
+    return [
     Positioned(
       left: 14,
       top: 124,
@@ -145,6 +151,19 @@ class DashboardScreen extends StatelessWidget {
           shadows: const [
             BoxShadow(color: Color(0x3F000000), blurRadius: 4, offset: Offset(0, 4)),
           ],
+        ),
+      ),
+    ),
+    Positioned(
+      left: 227,
+      top: 138,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: const SkeletonSvg(
+          'lib/assets/images/mountaine wf;ag.svg',
+          width: 169,
+          height: 118,
+          fit: BoxFit.cover,
         ),
       ),
     ),
@@ -167,12 +186,12 @@ class DashboardScreen extends StatelessWidget {
       top: 183,
       width: 219,
       height: 13,
-      percent: user.overallProgressPercent / 100,
+      percent: calculatedProgress / 100,
     ),
     Positioned(
       left: 258,
       top: 178,
-      child: Text('${user.overallProgressPercent}%', style: _valueStyle),
+      child: Text('$calculatedProgress%', style: _valueStyle),
     ),
     const Positioned(
       left: 36,
@@ -188,20 +207,8 @@ class DashboardScreen extends StatelessWidget {
         ),
       ),
     ),
-    Positioned(
-      left: 227,
-      top: 138,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: const SkeletonSvg(
-          'lib/assets/images/mountaine wf;ag.svg',
-          width: 169,
-          height: 118,
-          fit: BoxFit.cover,
-        ),
-      ),
-    ),
   ];
+  }
 
   /// A rounded track + a proportional fill, sharing one shape so the fill
   /// width is always derived from [percent] instead of a hand-tuned number.
@@ -504,10 +511,12 @@ class DashboardScreen extends StatelessWidget {
               Navigator.of(context).push(
                 fadeRoute((_) => const LessonsMeasurementTools()),
               );
-            } else {
+            } else if (user.currentLessonTitle.contains('Introduction')) {
               Navigator.of(context).push(
                 fadeRoute((_) => const LessonsIntroScreen()),
               );
+            } else {
+              pushUnderDevelopment(context, title: user.currentLessonTitle);
             }
           },
         ),

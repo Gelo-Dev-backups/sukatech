@@ -38,6 +38,16 @@ class LessonsMeasurementToolsPart4 extends StatelessWidget {
   }
 }
 
+/// Standalone entry point or tab representation for Lesson 2, Part 5 (Straight Edge).
+class LessonsMeasurementToolsPart5 extends StatelessWidget {
+  const LessonsMeasurementToolsPart5({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const LessonsMeasurementTools(initialTab: 4);
+  }
+}
+
 class LessonsMeasurementTools extends StatefulWidget {
   const LessonsMeasurementTools({super.key, this.initialTab = 0});
 
@@ -116,9 +126,21 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
       return;
     }
 
-    // Advanced past tab 3 (Part 4)
+    if (_currentTab == 3) {
+      setState(() => _saving = true);
+      await _saveProgress(4);
+      if (!mounted) return;
+      setState(() {
+        _saving = false;
+        _currentTab = 4;
+        _progressStep = 4;
+      });
+      return;
+    }
+
+    // Advanced past tab 4 (Part 5 - Straight Edge)
     setState(() => _saving = true);
-    await _saveProgress(4);
+    await _saveProgress(5);
     if (!mounted) return;
     setState(() => _saving = false);
     pushUnderDevelopment(context, title: 'Measuring Tools - Next Part');
@@ -147,6 +169,9 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
     }
     if (_currentTab == 3) {
       return _buildTrySquareTab(context);
+    }
+    if (_currentTab == 4) {
+      return _buildStraightEdgeTab(context);
     }
     return _buildIntroTab(context);
   }
@@ -1129,12 +1154,12 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
           ),
         ),
 
-        // Tool Image (venice-caliper)
+        // Tool Image (try-square)
         Positioned(
           left: 233,
           top: 225,
           child: Image.asset(
-            'lib/assets/images/venice-caliper.png',
+            'lib/assets/images/try-square.png',
             width: 176,
             height: 176,
             fit: BoxFit.contain,
@@ -1271,6 +1296,322 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
             borderColor: _navy,
             disabled: _saving,
             onPressed: () => _selectTab(2),
+          ),
+        ),
+
+        // NEXT button
+        Positioned(
+          left: 270,
+          top: 681,
+          child: _IntroNavButton(
+            label: 'NEXT',
+            backgroundColor: _navy,
+            foregroundColor: Colors.white,
+            disabled: _saving,
+            onPressed: _advance,
+          ),
+        ),
+
+        // Real Interactive Bottom Navigation Bar
+        const DashboardBottomNavBar(currentTab: DashboardTab.lesson),
+      ],
+    );
+  }
+
+  /// Tab 4 (Part 5): 4. Straight Edge
+  Widget _buildStraightEdgeTab(BuildContext context) {
+    return DesignCanvas(
+      width: 409,
+      height: 849,
+      backgroundColor: Colors.white,
+      children: [
+        // Top navy header bar
+        const Positioned(
+          left: 0,
+          top: 0,
+          child: SizedBox(
+            width: 409,
+            height: 122,
+            child: DecoratedBox(decoration: BoxDecoration(color: _navy)),
+          ),
+        ),
+
+        // Back button (returns to Tab 3)
+        Positioned(
+          left: 18,
+          top: 55,
+          child: IconButton(
+            onPressed: () => _selectTab(3),
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+            ),
+          ),
+        ),
+
+        // Screen title
+        const Positioned(
+          left: 70,
+          right: 20,
+          top: 69,
+          child: Text(
+            'Lesson 2 - Measuring Tools',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.54,
+            ),
+          ),
+        ),
+
+        // Lesson Progress label
+        const Positioned(
+          left: 28,
+          top: 135,
+          child: Text(
+            'Lesson Progress',
+            style: TextStyle(
+              color: _navy,
+              fontSize: 16,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w600,
+              height: 1.25,
+              letterSpacing: 0.48,
+            ),
+          ),
+        ),
+
+        // Step count (4/5)
+        Positioned(
+          right: 28,
+          top: 134,
+          child: Text(
+            '$_progressStep/$_tabCount',
+            textAlign: TextAlign.right,
+            style: const TextStyle(
+              color: _navy,
+              fontSize: 14,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.42,
+            ),
+          ),
+        ),
+
+        // Progress bar
+        Positioned(
+          left: 26,
+          top: 163,
+          child: _ProgressBar(step: _progressStep, tabCount: _tabCount),
+        ),
+
+        // Divider under progress
+        const Positioned(
+          left: 28,
+          top: 192,
+          child: SizedBox(width: 354, child: Divider(color: Color(0x3A000000))),
+        ),
+
+        // Measuring Tools section category heading
+        const Positioned(
+          left: 0,
+          right: 0,
+          top: 216,
+          child: Text(
+            'Measuring Tools',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: _navy,
+              fontSize: 24,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.72,
+            ),
+          ),
+        ),
+
+        // 4. Straight Edge title
+        const Positioned(
+          left: 31,
+          top: 273,
+          child: Text(
+            '4. Straight Edge',
+            style: TextStyle(
+              color: _navy,
+              fontSize: 16,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+              height: 1.25,
+              letterSpacing: 0.48,
+            ),
+          ),
+        ),
+
+        // Tool description
+        const Positioned(
+          left: 40,
+          top: 306,
+          child: SizedBox(
+            width: 203,
+            child: Text(
+              'Used to check if an edge or surface is straight.',
+              style: TextStyle(
+                color: _navy,
+                fontSize: 15,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w600,
+                height: 1.33,
+                letterSpacing: 0.45,
+              ),
+            ),
+          ),
+        ),
+
+        // Tool Image (straight-edge)
+        Positioned(
+          left: 227,
+          top: 254,
+          child: Image.asset(
+            'lib/assets/images/straight-edge.png',
+            width: 172,
+            height: 119,
+            fit: BoxFit.contain,
+          ),
+        ),
+
+        // Uses section
+        const Positioned(
+          left: 31,
+          top: 361,
+          child: SizedBox(
+            width: 354,
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Uses:\n',
+                    style: TextStyle(
+                      color: _navy,
+                      fontSize: 15,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w800,
+                      height: 1.3,
+                      letterSpacing: -0.15,
+                    ),
+                  ),
+                  TextSpan(
+                    text:
+                        '• Checking straight boards\n• Checking flat surfaces\n• Checking alignment\n• Finding bends or gaps',
+                    style: TextStyle(
+                      color: _navy,
+                      fontSize: 15,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w500,
+                      height: 1.33,
+                      letterSpacing: 0.45,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // Safety Tips section
+        const Positioned(
+          left: 31,
+          top: 477,
+          child: SizedBox(
+            width: 354,
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Safety Tips:\n',
+                    style: TextStyle(
+                      color: _navy,
+                      fontSize: 15,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w800,
+                      height: 1.3,
+                      letterSpacing: -0.15,
+                    ),
+                  ),
+                  TextSpan(
+                    text:
+                        '• Do not bend or drop it.\n• Keep the edge clean.\n• Store it carefully.\n• Do not use it as a lever.',
+                    style: TextStyle(
+                      color: _navy,
+                      fontSize: 15,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w500,
+                      height: 1.33,
+                      letterSpacing: 0.45,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // Remember callout
+        const Positioned(
+          left: 28,
+          right: 28,
+          top: 600,
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: 'Remember\n',
+                  style: TextStyle(
+                    color: _navy,
+                    fontSize: 15,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w800,
+                    height: 1.3,
+                    letterSpacing: -0.15,
+                  ),
+                ),
+                TextSpan(
+                  text: 'Straight Edge = Checks Straightness',
+                  style: TextStyle(
+                    color: _navy,
+                    fontSize: 15,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w500,
+                    height: 1.33,
+                    letterSpacing: 0.45,
+                  ),
+                ),
+              ],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+
+        // Bottom divider above navigation buttons
+        const Positioned(
+          left: 28,
+          top: 655,
+          child: SizedBox(width: 354, child: Divider(color: Color(0x3A000000))),
+        ),
+
+        // PREVIOUS button
+        Positioned(
+          left: 16,
+          top: 681,
+          child: _IntroNavButton(
+            label: 'PREVIOUS',
+            backgroundColor: Colors.white,
+            foregroundColor: _navy,
+            borderColor: _navy,
+            disabled: _saving,
+            onPressed: () => _selectTab(3),
           ),
         ),
 
