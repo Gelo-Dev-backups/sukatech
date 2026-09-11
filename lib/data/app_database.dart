@@ -17,7 +17,7 @@ class AppDatabase {
   factory AppDatabase.withPath(String path) => AppDatabase._(path);
 
   static const _fileName = 'sukatech.db';
-  static const _version = 2;
+  static const _version = 3;
 
   final String? _explicitPath;
   Database? _database;
@@ -34,6 +34,9 @@ class AppDatabase {
         if (oldVersion < 2) {
           await db.execute("ALTER TABLE users ADD COLUMN completed_lessons TEXT NOT NULL DEFAULT '[]'");
           await db.execute("ALTER TABLE users ADD COLUMN lesson_last_tabs TEXT NOT NULL DEFAULT '{}'");
+        }
+        if (oldVersion < 3) {
+          await db.execute("ALTER TABLE users ADD COLUMN completed_lesson_tabs TEXT NOT NULL DEFAULT '[]'");
         }
       },
     );
@@ -53,7 +56,8 @@ class AppDatabase {
         current_lesson_title TEXT NOT NULL DEFAULT '',
         current_lesson_progress_percent INTEGER NOT NULL DEFAULT 0,
         completed_lessons TEXT NOT NULL DEFAULT '[]',
-        lesson_last_tabs TEXT NOT NULL DEFAULT '{}'
+        lesson_last_tabs TEXT NOT NULL DEFAULT '{}',
+        completed_lesson_tabs TEXT NOT NULL DEFAULT '[]'
       )
     ''');
     await db.execute('''

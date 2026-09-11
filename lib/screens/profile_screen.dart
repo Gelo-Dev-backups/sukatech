@@ -302,6 +302,7 @@ class ProfileScreen extends StatelessWidget {
         currentLessonProgressPercent: 0,
         completedLessonsList: [],
         lessonLastTabs: {},
+        completedLessonTabs: [],
       ),
     );
   }

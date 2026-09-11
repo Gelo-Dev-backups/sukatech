@@ -17,6 +17,7 @@ void main() {
         'current_lesson_progress_percent': 10,
         'completed_lessons': '["Lesson 1"]',
         'lesson_last_tabs': '{"Lesson 1": 2}',
+        'completed_lesson_tabs': '["lesson_01_tab_01"]',
       });
 
       expect(user.id, 1);
@@ -31,6 +32,7 @@ void main() {
       expect(user.currentLessonProgressPercent, 10);
       expect(user.completedLessonsList, ['Lesson 1']);
       expect(user.lessonLastTabs, {'Lesson 1': 2});
+      expect(user.completedLessonTabs, ['lesson_01_tab_01']);
     });
 
     test('toMap round-trips through fromMap unchanged', () {
@@ -47,6 +49,7 @@ void main() {
         currentLessonProgressPercent: 20,
         completedLessonsList: ['Lesson 1'],
         lessonLastTabs: {'Lesson 1': 2, 'Lesson 2': 1},
+        completedLessonTabs: ['lesson_01_tab_01', 'lesson_01_tab_02'],
       );
 
       final rebuilt = AppUser.fromMap(original.toMap());
@@ -66,6 +69,7 @@ void main() {
       );
       expect(rebuilt.completedLessonsList, original.completedLessonsList);
       expect(rebuilt.lessonLastTabs, original.lessonLastTabs);
+      expect(rebuilt.completedLessonTabs, original.completedLessonTabs);
     });
 
     test('copyWith only changes the fields passed to it', () {
@@ -82,6 +86,7 @@ void main() {
         currentLessonProgressPercent: 60,
         completedLessonsList: [],
         lessonLastTabs: {},
+        completedLessonTabs: ['lesson_01_tab_03'],
       );
 
       final reset = original.copyWith(
@@ -107,6 +112,7 @@ void main() {
       expect(reset.currentLessonTitle, original.currentLessonTitle);
       expect(reset.completedLessonsList, original.completedLessonsList);
       expect(reset.lessonLastTabs, original.lessonLastTabs);
+      expect(reset.completedLessonTabs, original.completedLessonTabs);
     });
   });
 }

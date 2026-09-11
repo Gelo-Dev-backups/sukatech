@@ -246,6 +246,8 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
   }
 
   Future<void> _saveProgress(int step, int newTab) async {
+    final completedTabId = 'lesson_01_tab_${_currentTab.toString().padLeft(2, '0')}';
+
     await UserStore.mutate((user) {
       final nextPercent = (step * 100 / _tabCount).round();
       final newTabs = Map<String, int>.from(user.lessonLastTabs);
@@ -257,6 +259,13 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
         completed.add(_lessonTitle);
       }
 
+      final completedLessonTabs = List<String>.from(user.completedLessonTabs);
+      int xpEarned = user.xpEarned;
+      if (!completedLessonTabs.contains(completedTabId)) {
+        completedLessonTabs.add(completedTabId);
+        xpEarned += 10;
+      }
+
       return user.copyWith(
         currentLessonTitle: _lessonTitle,
         currentLessonProgressPercent:
@@ -266,6 +275,8 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
         lessonsCompleted: completed.length,
         completedLessonsList: completed,
         lessonLastTabs: newTabs,
+        completedLessonTabs: completedLessonTabs,
+        xpEarned: xpEarned,
       );
     });
   }

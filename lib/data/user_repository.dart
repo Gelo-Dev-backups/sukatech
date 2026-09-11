@@ -33,6 +33,7 @@ class UserRepository {
       'current_lesson_progress_percent': 0,
       'completed_lessons': '[]',
       'lesson_last_tabs': '{}',
+      'completed_lesson_tabs': '[]',
     });
     final created = await db.query('users', where: 'id = ?', whereArgs: [id]);
     return AppUser.fromMap(created.first);
