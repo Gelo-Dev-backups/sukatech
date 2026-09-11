@@ -73,10 +73,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
   void _selectTab(int tab) {
     setState(() {
       _currentTab = tab.clamp(0, _tabCount);
-      final tabStep = _stepForTab(_currentTab);
-      if (tabStep > _progressStep) {
-        _progressStep = tabStep;
-      }
+      _progressStep = _stepForTab(_currentTab);
     });
   }
 
@@ -1132,14 +1129,14 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
           ),
         ),
 
-        // Tool Image (try-square)
+        // Tool Image (venice-caliper)
         Positioned(
-          left: 240,
-          top: 235,
+          left: 233,
+          top: 225,
           child: Image.asset(
-            'lib/assets/images/try-square.png',
-            width: 160,
-            height: 160,
+            'lib/assets/images/venice-caliper.png',
+            width: 176,
+            height: 176,
             fit: BoxFit.contain,
           ),
         ),
