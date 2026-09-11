@@ -17,31 +17,31 @@ class LessonsScreen extends StatelessWidget {
       title: 'Introduction to\nMeasurement',
       duration: '10 MIN',
       difficulty: 'Easy',
-      icon: Icons.straighten_rounded,
+      icon: Icons.menu_book_rounded,
     ),
     (
       title: 'Measuring Tools',
       duration: '10 MIN',
       difficulty: 'Easy',
-      icon: Icons.handyman_rounded,
+      icon: Icons.square_foot_rounded,
+    ),
+    (
+      title: 'Parts and\nFunctions',
+      duration: '10 MIN',
+      difficulty: 'Medium',
+      icon: Icons.widgets_rounded,
     ),
     (
       title: 'Reading\nMeasurements',
       duration: '10 MIN',
       difficulty: 'Medium',
-      icon: Icons.rule_rounded,
-    ),
-    (
-      title: 'Measuring Lumber',
-      duration: '10 MIN',
-      difficulty: 'Medium',
-      icon: Icons.view_agenda_rounded,
+      icon: Icons.straighten_rounded,
     ),
     (
       title: 'Layout and\nMarking',
       duration: '10 MIN',
       difficulty: 'Hard',
-      icon: Icons.edit_rounded,
+      icon: Icons.draw_rounded,
     ),
     (
       title: 'Measurement\nCalculations',
@@ -67,10 +67,26 @@ class LessonsScreen extends StatelessWidget {
             child: DecoratedBox(decoration: BoxDecoration(color: _navy)),
           ),
         ),
-        const Positioned(
-          left: 26,
-          top: 64,
-          child: Icon(Icons.menu_book_rounded, color: Colors.white, size: 30),
+        Positioned(
+          left: 18,
+          top: 56,
+          child: Navigator.of(context).canPop()
+              ? IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                )
+              : const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.menu_book_rounded,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
         ),
         const Positioned(
           left: 0,
@@ -157,10 +173,48 @@ class LessonsScreen extends StatelessWidget {
                   width: 96,
                   height: 68,
                   decoration: BoxDecoration(
-                    color: _navy,
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFF0F3260),
+                        Color(0xFF061D3F),
+                      ],
+                    ),
                     borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: _accent.withValues(alpha: 0.28),
+                      width: 1.2,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _navy.withValues(alpha: 0.18),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
-                  child: Icon(lesson.icon, color: _accent, size: 38),
+                  child: Center(
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withValues(alpha: 0.08),
+                        border: Border.all(
+                          color: _accent.withValues(alpha: 0.40),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          lesson.icon,
+                          color: _accent,
+                          size: 26,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
