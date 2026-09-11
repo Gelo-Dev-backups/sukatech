@@ -17,7 +17,7 @@ class AppDatabase {
   factory AppDatabase.withPath(String path) => AppDatabase._(path);
 
   static const _fileName = 'sukatech.db';
-  static const _version = 3;
+  static const _version = 4;
 
   final String? _explicitPath;
   Database? _database;
@@ -38,6 +38,14 @@ class AppDatabase {
         if (oldVersion < 3) {
           await db.execute("ALTER TABLE users ADD COLUMN completed_lesson_tabs TEXT NOT NULL DEFAULT '[]'");
         }
+        if (oldVersion < 4) {
+          await db.execute("ALTER TABLE users ADD COLUMN unlocked_achievements TEXT NOT NULL DEFAULT '[]'");
+          await db.execute("ALTER TABLE users ADD COLUMN max_consecutive_correct_answers INTEGER NOT NULL DEFAULT 0");
+          await db.execute("ALTER TABLE users ADD COLUMN current_consecutive_correct_answers INTEGER NOT NULL DEFAULT 0");
+          await db.execute("ALTER TABLE users ADD COLUMN unique_tools_selected TEXT NOT NULL DEFAULT '[]'");
+          await db.execute("ALTER TABLE users ADD COLUMN correct_metric_english_conversions INTEGER NOT NULL DEFAULT 0");
+          await db.execute("ALTER TABLE users ADD COLUMN correct_measurement_basics INTEGER NOT NULL DEFAULT 0");
+        }
       },
     );
   }
@@ -57,7 +65,13 @@ class AppDatabase {
         current_lesson_progress_percent INTEGER NOT NULL DEFAULT 0,
         completed_lessons TEXT NOT NULL DEFAULT '[]',
         lesson_last_tabs TEXT NOT NULL DEFAULT '{}',
-        completed_lesson_tabs TEXT NOT NULL DEFAULT '[]'
+        completed_lesson_tabs TEXT NOT NULL DEFAULT '[]',
+        unlocked_achievements TEXT NOT NULL DEFAULT '[]',
+        max_consecutive_correct_answers INTEGER NOT NULL DEFAULT 0,
+        current_consecutive_correct_answers INTEGER NOT NULL DEFAULT 0,
+        unique_tools_selected TEXT NOT NULL DEFAULT '[]',
+        correct_metric_english_conversions INTEGER NOT NULL DEFAULT 0,
+        correct_measurement_basics INTEGER NOT NULL DEFAULT 0
       )
     ''');
     await db.execute('''

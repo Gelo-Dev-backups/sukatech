@@ -18,6 +18,12 @@ void main() {
         'completed_lessons': '["Lesson 1"]',
         'lesson_last_tabs': '{"Lesson 1": 2}',
         'completed_lesson_tabs': '["lesson_01_tab_01"]',
+        'unlocked_achievements': '["getting_started"]',
+        'max_consecutive_correct_answers': 5,
+        'current_consecutive_correct_answers': 2,
+        'unique_tools_selected': '["ruler"]',
+        'correct_metric_english_conversions': 3,
+        'correct_measurement_basics': 4,
       });
 
       expect(user.id, 1);
@@ -33,6 +39,12 @@ void main() {
       expect(user.completedLessonsList, ['Lesson 1']);
       expect(user.lessonLastTabs, {'Lesson 1': 2});
       expect(user.completedLessonTabs, ['lesson_01_tab_01']);
+      expect(user.unlockedAchievements, ['getting_started']);
+      expect(user.maxConsecutiveCorrectAnswers, 5);
+      expect(user.currentConsecutiveCorrectAnswers, 2);
+      expect(user.uniqueToolsSelected, ['ruler']);
+      expect(user.correctMetricEnglishConversions, 3);
+      expect(user.correctMeasurementBasics, 4);
     });
 
     test('toMap round-trips through fromMap unchanged', () {
@@ -50,6 +62,12 @@ void main() {
         completedLessonsList: ['Lesson 1'],
         lessonLastTabs: {'Lesson 1': 2, 'Lesson 2': 1},
         completedLessonTabs: ['lesson_01_tab_01', 'lesson_01_tab_02'],
+        unlockedAchievements: ['getting_started', 'first_lesson'],
+        maxConsecutiveCorrectAnswers: 10,
+        currentConsecutiveCorrectAnswers: 10,
+        uniqueToolsSelected: ['ruler', 'tape'],
+        correctMetricEnglishConversions: 8,
+        correctMeasurementBasics: 4,
       );
 
       final rebuilt = AppUser.fromMap(original.toMap());
@@ -70,6 +88,12 @@ void main() {
       expect(rebuilt.completedLessonsList, original.completedLessonsList);
       expect(rebuilt.lessonLastTabs, original.lessonLastTabs);
       expect(rebuilt.completedLessonTabs, original.completedLessonTabs);
+      expect(rebuilt.unlockedAchievements, original.unlockedAchievements);
+      expect(rebuilt.maxConsecutiveCorrectAnswers, original.maxConsecutiveCorrectAnswers);
+      expect(rebuilt.currentConsecutiveCorrectAnswers, original.currentConsecutiveCorrectAnswers);
+      expect(rebuilt.uniqueToolsSelected, original.uniqueToolsSelected);
+      expect(rebuilt.correctMetricEnglishConversions, original.correctMetricEnglishConversions);
+      expect(rebuilt.correctMeasurementBasics, original.correctMeasurementBasics);
     });
 
     test('copyWith only changes the fields passed to it', () {
@@ -87,6 +111,12 @@ void main() {
         completedLessonsList: [],
         lessonLastTabs: {},
         completedLessonTabs: ['lesson_01_tab_03'],
+        unlockedAchievements: ['getting_started'],
+        maxConsecutiveCorrectAnswers: 3,
+        currentConsecutiveCorrectAnswers: 1,
+        uniqueToolsSelected: [],
+        correctMetricEnglishConversions: 0,
+        correctMeasurementBasics: 1,
       );
 
       final reset = original.copyWith(
@@ -113,6 +143,12 @@ void main() {
       expect(reset.completedLessonsList, original.completedLessonsList);
       expect(reset.lessonLastTabs, original.lessonLastTabs);
       expect(reset.completedLessonTabs, original.completedLessonTabs);
+      expect(reset.unlockedAchievements, original.unlockedAchievements);
+      expect(reset.maxConsecutiveCorrectAnswers, original.maxConsecutiveCorrectAnswers);
+      expect(reset.currentConsecutiveCorrectAnswers, original.currentConsecutiveCorrectAnswers);
+      expect(reset.uniqueToolsSelected, original.uniqueToolsSelected);
+      expect(reset.correctMetricEnglishConversions, original.correctMetricEnglishConversions);
+      expect(reset.correctMeasurementBasics, original.correctMeasurementBasics);
     });
   });
 }

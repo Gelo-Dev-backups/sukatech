@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../data/course_data.dart';
 import '../data/user_store.dart';
 import '../models/user.dart';
 import '../navigation/fade_route.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
 import '../widgets/skeleton.dart';
+import 'achievements_screen.dart';
 import 'lesson_measurement_tools.dart';
 import 'lessons_intro_screen.dart';
 import 'lessons_screen.dart';
@@ -133,7 +135,7 @@ class DashboardScreen extends StatelessWidget {
   // --- Overall progress card -----------------------------------------
 
   static List<Widget> _progressCard(AppUser user) {
-    const totalLessons = 6;
+    final totalLessons = CourseData.totalLessons;
     // Completed lessons contribute 100 points each.
     // The active lesson contributes its partial percent as points,
     // but only if it is NOT already in completedLessonsList (avoid double-count).
@@ -587,7 +589,7 @@ class DashboardScreen extends StatelessWidget {
       badgeColor: const Color(0xFFF59E0B),
       label: 'ACHIEVEMENTS',
       labelFontSize: 11,
-      onTap: () => pushUnderDevelopment(context, title: 'Achievements'),
+      onTap: () => Navigator.of(context).push(fadeRoute((_) => const AchievementsScreen())),
     ),
     ..._categoryCard(
       context: context,

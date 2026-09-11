@@ -16,6 +16,12 @@ class AppUser {
     required this.completedLessonsList,
     required this.lessonLastTabs,
     required this.completedLessonTabs,
+    required this.unlockedAchievements,
+    required this.maxConsecutiveCorrectAnswers,
+    required this.currentConsecutiveCorrectAnswers,
+    required this.uniqueToolsSelected,
+    required this.correctMetricEnglishConversions,
+    required this.correctMeasurementBasics,
   });
 
   final int id;
@@ -31,6 +37,12 @@ class AppUser {
   final List<String> completedLessonsList;
   final Map<String, int> lessonLastTabs;
   final List<String> completedLessonTabs;
+  final List<String> unlockedAchievements;
+  final int maxConsecutiveCorrectAnswers;
+  final int currentConsecutiveCorrectAnswers;
+  final List<String> uniqueToolsSelected;
+  final int correctMetricEnglishConversions;
+  final int correctMeasurementBasics;
 
   factory AppUser.fromMap(Map<String, Object?> map) {
     return AppUser(
@@ -47,6 +59,12 @@ class AppUser {
       completedLessonsList: List<String>.from(jsonDecode(map['completed_lessons'] as String)),
       lessonLastTabs: Map<String, int>.from(jsonDecode(map['lesson_last_tabs'] as String)),
       completedLessonTabs: List<String>.from(jsonDecode(map['completed_lesson_tabs'] as String)),
+      unlockedAchievements: List<String>.from(jsonDecode(map['unlocked_achievements'] as String)),
+      maxConsecutiveCorrectAnswers: map['max_consecutive_correct_answers'] as int,
+      currentConsecutiveCorrectAnswers: map['current_consecutive_correct_answers'] as int,
+      uniqueToolsSelected: List<String>.from(jsonDecode(map['unique_tools_selected'] as String)),
+      correctMetricEnglishConversions: map['correct_metric_english_conversions'] as int,
+      correctMeasurementBasics: map['correct_measurement_basics'] as int,
     );
   }
 
@@ -64,6 +82,12 @@ class AppUser {
     'completed_lessons': jsonEncode(completedLessonsList),
     'lesson_last_tabs': jsonEncode(lessonLastTabs),
     'completed_lesson_tabs': jsonEncode(completedLessonTabs),
+    'unlocked_achievements': jsonEncode(unlockedAchievements),
+    'max_consecutive_correct_answers': maxConsecutiveCorrectAnswers,
+    'current_consecutive_correct_answers': currentConsecutiveCorrectAnswers,
+    'unique_tools_selected': jsonEncode(uniqueToolsSelected),
+    'correct_metric_english_conversions': correctMetricEnglishConversions,
+    'correct_measurement_basics': correctMeasurementBasics,
   };
 
   AppUser copyWith({
@@ -79,6 +103,12 @@ class AppUser {
     List<String>? completedLessonsList,
     Map<String, int>? lessonLastTabs,
     List<String>? completedLessonTabs,
+    List<String>? unlockedAchievements,
+    int? maxConsecutiveCorrectAnswers,
+    int? currentConsecutiveCorrectAnswers,
+    List<String>? uniqueToolsSelected,
+    int? correctMetricEnglishConversions,
+    int? correctMeasurementBasics,
   }) {
     return AppUser(
       id: id,
@@ -95,6 +125,12 @@ class AppUser {
       completedLessonsList: completedLessonsList ?? this.completedLessonsList,
       lessonLastTabs: lessonLastTabs ?? this.lessonLastTabs,
       completedLessonTabs: completedLessonTabs ?? this.completedLessonTabs,
+      unlockedAchievements: unlockedAchievements ?? this.unlockedAchievements,
+      maxConsecutiveCorrectAnswers: maxConsecutiveCorrectAnswers ?? this.maxConsecutiveCorrectAnswers,
+      currentConsecutiveCorrectAnswers: currentConsecutiveCorrectAnswers ?? this.currentConsecutiveCorrectAnswers,
+      uniqueToolsSelected: uniqueToolsSelected ?? this.uniqueToolsSelected,
+      correctMetricEnglishConversions: correctMetricEnglishConversions ?? this.correctMetricEnglishConversions,
+      correctMeasurementBasics: correctMeasurementBasics ?? this.correctMeasurementBasics,
     );
   }
 }

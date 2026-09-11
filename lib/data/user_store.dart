@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../models/user.dart';
+import 'achievement_manager.dart';
 import 'user_repository.dart';
 
 /// The current learner, held outside the widget tree so every screen reads
@@ -23,7 +24,8 @@ class UserStore {
   static Future<void> mutate(AppUser Function(AppUser user) update) async {
     final existing = current.value;
     if (existing == null) return;
-    final updated = update(existing);
+    var updated = update(existing);
+    updated = AchievementManager.instance.evaluate(updated);
     await UserRepository.instance.update(updated);
     current.value = updated;
   }

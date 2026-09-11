@@ -34,6 +34,12 @@ class UserRepository {
       'completed_lessons': '[]',
       'lesson_last_tabs': '{}',
       'completed_lesson_tabs': '[]',
+      'unlocked_achievements': '[]',
+      'max_consecutive_correct_answers': 0,
+      'current_consecutive_correct_answers': 0,
+      'unique_tools_selected': '[]',
+      'correct_metric_english_conversions': 0,
+      'correct_measurement_basics': 0,
     });
     final created = await db.query('users', where: 'id = ?', whereArgs: [id]);
     return AppUser.fromMap(created.first);

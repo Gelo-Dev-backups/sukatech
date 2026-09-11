@@ -303,6 +303,12 @@ class ProfileScreen extends StatelessWidget {
         completedLessonsList: [],
         lessonLastTabs: {},
         completedLessonTabs: [],
+        unlockedAchievements: [],
+        maxConsecutiveCorrectAnswers: 0,
+        currentConsecutiveCorrectAnswers: 0,
+        uniqueToolsSelected: [],
+        correctMetricEnglishConversions: 0,
+        correctMeasurementBasics: 0,
       ),
     );
   }
