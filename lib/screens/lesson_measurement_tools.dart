@@ -246,17 +246,15 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
       newTabs[_lessonTitle] = 8;
       
       final completed = List<String>.from(user.completedLessonsList);
-      int newLessonsCompleted = user.lessonsCompleted;
       
       if (!completed.contains(_lessonTitle)) {
         completed.add(_lessonTitle);
-        newLessonsCompleted++;
       }
 
       return user.copyWith(
         currentLessonTitle: _lessonTitle,
         currentLessonProgressPercent: 100,
-        lessonsCompleted: newLessonsCompleted,
+        lessonsCompleted: completed.length,
         completedLessonsList: completed,
         lessonLastTabs: newTabs,
       );
@@ -524,12 +522,12 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
           ),
         ),
 
-        // Back button (returns to Tab 0)
+        // Back button — exits lesson
         Positioned(
           left: 18,
           top: 55,
           child: IconButton(
-            onPressed: () => _selectTab(0),
+            onPressed: () => Navigator.of(context).pop(),
             icon: const Icon(
               Icons.arrow_back_ios_new_rounded,
               color: Colors.white,
@@ -840,7 +838,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
           ),
         ),
 
-        // Back button (returns to Tab 1)
+        // Back button — exits lesson
         Positioned(
           left: 18,
           top: 55,
@@ -1156,7 +1154,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
           ),
         ),
 
-        // Back button (returns to Tab 2)
+        // Back button — exits lesson
         Positioned(
           left: 18,
           top: 55,
@@ -1472,7 +1470,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
           ),
         ),
 
-        // Back button (returns to Tab 3)
+        // Back button — exits lesson
         Positioned(
           left: 18,
           top: 55,
@@ -1788,7 +1786,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
           ),
         ),
 
-        // Back button (returns to Tab 4)
+        // Back button — exits lesson
         Positioned(
           left: 18,
           top: 55,
@@ -2104,7 +2102,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
           ),
         ),
 
-        // Back button (returns to Tab 5)
+        // Back button — exits lesson
         Positioned(
           left: 18,
           top: 55,
@@ -2420,7 +2418,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
           ),
         ),
 
-        // Back button (returns to Tab 6)
+        // Back button — exits lesson
         Positioned(
           left: 18,
           top: 55,
@@ -2745,7 +2743,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
           ),
         ),
 
-        // Back button (returns to Tab 7)
+        // Back button — exits lesson
         Positioned(
           left: 18,
           top: 55,

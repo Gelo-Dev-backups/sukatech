@@ -133,10 +133,19 @@ class DashboardScreen extends StatelessWidget {
   // --- Overall progress card -----------------------------------------
 
   static List<Widget> _progressCard(AppUser user) {
-    final totalLessons = 6;
-    final int calculatedProgress = ((user.lessonsCompleted * 100 / totalLessons) + 
-                                    (user.currentLessonProgressPercent / totalLessons))
-                                   .clamp(0, 100).toInt();
+    const totalLessons = 6;
+    // Completed lessons contribute 100 points each.
+    // The active lesson contributes its partial percent as points,
+    // but only if it is NOT already in completedLessonsList (avoid double-count).
+    final int completedPoints = user.completedLessonsList.length * 100;
+    final bool currentAlreadyDone =
+        user.completedLessonsList.contains(user.currentLessonTitle);
+    final int partialPoints =
+        currentAlreadyDone ? 0 : user.currentLessonProgressPercent;
+    final int calculatedProgress =
+        ((completedPoints + partialPoints) / (totalLessons * 100) * 100)
+            .clamp(0, 100)
+            .toInt();
                                    
     return [
     Positioned(

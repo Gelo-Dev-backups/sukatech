@@ -253,10 +253,8 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
 
       // Idempotent completion: only count lesson once
       final completed = List<String>.from(user.completedLessonsList);
-      int newLessonsCompleted = user.lessonsCompleted;
       if (step >= _tabCount && !completed.contains(_lessonTitle)) {
         completed.add(_lessonTitle);
-        newLessonsCompleted++;
       }
 
       return user.copyWith(
@@ -265,7 +263,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
             user.currentLessonProgressPercent > nextPercent
             ? user.currentLessonProgressPercent
             : nextPercent,
-        lessonsCompleted: newLessonsCompleted,
+        lessonsCompleted: completed.length,
         completedLessonsList: completed,
         lessonLastTabs: newTabs,
       );
