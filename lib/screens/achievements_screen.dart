@@ -93,7 +93,7 @@ class AchievementsScreen extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: progressPercent,
                   backgroundColor: Colors.white.withValues(alpha: 0.2),
-                  color: _accent,
+                  color: const Color(0xFF05831C),
                   minHeight: 6,
                 ),
               ),

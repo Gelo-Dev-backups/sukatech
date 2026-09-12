@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../data/user_store.dart';
-import '../navigation/fade_route.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
 
@@ -29,18 +28,17 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
     super.initState();
     final savedTab = UserStore.current.value?.lessonLastTabs[_lessonTitle];
     final restoredTab = savedTab ?? widget.initialTab;
-    _currentTab = restoredTab.clamp(0, _tabCount);
+    _currentTab = restoredTab.clamp(0, _tabCount - 1);
     _progressStep = _stepForTab(_currentTab);
   }
 
   int _stepForTab(int tab) {
-    if (tab == 0) return 1;
-    return tab.clamp(1, _tabCount);
+    return (tab + 1).clamp(1, _tabCount);
   }
 
   void _selectTab(int tab) {
     setState(() {
-      _currentTab = tab.clamp(0, _tabCount);
+      _currentTab = tab.clamp(0, _tabCount - 1);
       _progressStep = _stepForTab(_currentTab);
     });
     UserStore.mutate((user) {
@@ -317,7 +315,7 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                 widthFactor: _progressStep / _tabCount,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFA500),
+                    color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -654,7 +652,7 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                 widthFactor: _progressStep / _tabCount,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFA500),
+                    color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -1063,7 +1061,7 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                 widthFactor: _progressStep / _tabCount,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFA500),
+                    color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -1431,7 +1429,7 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                 widthFactor: _progressStep / _tabCount,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFA500),
+                    color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -1763,7 +1761,7 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                 widthFactor: _progressStep / _tabCount,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFA500),
+                    color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -2094,7 +2092,7 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                 widthFactor: _progressStep / _tabCount,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFA500),
+                    color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -2390,7 +2388,7 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                 widthFactor: _progressStep / _tabCount,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFA500),
+                    color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -2699,7 +2697,7 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                 widthFactor: _progressStep / _tabCount,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFA500),
+                    color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),

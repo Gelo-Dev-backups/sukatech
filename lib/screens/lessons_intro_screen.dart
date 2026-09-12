@@ -134,7 +134,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
                 widthFactor: _progressStep / _tabCount,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: _accent,
+                    color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -2733,7 +2733,7 @@ class _ProgressBar extends StatelessWidget {
         widthFactor: step / tabCount,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: const Color(0xBA05831C),
+            color: const Color(0xFF05831C),
             borderRadius: BorderRadius.circular(20),
           ),
         ),

@@ -4,6 +4,7 @@ import '../data/user_store.dart';
 import '../navigation/fade_route.dart';
 import 'lesson_measurement_tools.dart';
 import 'lesson_parts_and_functions.dart';
+import 'lesson_reading_measurements.dart';
 import 'lessons_intro_screen.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
@@ -162,6 +163,12 @@ class LessonsScreen extends StatelessWidget {
               Navigator.of(
                 context,
               ).push(fadeRoute((_) => const LessonsPartsAndFunctions()));
+              return;
+            }
+            if (index == 3) {
+              Navigator.of(
+                context,
+              ).push(fadeRoute((_) => const LessonsReadingMeasurements()));
               return;
             }
             pushUnderDevelopment(
