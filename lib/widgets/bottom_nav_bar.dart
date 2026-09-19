@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../navigation/fade_route.dart';
 import '../screens/dashboard_screen.dart';
 import '../screens/lessons_screen.dart';
+import '../screens/practice_screen.dart';
 import '../screens/profile_screen.dart';
+import '../screens/quiz_screen.dart';
 
 /// The five sections reachable from the main app's bottom bar.
 enum DashboardTab { home, lesson, practice, quiz, profile }
@@ -37,8 +39,9 @@ WidgetBuilder? _screenFor(DashboardTab tab) {
     case DashboardTab.lesson:
       return (_) => const LessonsScreen();
     case DashboardTab.practice:
+      return (_) => const PracticeScreen();
     case DashboardTab.quiz:
-      return null;
+      return (_) => const QuizScreen();
   }
 }
 
