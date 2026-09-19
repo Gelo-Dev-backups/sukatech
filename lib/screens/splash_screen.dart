@@ -25,14 +25,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset(
-      'lib/assets/splash_video/splash.mp4',
-    )
-      ..initialize().then((_) {
-        setState(() {});
-        _controller.play();
-      })
-      ..addListener(_onVideoTick);
+    _controller =
+        VideoPlayerController.asset('lib/assets/splash_video/splash.mp4')
+          ..initialize().then((_) {
+            setState(() {});
+            _controller.play();
+          })
+          ..addListener(_onVideoTick);
   }
 
   @override

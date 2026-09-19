@@ -362,7 +362,8 @@ class _LessonsReadingMeasurementsState
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -575,7 +576,8 @@ class _LessonsReadingMeasurementsState
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -1021,7 +1023,8 @@ class _LessonsReadingMeasurementsState
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -1464,7 +1467,8 @@ class _LessonsReadingMeasurementsState
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -1547,7 +1551,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'Place the stock firmly against the edge of the material.\n',
+                    text:
+                        'Place the stock firmly against the edge of the material.\n',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 12,
@@ -1635,7 +1640,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'Check that the marked line forms a 90-degree angle with the edge.',
+                    text:
+                        'Check that the marked line forms a 90-degree angle with the edge.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 12,
@@ -1670,7 +1676,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'If you need to mark a line across a piece of wood, place the stock against the edge and mark along the blade.\nThe line should form a ',
+                    text:
+                        'If you need to mark a line across a piece of wood, place the stock against the edge and mark along the blade.\nThe line should form a ',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 12,
@@ -1728,7 +1735,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'A try square is mainly used for checking squareness and marking, rather than measuring length.',
+                    text:
+                        'A try square is mainly used for checking squareness and marking, rather than measuring length.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 12,
@@ -1909,7 +1917,8 @@ class _LessonsReadingMeasurementsState
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -1968,7 +1977,7 @@ class _LessonsReadingMeasurementsState
             height: 135,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/assets/images/vernier-caliper.png'),
+                image: AssetImage('lib/assets/images/veniercaliper.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -2016,7 +2025,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'Adjust the jaws until they make proper contact with the object.\n',
+                    text:
+                        'Adjust the jaws until they make proper contact with the object.\n',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 12,
@@ -2060,7 +2070,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'Read the additional measurement indicated by the vernier scale.\n',
+                    text:
+                        'Read the additional measurement indicated by the vernier scale.\n',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 12,
@@ -2082,7 +2093,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'Combine the main-scale and vernier-scale readings.\n',
+                    text:
+                        'Combine the main-scale and vernier-scale readings.\n',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 12,
@@ -2353,7 +2365,8 @@ class _LessonsReadingMeasurementsState
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -2432,7 +2445,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: ' is a measurement expressed using a complete number without a fraction or decimal.',
+                    text:
+                        ' is a measurement expressed using a complete number without a fraction or decimal.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 12,
@@ -2617,7 +2631,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'If the measurement is between 8 inches and 9 inches, and the mark is halfway between them: ',
+                    text:
+                        'If the measurement is between 8 inches and 9 inches, and the mark is halfway between them: ',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 11,
@@ -2808,7 +2823,8 @@ class _LessonsReadingMeasurementsState
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -3192,7 +3208,8 @@ class _LessonsReadingMeasurementsState
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -3644,7 +3661,8 @@ class _LessonsReadingMeasurementsState
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -3850,7 +3868,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'If a piece of wood measures 3 feet, convert it to inches:\n',
+                    text:
+                        'If a piece of wood measures 3 feet, convert it to inches:\n',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 12,
@@ -4052,7 +4071,8 @@ class _LessonsReadingMeasurementsState
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -4173,7 +4193,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'Keep the measuring tool properly aligned.\nRead the markings carefully.\nIdentify whether the measurement is ',
+                    text:
+                        'Keep the measuring tool properly aligned.\nRead the markings carefully.\nIdentify whether the measurement is ',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 13,
@@ -4195,7 +4216,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'Check the smaller divisions.\nWrite the correct unit.',
+                    text:
+                        'Check the smaller divisions.\nWrite the correct unit.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 13,
@@ -4274,7 +4296,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'because the unit tells us what the measurement represents.',
+                    text:
+                        'because the unit tells us what the measurement represents.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 13,
@@ -4454,7 +4477,8 @@ class _LessonsReadingMeasurementsState
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -4508,7 +4532,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'used to measure length, width, height, and distance.\n',
+                    text:
+                        'used to measure length, width, height, and distance.\n',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 13,
@@ -4530,7 +4555,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'used to measure and mark short lengths accurately.\n',
+                    text:
+                        'used to measure and mark short lengths accurately.\n',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 13,
@@ -4640,7 +4666,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'a measurement containing a decimal point such as 12.5 cm.\n',
+                    text:
+                        'a measurement containing a decimal point such as 12.5 cm.\n',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 13,
@@ -4708,7 +4735,8 @@ class _LessonsReadingMeasurementsState
               TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Important Safety and Care Reminder:\n                          ',
+                    text:
+                        'Important Safety and Care Reminder:\n                          ',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 14,
@@ -4719,7 +4747,8 @@ class _LessonsReadingMeasurementsState
                     ),
                   ),
                   TextSpan(
-                    text: 'Always use the correct measuring tool. Handle tools carefully, keep them clean, and store them properly. Accurate measurement prevents errors.',
+                    text:
+                        'Always use the correct measuring tool. Handle tools carefully, keep them clean, and store them properly. Accurate measurement prevents errors.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 14,

@@ -172,9 +172,15 @@ class ProfileScreen extends StatelessWidget {
         height: 123,
         decoration: ShapeDecoration(
           color: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           shadows: const [
-            BoxShadow(color: Color(0x3F000000), blurRadius: 4, offset: Offset(0, 4)),
+            BoxShadow(
+              color: Color(0x3F000000),
+              blurRadius: 4,
+              offset: Offset(0, 4),
+            ),
           ],
         ),
       ),
@@ -184,7 +190,11 @@ class ProfileScreen extends StatelessWidget {
       value: '${user.lessonsCompleted}',
       label: 'Lessons\nCompleted',
     ),
-    ..._statColumn(centerX: 205.5, value: '${user.quizzesTaken}', label: 'Quizzes\nTaken'),
+    ..._statColumn(
+      centerX: 205.5,
+      value: '${user.quizzesTaken}',
+      label: 'Quizzes\nTaken',
+    ),
     ..._statColumn(
       centerX: 332.5,
       value: '${user.practiceCompleted}',
@@ -217,7 +227,11 @@ class ProfileScreen extends StatelessWidget {
         top: 250,
         child: SizedBox(
           width: boxWidth,
-          child: Text(value, textAlign: TextAlign.center, style: _statValueStyle),
+          child: Text(
+            value,
+            textAlign: TextAlign.center,
+            style: _statValueStyle,
+          ),
         ),
       ),
       Positioned(
@@ -225,7 +239,11 @@ class ProfileScreen extends StatelessWidget {
         top: 217,
         child: SizedBox(
           width: boxWidth,
-          child: Text(label, textAlign: TextAlign.center, style: _statLabelStyle),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: _statLabelStyle,
+          ),
         ),
       ),
     ];
@@ -334,7 +352,10 @@ class ProfileScreen extends StatelessWidget {
     Positioned(
       left: 73,
       top: top,
-      child: SizedBox(width: 220, child: Text(label, style: _settingsLabelStyle)),
+      child: SizedBox(
+        width: 220,
+        child: Text(label, style: _settingsLabelStyle),
+      ),
     ),
     Positioned(left: 310, top: top - 6, child: trailing),
     if (showDivider)
@@ -380,7 +401,10 @@ class _ToggleSwitch extends StatelessWidget {
           child: Container(
             width: _thumbSize,
             height: _thumbSize,
-            decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
           ),
         ),
       ),

@@ -5,6 +5,8 @@ import '../navigation/fade_route.dart';
 import 'lesson_measurement_tools.dart';
 import 'lesson_parts_and_functions.dart';
 import 'lesson_reading_measurements.dart';
+import 'lesson_measurement_calculations.dart';
+import 'lesson_unit_conversion.dart';
 import 'lessons_intro_screen.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
@@ -41,16 +43,16 @@ class LessonsScreen extends StatelessWidget {
       icon: Icons.straighten_rounded,
     ),
     (
-      title: 'Layout and\nMarking',
+      title: 'Unit\nConversion',
       duration: '10 MIN',
       difficulty: 'Hard',
-      icon: Icons.draw_rounded,
+      icon: Icons.sync_alt_rounded,
     ),
     (
       title: 'Measurement\nCalculations',
       duration: '10 MIN',
       difficulty: 'Hard',
-      icon: Icons.calculate_rounded,
+      icon: Icons.functions_rounded,
     ),
   ];
 
@@ -145,8 +147,10 @@ class LessonsScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           onTap: () {
             final flatTitle = lesson.title.replaceAll('\n', ' ');
-            UserStore.mutate((user) => user.copyWith(currentLessonTitle: flatTitle));
-            
+            UserStore.mutate(
+              (user) => user.copyWith(currentLessonTitle: flatTitle),
+            );
+
             if (index == 0) {
               Navigator.of(
                 context,
@@ -171,10 +175,19 @@ class LessonsScreen extends StatelessWidget {
               ).push(fadeRoute((_) => const LessonsReadingMeasurements()));
               return;
             }
-            pushUnderDevelopment(
-              context,
-              title: flatTitle,
-            );
+            if (index == 4) {
+              Navigator.of(
+                context,
+              ).push(fadeRoute((_) => const LessonsUnitConversion()));
+              return;
+            }
+            if (index == 5) {
+              Navigator.of(
+                context,
+              ).push(fadeRoute((_) => const LessonsMeasurementCalculations()));
+              return;
+            }
+            pushUnderDevelopment(context, title: flatTitle);
           },
           child: Container(
             width: 377,
@@ -194,10 +207,7 @@ class LessonsScreen extends StatelessWidget {
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xFF0F3260),
-                        Color(0xFF061D3F),
-                      ],
+                      colors: [Color(0xFF0F3260), Color(0xFF061D3F)],
                     ),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
@@ -225,11 +235,7 @@ class LessonsScreen extends StatelessWidget {
                         ),
                       ),
                       child: Center(
-                        child: Icon(
-                          lesson.icon,
-                          color: _accent,
-                          size: 26,
-                        ),
+                        child: Icon(lesson.icon, color: _accent, size: 26),
                       ),
                     ),
                   ),
@@ -254,7 +260,7 @@ class LessonsScreen extends StatelessWidget {
                       Row(
                         children: [
                           const Icon(
-                           Icons.schedule_rounded,
+                            Icons.schedule_rounded,
                             size: 14,
                             color: _navy,
                           ),

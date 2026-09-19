@@ -313,7 +313,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -650,7 +651,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -1059,7 +1061,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -1110,7 +1113,9 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
           left: 103.59,
           top: 219,
           child: Container(
-            transform: Matrix4.identity()..translate(0.0, 0.0)..rotateZ(0.03),
+            transform: Matrix4.identity()
+              ..translate(0.0, 0.0)
+              ..rotateZ(0.03),
             width: 223,
             height: 197,
             decoration: const BoxDecoration(
@@ -1141,7 +1146,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'The long, flat metal part of the try square. It is used for measuring and checking the straightness and squareness of an edge.',
+                    text:
+                        'The long, flat metal part of the try square. It is used for measuring and checking the straightness and squareness of an edge.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 13,
@@ -1176,7 +1182,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'The thicker part that supports the blade. It provides a firm reference surface when checking a 90° angle.',
+                    text:
+                        'The thicker part that supports the blade. It provides a firm reference surface when checking a 90° angle.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 13,
@@ -1211,7 +1218,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'Small metal fasteners that connect the blade and stock. It secures the blade and stock together',
+                    text:
+                        'Small metal fasteners that connect the blade and stock. It secures the blade and stock together',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 13,
@@ -1246,7 +1254,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'Blade = Checks | Stock = Supports | Rivets = Connect',
+                    text:
+                        'Blade = Checks | Stock = Supports | Rivets = Connect',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 14,
@@ -1427,7 +1436,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -1508,7 +1518,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'The lines and numbers marked along the rule. It indicates the measurement in units such as millimeters and centimeters.',
+                    text:
+                        'The lines and numbers marked along the rule. It indicates the measurement in units such as millimeters and centimeters.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 14,
@@ -1543,7 +1554,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'The straight side of the steel rule. It used as a reference when measuring, marking, or drawing straight lines.',
+                    text:
+                        'The straight side of the steel rule. It used as a reference when measuring, marking, or drawing straight lines.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 14,
@@ -1578,7 +1590,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'Graduations = Show measurement | Edge = Gives a straight reference',
+                    text:
+                        'Graduations = Show measurement | Edge = Gives a straight reference',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 14,
@@ -1759,7 +1772,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -1840,7 +1854,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'The larger jaws located at the bottom of the caliper. It measure the outside diameter, width, or thickness of an object.',
+                    text:
+                        'The larger jaws located at the bottom of the caliper. It measure the outside diameter, width, or thickness of an object.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 14,
@@ -1875,7 +1890,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'The smaller jaws located at the top. It measure the inside diameter or width of holes and openings.',
+                    text:
+                        'The smaller jaws located at the top. It measure the inside diameter or width of holes and openings.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 14,
@@ -1910,7 +1926,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'The fixed scale marked along the body of the caliper. It provides the main measurement reading.',
+                    text:
+                        'The fixed scale marked along the body of the caliper. It provides the main measurement reading.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 14,
@@ -2090,7 +2107,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -2171,7 +2189,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'The smaller movable scale that slides along the main scale. It provides a more precise measurement by allowing smaller divisions to be read.',
+                    text:
+                        'The smaller movable scale that slides along the main scale. It provides a more precise measurement by allowing smaller divisions to be read.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 14,
@@ -2206,7 +2225,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'The thin rod that extends from the end of the caliper. It measures the depth of holes, slots, and recessed areas.',
+                    text:
+                        'The thin rod that extends from the end of the caliper. It measures the depth of holes, slots, and recessed areas.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 14,
@@ -2386,7 +2406,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -2427,7 +2448,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Choosing the correct measuring tool depends on the type and size of the measurement needed.\n\n',
+                    text:
+                        'Choosing the correct measuring tool depends on the type and size of the measurement needed.\n\n',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 15,
@@ -2460,7 +2482,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'Need to check if a corner is square or an edge is straight? ',
+                    text:
+                        'Need to check if a corner is square or an edge is straight? ',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 15,
@@ -2504,7 +2527,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'Need a precise outside, inside, or depth measurement? ',
+                    text:
+                        'Need a precise outside, inside, or depth measurement? ',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 15,
@@ -2695,7 +2719,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -2765,7 +2790,8 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
                     ),
                   ),
                   TextSpan(
-                    text: 'Know the tool. Know its parts. Know its function. Measure with accuracy.',
+                    text:
+                        'Know the tool. Know its parts. Know its function. Measure with accuracy.',
                     style: TextStyle(
                       color: _navy,
                       fontSize: 14,

@@ -140,85 +140,93 @@ class DashboardScreen extends StatelessWidget {
     // The active lesson contributes its partial percent as points,
     // but only if it is NOT already in completedLessonsList (avoid double-count).
     final int completedPoints = user.completedLessonsList.length * 100;
-    final bool currentAlreadyDone =
-        user.completedLessonsList.contains(user.currentLessonTitle);
-    final int partialPoints =
-        currentAlreadyDone ? 0 : user.currentLessonProgressPercent;
+    final bool currentAlreadyDone = user.completedLessonsList.contains(
+      user.currentLessonTitle,
+    );
+    final int partialPoints = currentAlreadyDone
+        ? 0
+        : user.currentLessonProgressPercent;
     final int calculatedProgress =
         ((completedPoints + partialPoints) / (totalLessons * 100) * 100)
             .clamp(0, 100)
             .toInt();
-                                   
+
     return [
-    Positioned(
-      left: 14,
-      top: 124,
-      child: Container(
-        width: 382,
-        height: 132,
-        decoration: ShapeDecoration(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          shadows: const [
-            BoxShadow(color: Color(0x3F000000), blurRadius: 4, offset: Offset(0, 4)),
-          ],
+      Positioned(
+        left: 14,
+        top: 124,
+        child: Container(
+          width: 382,
+          height: 132,
+          decoration: ShapeDecoration(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            shadows: const [
+              BoxShadow(
+                color: Color(0x3F000000),
+                blurRadius: 4,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-    Positioned(
-      left: 227,
-      top: 138,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: const SkeletonSvg(
-          'lib/assets/images/mountaine wf;ag.svg',
-          width: 169,
-          height: 118,
-          fit: BoxFit.cover,
+      Positioned(
+        left: 227,
+        top: 138,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: const SkeletonSvg(
+            'lib/assets/images/mountaine wf;ag.svg',
+            width: 169,
+            height: 118,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
-    ),
-    const Positioned(
-      left: 34,
-      top: 144,
-      child: Text(
-        'Overall Progress',
-        style: TextStyle(
-          color: _navy,
-          fontSize: 18,
-          fontFamily: 'Montserrat',
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.54,
+      const Positioned(
+        left: 34,
+        top: 144,
+        child: Text(
+          'Overall Progress',
+          style: TextStyle(
+            color: _navy,
+            fontSize: 18,
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.54,
+          ),
         ),
       ),
-    ),
-    ..._progressBar(
-      left: 34,
-      top: 183,
-      width: 219,
-      height: 13,
-      percent: calculatedProgress / 100,
-    ),
-    Positioned(
-      left: 258,
-      top: 178,
-      child: Text('$calculatedProgress%', style: _valueStyle),
-    ),
-    const Positioned(
-      left: 36,
-      top: 213,
-      child: Text(
-        'Great job! Keep it up!',
-        style: TextStyle(
-          color: _navy,
-          fontSize: 14,
-          fontFamily: 'Montserrat',
-          fontWeight: FontWeight.w500,
-          letterSpacing: 0.42,
+      ..._progressBar(
+        left: 34,
+        top: 183,
+        width: 219,
+        height: 13,
+        percent: calculatedProgress / 100,
+      ),
+      Positioned(
+        left: 258,
+        top: 178,
+        child: Text('$calculatedProgress%', style: _valueStyle),
+      ),
+      const Positioned(
+        left: 36,
+        top: 213,
+        child: Text(
+          'Great job! Keep it up!',
+          style: TextStyle(
+            color: _navy,
+            fontSize: 14,
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.42,
+          ),
         ),
       ),
-    ),
-  ];
+    ];
   }
 
   /// A rounded track + a proportional fill, sharing one shape so the fill
@@ -230,7 +238,9 @@ class DashboardScreen extends StatelessWidget {
     required double height,
     required double percent,
   }) {
-    final shape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(20));
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20),
+    );
     return [
       Positioned(
         left: left,
@@ -319,11 +329,18 @@ class DashboardScreen extends StatelessWidget {
           decoration: ShapeDecoration(
             color: Colors.white,
             shape: RoundedRectangleBorder(
-              side: BorderSide(width: 1, color: Colors.black.withValues(alpha: 0.08)),
+              side: BorderSide(
+                width: 1,
+                color: Colors.black.withValues(alpha: 0.08),
+              ),
               borderRadius: BorderRadius.circular(20),
             ),
             shadows: const [
-              BoxShadow(color: Color(0x1F000000), blurRadius: 4, offset: Offset(0, 4)),
+              BoxShadow(
+                color: Color(0x1F000000),
+                blurRadius: 4,
+                offset: Offset(0, 4),
+              ),
             ],
           ),
         ),
@@ -334,7 +351,10 @@ class DashboardScreen extends StatelessWidget {
         child: Container(
           width: circleSize,
           height: circleSize,
-          decoration: ShapeDecoration(color: circleColor, shape: const OvalBorder()),
+          decoration: ShapeDecoration(
+            color: circleColor,
+            shape: const OvalBorder(),
+          ),
         ),
       ),
       Positioned(
@@ -342,8 +362,16 @@ class DashboardScreen extends StatelessWidget {
         top: circleTop + (circleSize - iconSize) / 2,
         child: Icon(icon, color: Colors.white, size: iconSize),
       ),
-      Positioned(left: valueLeft, top: 367, child: Text(value, style: _valueStyle)),
-      Positioned(left: labelLeft, top: 392, child: Text(label, style: _statLabelStyle)),
+      Positioned(
+        left: valueLeft,
+        top: 367,
+        child: Text(value, style: _valueStyle),
+      ),
+      Positioned(
+        left: labelLeft,
+        top: 392,
+        child: Text(label, style: _statLabelStyle),
+      ),
       Positioned(
         left: cardLeft,
         top: cardTop,
@@ -362,7 +390,10 @@ class DashboardScreen extends StatelessWidget {
 
   // --- Continue learning card ------------------------------------------
 
-  static List<Widget> _continueLearningCard(BuildContext context, AppUser user) {
+  static List<Widget> _continueLearningCard(
+    BuildContext context,
+    AppUser user,
+  ) {
     IconData lessonIcon = Icons.menu_book_rounded;
     if (user.currentLessonTitle.contains('Measuring Tools')) {
       lessonIcon = Icons.square_foot_rounded;
@@ -400,7 +431,10 @@ class DashboardScreen extends StatelessWidget {
           decoration: ShapeDecoration(
             color: const Color(0xFFF6F6F6),
             shape: RoundedRectangleBorder(
-              side: BorderSide(width: 1, color: Colors.black.withValues(alpha: 0.12)),
+              side: BorderSide(
+                width: 1,
+                color: Colors.black.withValues(alpha: 0.12),
+              ),
               borderRadius: BorderRadius.circular(20),
             ),
           ),
@@ -416,10 +450,7 @@ class DashboardScreen extends StatelessWidget {
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF0F3260),
-                Color(0xFF061D3F),
-              ],
+              colors: [Color(0xFF0F3260), Color(0xFF061D3F)],
             ),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
@@ -435,11 +466,7 @@ class DashboardScreen extends StatelessWidget {
             ],
           ),
           child: Center(
-            child: Icon(
-              lessonIcon,
-              color: const Color(0xFFFFA500),
-              size: 24,
-            ),
+            child: Icon(lessonIcon, color: const Color(0xFFFFA500), size: 24),
           ),
         ),
       ),
@@ -461,79 +488,79 @@ class DashboardScreen extends StatelessWidget {
           ),
         ),
       ),
-    ..._progressBar(
-      left: 88,
-      top: 511,
-      width: 191,
-      height: 11,
-      percent: user.currentLessonProgressPercent / 100,
-    ),
-    Positioned(
-      left: 286,
-      top: 509,
-      child: Text(
-        '${user.currentLessonProgressPercent}%',
-        style: const TextStyle(
-          color: _navy,
-          fontSize: 12,
-          fontFamily: 'Montserrat',
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.36,
-        ),
+      ..._progressBar(
+        left: 88,
+        top: 511,
+        width: 191,
+        height: 11,
+        percent: user.currentLessonProgressPercent / 100,
       ),
-    ),
-    Positioned(
-      left: 332,
-      top: 480,
-      child: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: _navy,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: _navy.withValues(alpha: 0.25),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: const Center(
-          child: Icon(
-            Icons.play_arrow_rounded,
-            color: Colors.white,
-            size: 26,
+      Positioned(
+        left: 286,
+        top: 509,
+        child: Text(
+          '${user.currentLessonProgressPercent}%',
+          style: const TextStyle(
+            color: _navy,
+            fontSize: 12,
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.36,
           ),
         ),
       ),
-    ),
-    Positioned(
-      left: 18,
-      top: 464,
-      width: 377,
-      height: 77,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: () {
-            if (user.currentLessonTitle.contains('Measuring Tools')) {
-              Navigator.of(context).push(
-                fadeRoute((_) => const LessonsMeasurementTools()),
-              );
-            } else if (user.currentLessonTitle.contains('Introduction')) {
-              Navigator.of(context).push(
-                fadeRoute((_) => const LessonsIntroScreen()),
-              );
-            } else {
-              pushUnderDevelopment(context, title: user.currentLessonTitle);
-            }
-          },
+      Positioned(
+        left: 332,
+        top: 480,
+        child: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: _navy,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: _navy.withValues(alpha: 0.25),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: const Center(
+            child: Icon(
+              Icons.play_arrow_rounded,
+              color: Colors.white,
+              size: 26,
+            ),
+          ),
         ),
       ),
-    ),
-  ];
+      Positioned(
+        left: 18,
+        top: 464,
+        width: 377,
+        height: 77,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: () {
+              if (user.currentLessonTitle.contains('Measuring Tools')) {
+                Navigator.of(
+                  context,
+                ).push(fadeRoute((_) => const LessonsMeasurementTools()));
+              } else if (user.currentLessonTitle.contains('Introduction')) {
+                Navigator.of(
+                  context,
+                ).push(fadeRoute((_) => const LessonsIntroScreen()));
+              } else {
+                pushUnderDevelopment(context, title: user.currentLessonTitle);
+              }
+            },
+          ),
+        ),
+      ),
+    ];
   }
 
   // --- Category grid ----------------------------------------------------
@@ -546,9 +573,8 @@ class DashboardScreen extends StatelessWidget {
       icon: Icons.menu_book_rounded,
       badgeColor: const Color(0xFF061D3F),
       label: 'LESSONS',
-      onTap: () => Navigator.of(context).push(
-        fadeRoute((_) => const LessonsScreen()),
-      ),
+      onTap: () =>
+          Navigator.of(context).push(fadeRoute((_) => const LessonsScreen())),
     ),
     ..._categoryCard(
       context: context,
@@ -577,9 +603,9 @@ class DashboardScreen extends StatelessWidget {
       badgeColor: const Color(0xFF0284C7),
       label: 'MEASUREMENT\nTOOLS',
       labelFontSize: 11,
-      onTap: () => Navigator.of(context).push(
-        fadeRoute((_) => const LessonsMeasurementTools()),
-      ),
+      onTap: () => Navigator.of(
+        context,
+      ).push(fadeRoute((_) => const LessonsMeasurementTools())),
     ),
     ..._categoryCard(
       context: context,
@@ -589,7 +615,9 @@ class DashboardScreen extends StatelessWidget {
       badgeColor: const Color(0xFFF59E0B),
       label: 'ACHIEVEMENTS',
       labelFontSize: 11,
-      onTap: () => Navigator.of(context).push(fadeRoute((_) => const AchievementsScreen())),
+      onTap: () => Navigator.of(
+        context,
+      ).push(fadeRoute((_) => const AchievementsScreen())),
     ),
     ..._categoryCard(
       context: context,
@@ -619,7 +647,9 @@ class DashboardScreen extends StatelessWidget {
     const circleSize = 42.0;
     const iconSize = 22.0;
     final isDoubleLine = label.contains('\n');
-    final labelTop = isDoubleLine ? top + cardHeight - 34 : top + cardHeight - 26;
+    final labelTop = isDoubleLine
+        ? top + cardHeight - 34
+        : top + cardHeight - 26;
 
     return [
       Positioned(
@@ -695,10 +725,7 @@ class DashboardScreen extends StatelessWidget {
         height: cardHeight,
         child: Material(
           color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(20),
-            onTap: onTap,
-          ),
+          child: InkWell(borderRadius: BorderRadius.circular(20), onTap: onTap),
         ),
       ),
     ];

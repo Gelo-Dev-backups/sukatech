@@ -244,9 +244,9 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
     await UserStore.mutate((user) {
       final newTabs = Map<String, int>.from(user.lessonLastTabs);
       newTabs[_lessonTitle] = 8;
-      
+
       final completed = List<String>.from(user.completedLessonsList);
-      
+
       if (!completed.contains(_lessonTitle)) {
         completed.add(_lessonTitle);
       }
@@ -275,13 +275,14 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
   }
 
   Future<void> _saveProgress(int step, int newTab) async {
-    final completedTabId = 'lesson_02_tab_${_currentTab.toString().padLeft(2, '0')}';
-    
+    final completedTabId =
+        'lesson_02_tab_${_currentTab.toString().padLeft(2, '0')}';
+
     await UserStore.mutate((user) {
       final nextPercent = (step * 100 / _tabCount).round();
       final newTabs = Map<String, int>.from(user.lessonLastTabs);
       newTabs[_lessonTitle] = newTab;
-      
+
       final completedLessonTabs = List<String>.from(user.completedLessonTabs);
       int xpEarned = user.xpEarned;
       if (!completedLessonTabs.contains(completedTabId)) {
@@ -2588,10 +2589,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
               ],
             ),
             child: Table(
-              border: TableBorder.all(
-                color: const Color(0xFFCBD5E1),
-                width: 1,
-              ),
+              border: TableBorder.all(color: const Color(0xFFCBD5E1), width: 1),
               columnWidths: const {
                 0: FlexColumnWidth(1),
                 1: FlexColumnWidth(1),
@@ -2600,9 +2598,7 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
               children: [
                 // Table Header
                 TableRow(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFD1DBEA),
-                  ),
+                  decoration: const BoxDecoration(color: Color(0xFFD1DBEA)),
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(

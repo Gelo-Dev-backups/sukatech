@@ -22,7 +22,9 @@ class AchievementsScreen extends StatelessWidget {
         final unlockedIds = user.unlockedAchievements;
         final totalUnlocked = unlockedIds.length;
         final totalAchievements = AchievementManager.allAchievements.length;
-        final progressPercent = totalAchievements == 0 ? 0.0 : totalUnlocked / totalAchievements;
+        final progressPercent = totalAchievements == 0
+            ? 0.0
+            : totalUnlocked / totalAchievements;
 
         return DesignCanvas(
           width: 409,
@@ -75,10 +77,7 @@ class AchievementsScreen extends StatelessWidget {
                   ),
                   Text(
                     '$totalUnlocked / $totalAchievements Unlocked',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
                   ),
                 ],
               ),
@@ -107,7 +106,11 @@ class AchievementsScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final ach = AchievementManager.allAchievements[index];
                   final isUnlocked = unlockedIds.contains(ach.id);
-                  return _AchievementCard(achievement: ach, isUnlocked: isUnlocked, user: user);
+                  return _AchievementCard(
+                    achievement: ach,
+                    isUnlocked: isUnlocked,
+                    user: user,
+                  );
                 },
               ),
             ),
@@ -145,10 +148,18 @@ class _AchievementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bgColor = isUnlocked ? const Color(0xFFF6F6F6) : Colors.white;
-    final borderColor = isUnlocked ? Colors.black.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.05);
-    final iconBgColor = isUnlocked ? const Color(0xFF0F3260) : Colors.grey.shade300;
-    final iconColor = isUnlocked ? const Color(0xFFFFA500) : Colors.grey.shade500;
-    final titleColor = isUnlocked ? const Color(0xFF061D3F) : Colors.grey.shade600;
+    final borderColor = isUnlocked
+        ? Colors.black.withValues(alpha: 0.12)
+        : Colors.black.withValues(alpha: 0.05);
+    final iconBgColor = isUnlocked
+        ? const Color(0xFF0F3260)
+        : Colors.grey.shade300;
+    final iconColor = isUnlocked
+        ? const Color(0xFFFFA500)
+        : Colors.grey.shade500;
+    final titleColor = isUnlocked
+        ? const Color(0xFF061D3F)
+        : Colors.grey.shade600;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -163,7 +174,7 @@ class _AchievementCard extends StatelessWidget {
                   color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
-                )
+                ),
               ]
             : null,
       ),
@@ -204,7 +215,9 @@ class _AchievementCard extends StatelessWidget {
                     Text(
                       '+${achievement.xpReward} XP',
                       style: TextStyle(
-                        color: isUnlocked ? const Color(0xFF10B981) : Colors.grey.shade500,
+                        color: isUnlocked
+                            ? const Color(0xFF10B981)
+                            : Colors.grey.shade500,
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                       ),
@@ -214,10 +227,7 @@ class _AchievementCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   achievement.description,
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 13,
-                  ),
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -293,7 +303,11 @@ class _Badge extends StatelessWidget {
   final Color color;
   final bool isUnlocked;
 
-  const _Badge({required this.text, required this.color, required this.isUnlocked});
+  const _Badge({
+    required this.text,
+    required this.color,
+    required this.isUnlocked,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -302,7 +316,9 @@ class _Badge extends StatelessWidget {
       decoration: BoxDecoration(
         color: isUnlocked ? color.withValues(alpha: 0.1) : Colors.grey.shade200,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: isUnlocked ? color.withValues(alpha: 0.2) : Colors.transparent),
+        border: Border.all(
+          color: isUnlocked ? color.withValues(alpha: 0.2) : Colors.transparent,
+        ),
       ),
       child: Text(
         text,

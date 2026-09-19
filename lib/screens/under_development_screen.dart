@@ -30,7 +30,10 @@ class UnderDevelopmentScreen extends StatelessWidget {
           top: 60,
           child: IconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+            ),
           ),
         ),
         Positioned(

@@ -132,7 +132,8 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: _progressStep / _tabCount,
-                child: DecoratedBox(
+                child: Container(
+                  height: 11,
                   decoration: BoxDecoration(
                     color: const Color(0xFF05831C),
                     borderRadius: BorderRadius.circular(20),
@@ -246,7 +247,8 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
   }
 
   Future<void> _saveProgress(int step, int newTab) async {
-    final completedTabId = 'lesson_01_tab_${_currentTab.toString().padLeft(2, '0')}';
+    final completedTabId =
+        'lesson_01_tab_${_currentTab.toString().padLeft(2, '0')}';
 
     await UserStore.mutate((user) {
       final nextPercent = (step * 100 / _tabCount).round();
@@ -2731,7 +2733,8 @@ class _ProgressBar extends StatelessWidget {
       child: FractionallySizedBox(
         alignment: Alignment.centerLeft,
         widthFactor: step / tabCount,
-        child: DecoratedBox(
+        child: Container(
+          height: 11,
           decoration: BoxDecoration(
             color: const Color(0xFF05831C),
             borderRadius: BorderRadius.circular(20),
@@ -2854,4 +2857,3 @@ class _IntroButton extends StatelessWidget {
     );
   }
 }
-

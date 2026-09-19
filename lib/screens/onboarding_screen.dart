@@ -33,9 +33,7 @@ class OnboardingScreen extends StatelessWidget {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(prefsKey, true);
     if (!context.mounted) return;
-    Navigator.of(
-      context,
-    ).pushReplacement(fadeRoute((_) => const HomeScreen()));
+    Navigator.of(context).pushReplacement(fadeRoute((_) => const HomeScreen()));
   }
 
   static Future<void> _showUnderConstructionDialog(BuildContext context) async {
@@ -110,10 +108,15 @@ class OnboardingScreen extends StatelessWidget {
             child: Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: 'SUKA', style: _brandTextStyle.copyWith(color: _navy)),
+                  TextSpan(
+                    text: 'SUKA',
+                    style: _brandTextStyle.copyWith(color: _navy),
+                  ),
                   TextSpan(
                     text: 'TECH',
-                    style: _brandTextStyle.copyWith(color: const Color(0xFFFFA500)),
+                    style: _brandTextStyle.copyWith(
+                      color: const Color(0xFFFFA500),
+                    ),
                   ),
                 ],
               ),
@@ -189,7 +192,10 @@ class OnboardingScreen extends StatelessWidget {
                 'lib/assets/images/no wifi.svg',
                 width: 40,
                 height: 36,
-                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                colorFilter: const ColorFilter.mode(
+                  Colors.white,
+                  BlendMode.srcIn,
+                ),
               ),
             ),
           ),
