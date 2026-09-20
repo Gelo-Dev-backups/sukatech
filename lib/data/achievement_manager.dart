@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/sound_service.dart';
 
 import '../main.dart';
 import '../models/achievement.dart';
@@ -235,6 +236,11 @@ class AchievementManager {
   void _showNotifications(List<Achievement> unlocked) {
     final messenger = rootScaffoldMessengerKey.currentState;
     if (messenger == null) return;
+    
+    // Play achievement unlocked sound exactly once per batch
+    if (unlocked.isNotEmpty) {
+      SoundService.instance.playAchievementUnlocked();
+    }
 
     for (final ach in unlocked) {
       messenger.showSnackBar(

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../data/user_store.dart';
+import '../services/sound_service.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
 import '../widgets/quiz_shared_widgets.dart';
@@ -54,6 +55,7 @@ class _ScreenState extends State<Lesson1QuizScreen>
         vsync: this, duration: const Duration(milliseconds: 380));
     _fbScale = CurvedAnimation(parent: _fbCtrl, curve: Curves.elasticOut);
     _prepQ();
+    SoundService.instance.playBackgroundMusic();
   }
 
   void _prepQ() {
@@ -68,6 +70,7 @@ class _ScreenState extends State<Lesson1QuizScreen>
 
   @override
   void dispose() {
+    SoundService.instance.stopBackgroundMusic();
     _fbCtrl.dispose();
     super.dispose();
   }
@@ -78,13 +81,15 @@ class _ScreenState extends State<Lesson1QuizScreen>
     setState(() => _selected = idx);
     _fbCtrl.forward(from: 0);
     if (ok) {
-      _score++;
+      SoundService.instance.playCorrect();
+      _score += 10;
       _consecutive++;
       if (_q.type == _QType.identifyDimension ||
           _q.type == _QType.whatIsMeasured) {
         _dimAnswers.add(_q.choices[_q.correctIndex].toLowerCase());
       }
     } else {
+      SoundService.instance.playWrong();
       _consecutive = 0;
     }
   }
@@ -105,9 +110,11 @@ class _ScreenState extends State<Lesson1QuizScreen>
     setState(() => _sortSubmitted = true);
     _fbCtrl.forward(from: 0);
     if (_sortState!.isAllCorrect) {
-      _score++;
+      SoundService.instance.playCorrect();
+      _score += 10;
       _consecutive++;
     } else {
+      SoundService.instance.playWrong();
       _consecutive = 0;
     }
   }
@@ -126,19 +133,26 @@ class _ScreenState extends State<Lesson1QuizScreen>
 
   Future<void> _finish() async {
     setState(() => _done = true);
-    final perfect = _score == _questions.length;
+    final maxScore = _questions.length * 10;
+    final perfect = _score == maxScore;
+    SoundService.instance.playQuizComplete();
+    
     await UserStore.mutate((user) {
       final tabs = List<String>.from(user.completedLessonTabs);
       int xp = user.xpEarned;
       int quizzes = user.quizzesTaken;
+      
+      bool gainedXp = false;
       if (!tabs.contains(_practiceXpKey)) {
         tabs.add(_practiceXpKey);
         xp += 10;
         quizzes++;
+        gainedXp = true;
       }
       if (perfect && !tabs.contains(_practicePerfectKey)) {
         tabs.add(_practicePerfectKey);
         xp += 10;
+        gainedXp = true;
       }
       int basics = user.correctMeasurementBasics;
       for (final d in _dimAnswers) {
@@ -146,7 +160,12 @@ class _ScreenState extends State<Lesson1QuizScreen>
         if (!tabs.contains(key)) {
           tabs.add(key);
           basics++;
+          gainedXp = true;
         }
+      }
+      
+      if (gainedXp) {
+        SoundService.instance.playGainXp();
       }
       final maxC = _consecutive > user.maxConsecutiveCorrectAnswers
           ? _consecutive
@@ -409,8 +428,9 @@ class _ScreenState extends State<Lesson1QuizScreen>
   }
 
   Widget _resultScreen(BuildContext context) {
-    final accuracy = (_score / _questions.length * 100).round();
-    final isPerfect = _score == _questions.length;
+    final maxScore = _questions.length * 10;
+    final accuracy = (_score / maxScore * 100).round();
+    final isPerfect = _score == maxScore;
     final String msg;
     final Color msgColor;
     if (accuracy >= 90) {
@@ -468,7 +488,7 @@ class _ScreenState extends State<Lesson1QuizScreen>
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          '$_score / ${_questions.length}',
+                          '$_score / ${(_questions.length * 10)}',
                           style: const TextStyle(
                             color: _navy,
                             fontSize: 52,

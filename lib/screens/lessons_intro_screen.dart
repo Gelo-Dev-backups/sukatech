@@ -2512,7 +2512,7 @@ class _LessonImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: Image.asset(
-        'lib/assets/images/learningobj-intro.jpg',
+        'lib/assets/images/learningobj.png',
         width: 357,
         height: 176,
         fit: BoxFit.cover,
