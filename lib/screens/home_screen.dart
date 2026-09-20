@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../assets_manifest.dart';
 import '../navigation/fade_route.dart';
+import '../services/sound_service.dart';
+import '../settings/app_settings.dart';
 import '../widgets/design_canvas.dart';
 import 'dashboard_screen.dart';
 
@@ -35,6 +37,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    // Start BGM if the music volume is above zero.
+    if (AppSettings.musicVolume.value > 0) {
+      SoundService.instance.playBackgroundMusic();
+    }
+    // React live to the Music Volume slider.
+    AppSettings.musicVolume.addListener(_onMusicVolumeToggle);
+
     Future.delayed(_loadingAnimDuration, () {
       _animationDone = true;
       _maybeGoToDashboard();
@@ -60,6 +69,20 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!mounted) return;
     _appAssetsReady = true;
     _maybeGoToDashboard();
+  }
+
+  void _onMusicVolumeToggle() {
+    if (AppSettings.musicVolume.value > 0) {
+      SoundService.instance.playBackgroundMusic();
+    } else {
+      SoundService.instance.stopBackgroundMusic();
+    }
+  }
+
+  @override
+  void dispose() {
+    AppSettings.musicVolume.removeListener(_onMusicVolumeToggle);
+    super.dispose();
   }
 
   void _maybeGoToDashboard() {

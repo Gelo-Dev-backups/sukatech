@@ -8,12 +8,13 @@ import '../widgets/bottom_nav_bar.dart';
 import '../widgets/confirmation_modal.dart';
 import '../widgets/design_canvas.dart';
 import '../widgets/skeleton.dart';
+import 'about_screen.dart';
+import 'edit_profile_screen.dart';
 
-// The learner's profile: stats, avatar and app settings. Dark Mode and
-// Sound read/write AppSettings, so they're real, working toggles — they
-// just aren't wired to an actual theme/audio system yet. Reset Progress is
-// fully functional: it zeroes the on-device user's stats in SQLite behind a
-// confirmation dialog. "1.0.0" is the only remaining placeholder.
+// The learner's profile: stats, avatar, and app settings.
+// musicVolume and sfxVolume read/write AppSettings, so the sliders are real
+// and persist across restarts. Reset Progress is fully functional: it zeroes
+// the on-device user's stats in SQLite behind a confirmation dialog.
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -133,7 +134,9 @@ class ProfileScreen extends StatelessWidget {
       top: 133,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => pushUnderDevelopment(context, title: 'No Edit Profile'),
+        onTap: () => Navigator.of(context).push(
+          fadeRoute((_) => const EditProfileScreen()),
+        ),
         child: Container(
           width: 133,
           height: 32,
@@ -251,51 +254,86 @@ class ProfileScreen extends StatelessWidget {
 
   // --- Settings list -------------------------------------------------
 
+  static const _sectionHeaderStyle = TextStyle(
+    color: Color(0xFF8A94A6),
+    fontSize: 11,
+    fontFamily: 'Montserrat',
+    fontWeight: FontWeight.w700,
+    letterSpacing: 1.2,
+  );
+
   List<Widget> _settingsList(BuildContext context) => [
-    ..._settingsRow(
-      top: 357,
-      label: 'Dark Mode',
-      trailing: ValueListenableBuilder<bool>(
-        valueListenable: AppSettings.darkMode,
-        builder: (context, value, _) => _ToggleSwitch(value: value),
+    // All settings rows live in one Positioned Column so they self-size
+    // and never overlap regardless of how tall each row ends up being.
+    Positioned(
+      left: 14,
+      top: 328,
+      width: 382,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Section header
+          const Padding(
+            padding: EdgeInsets.only(left: 13, bottom: 6),
+            child: Text('SETTINGS', style: _sectionHeaderStyle),
+          ),
+          // Music Volume slider
+          _VolumeSliderRow(
+            icon: Icons.music_note_rounded,
+            label: 'Music Volume',
+            notifier: AppSettings.musicVolume,
+            showDivider: true,
+          ),
+          // SFX Volume slider
+          _VolumeSliderRow(
+            icon: Icons.volume_up_rounded,
+            label: 'Sound Effects',
+            notifier: AppSettings.sfxVolume,
+            showDivider: true,
+          ),
+          // Reset Progress
+          _settingsRow(
+            icon: Icons.refresh_rounded,
+            label: 'Reset Progress',
+            trailing: const Icon(
+              Icons.chevron_right_rounded,
+              color: Color(0xFF8A94A6),
+              size: 22,
+            ),
+            onTap: () => _confirmResetProgress(context),
+          ),
+          // About SUKATECH
+          _settingsRow(
+            icon: Icons.info_outline_rounded,
+            label: 'About SUKATECH',
+            trailing: const Icon(
+              Icons.chevron_right_rounded,
+              color: Color(0xFF8A94A6),
+              size: 22,
+            ),
+            onTap: () => Navigator.of(context).push(
+              fadeRoute((_) => const AboutScreen()),
+            ),
+          ),
+          // App Version (read-only, no divider)
+          _settingsRow(
+            icon: Icons.tag_rounded,
+            label: 'App Version',
+            trailing: const Text(
+              '1.0.0',
+              style: TextStyle(
+                color: Color(0xFF8A94A6),
+                fontSize: 14,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.42,
+              ),
+            ),
+            showDivider: false,
+          ),
+        ],
       ),
-      onTap: () => AppSettings.darkMode.value = !AppSettings.darkMode.value,
-    ),
-    ..._settingsRow(
-      top: 404,
-      label: 'Sound',
-      trailing: ValueListenableBuilder<bool>(
-        valueListenable: AppSettings.soundOn,
-        builder: (context, value, _) => _ToggleSwitch(value: value),
-      ),
-      onTap: () => AppSettings.soundOn.value = !AppSettings.soundOn.value,
-    ),
-    ..._settingsRow(
-      top: 452,
-      label: 'Reset Progress',
-      trailing: const Icon(Icons.restart_alt_rounded, color: _navy, size: 22),
-      onTap: () => _confirmResetProgress(context),
-    ),
-    ..._settingsRow(
-      top: 500,
-      label: 'About SUKATECH',
-      trailing: const Icon(Icons.info_outline_rounded, color: _navy, size: 22),
-      onTap: () => pushUnderDevelopment(context, title: 'No About'),
-    ),
-    ..._settingsRow(
-      top: 548,
-      label: 'App Version',
-      trailing: const Text(
-        '1.0.0',
-        style: TextStyle(
-          color: _navy,
-          fontSize: 14,
-          fontFamily: 'Montserrat',
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.42,
-        ),
-      ),
-      showDivider: false,
     ),
   ];
 
@@ -331,83 +369,177 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  /// One label + trailing control, with a hairline divider under it. All
-  /// five settings rows share this exact shape, just with different
-  /// trailing content (a toggle, an icon, or plain text).
-  static List<Widget> _settingsRow({
-    required double top,
+  /// A single settings row: icon bubble + label + trailing control.
+  /// Returned as a plain Column child — the parent Positioned Column
+  /// handles vertical stacking so rows never overlap.
+  static Widget _settingsRow({
+    required IconData icon,
     required String label,
     required Widget trailing,
     VoidCallback? onTap,
     bool showDivider = true,
-  }) => [
-    if (onTap != null)
-      Positioned(
-        left: 27,
-        top: top - 15,
-        width: 354,
-        height: 44,
-        child: GestureDetector(behavior: HitTestBehavior.opaque, onTap: onTap),
-      ),
-    Positioned(
-      left: 73,
-      top: top,
-      child: SizedBox(
-        width: 220,
-        child: Text(label, style: _settingsLabelStyle),
-      ),
-    ),
-    Positioned(left: 310, top: top - 6, child: trailing),
-    if (showDivider)
-      Positioned(
-        left: 27,
-        top: top + 29,
-        child: Container(width: 354, height: 1, color: _dividerColor),
-      ),
-  ];
-}
-
-/// Purely presentational — the enclosing settings row owns the tap, so
-/// there's exactly one place that flips the value instead of two
-/// overlapping tap handlers that could both fire off a single tap.
-class _ToggleSwitch extends StatelessWidget {
-  const _ToggleSwitch({required this.value});
-
-  final bool value;
-
-  static const _trackWidth = 46.0;
-  static const _trackHeight = 22.0;
-  static const _thumbSize = 18.0;
-  static const _onColor = Color(0xFF05831C);
-  static const _offColor = Color(0xFFEBE9E9);
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        width: _trackWidth,
-        height: _trackHeight,
-        padding: const EdgeInsets.symmetric(horizontal: 2),
-        decoration: BoxDecoration(
-          color: value ? _onColor : _offColor,
-          borderRadius: BorderRadius.circular(_trackHeight),
-          border: Border.all(color: Colors.black.withValues(alpha: 0.12)),
-        ),
-        child: AnimatedAlign(
-          duration: const Duration(milliseconds: 180),
-          curve: Curves.easeInOut,
-          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
-          child: Container(
-            width: _thumbSize,
-            height: _thumbSize,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 13,
+                vertical: 12,
+              ),
+              child: Row(
+                children: [
+                  // Leading icon bubble
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF0F3F8),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(icon, color: _navy, size: 20),
+                  ),
+                  const SizedBox(width: 14),
+                  // Label fills remaining space
+                  Expanded(
+                    child: Text(label, style: _settingsLabelStyle),
+                  ),
+                  // Trailing control (toggle / chevron / text)
+                  trailing,
+                ],
+              ),
             ),
           ),
         ),
-      ),
+        if (showDivider)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 13),
+            child: Container(height: 1, color: _dividerColor),
+          ),
+      ],
+    );
+  }
+}
+
+/// A settings row that shows an icon bubble, a label, and a compact
+/// volume slider wired to a [ValueNotifier<double>].
+class _VolumeSliderRow extends StatelessWidget {
+  const _VolumeSliderRow({
+    required this.icon,
+    required this.label,
+    required this.notifier,
+    this.showDivider = true,
+  });
+
+  final IconData icon;
+  final String label;
+  final ValueNotifier<double> notifier;
+  final bool showDivider;
+
+  static const _navy = Color(0xFF061D3F);
+  static const _dividerColor = Color(0x3D000000);
+  static const _activeColor = Color(0xFF061D3F);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
+          child: Row(
+            children: [
+              // Leading icon bubble
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF0F3F8),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: _navy, size: 20),
+              ),
+              const SizedBox(width: 12),
+              // Label + slider stacked vertically
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      label,
+                      style: const TextStyle(
+                        color: _navy,
+                        fontSize: 14,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    ValueListenableBuilder<double>(
+                      valueListenable: notifier,
+                      builder: (context, value, _) {
+                        return SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            activeTrackColor: _activeColor,
+                            inactiveTrackColor: const Color(0xFFDDE1EA),
+                            thumbColor: _activeColor,
+                            overlayColor: _activeColor.withValues(alpha: 0.12),
+                            trackHeight: 4,
+                            thumbShape: const RoundSliderThumbShape(
+                              enabledThumbRadius: 7,
+                            ),
+                            overlayShape: const RoundSliderOverlayShape(
+                              overlayRadius: 14,
+                            ),
+                          ),
+                          child: SizedBox(
+                            height: 28,
+                            child: Slider(
+                              value: value,
+                              min: 0,
+                              max: 1,
+                              onChanged: (v) => notifier.value = v,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              // Percentage label
+              ValueListenableBuilder<double>(
+                valueListenable: notifier,
+                builder: (context, value, _) => SizedBox(
+                  width: 36,
+                  child: Text(
+                    '${(value * 100).round()}%',
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(
+                      color: Color(0xFF8A94A6),
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (showDivider)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 13),
+            child: Container(height: 1, color: _dividerColor),
+          ),
+      ],
     );
   }
 }

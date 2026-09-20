@@ -57,7 +57,7 @@ class _ScreenState extends State<Lesson3QuizScreen>
         vsync: this, duration: const Duration(milliseconds: 380));
     _fbScale = CurvedAnimation(parent: _fbCtrl, curve: Curves.elasticOut);
     _prepQ();
-    SoundService.instance.playBackgroundMusic();
+    SoundService.instance.enterQuizMusic();
   }
 
   void _prepQ() {
@@ -81,7 +81,7 @@ class _ScreenState extends State<Lesson3QuizScreen>
 
   @override
   void dispose() {
-    SoundService.instance.stopBackgroundMusic();
+    SoundService.instance.exitQuizMusic();
     _fbCtrl.dispose();
     super.dispose();
   }
@@ -547,9 +547,13 @@ class _ScreenState extends State<Lesson3QuizScreen>
       final q = _q as _QCategorySort;
       final cats = q.categories.entries.map((e) {
         Color color;
-        if (e.key.contains('TAPE MEASURE')) color = const Color(0xFF1565C0);
-        else if (e.key.contains('VERNIER CALIPER')) color = const Color(0xFFE65100);
-        else color = const Color(0xFF6A1B9A);
+        if (e.key.contains('TAPE MEASURE')) {
+          color = const Color(0xFF1565C0);
+        } else if (e.key.contains('VERNIER CALIPER')) {
+          color = const Color(0xFFE65100);
+        } else {
+          color = const Color(0xFF6A1B9A);
+        }
         return (name: e.key, color: color, correctItems: e.value);
       }).toList();
 

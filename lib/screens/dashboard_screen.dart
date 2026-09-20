@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../data/achievement_manager.dart';
 import '../data/course_data.dart';
 import '../data/user_store.dart';
 import '../models/user.dart';
@@ -11,6 +12,10 @@ import 'achievements_screen.dart';
 import 'lesson_measurement_tools.dart';
 import 'lessons_intro_screen.dart';
 import 'lessons_screen.dart';
+import 'practice_screen.dart';
+import 'profile_screen.dart';
+import 'quiz_screen.dart';
+import 'unit_converter_screen.dart';
 
 /// Main app landing page, shown after HomeScreen's loading animation.
 class DashboardScreen extends StatelessWidget {
@@ -53,7 +58,7 @@ class DashboardScreen extends StatelessWidget {
           height: 849,
           backgroundColor: Colors.white,
           children: [
-            ..._header(currentUser),
+            ..._header(context, currentUser),
             ..._progressCard(currentUser),
             const Positioned(
               left: 26,
@@ -81,7 +86,7 @@ class DashboardScreen extends StatelessWidget {
 
   // --- Header -------------------------------------------------------
 
-  static List<Widget> _header(AppUser user) => [
+  static List<Widget> _header(BuildContext context, AppUser user) => [
     Positioned(
       left: 0,
       top: 0,
@@ -121,13 +126,20 @@ class DashboardScreen extends StatelessWidget {
         ),
       ),
     ),
-    const Positioned(
+    Positioned(
       left: 346,
       top: 64,
-      child: SizedBox(
-        width: 34,
-        height: 34,
-        child: Icon(Icons.settings_rounded, color: Colors.white, size: 28),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(17),
+          onTap: () => Navigator.of(context).push(fadeRoute((_) => const ProfileScreen())),
+          child: const SizedBox(
+            width: 34,
+            height: 34,
+            child: Icon(Icons.person_rounded, color: Colors.white, size: 28),
+          ),
+        ),
       ),
     ),
   ];
@@ -136,20 +148,17 @@ class DashboardScreen extends StatelessWidget {
 
   static List<Widget> _progressCard(AppUser user) {
     final totalLessons = CourseData.totalLessons;
-    // Completed lessons contribute 100 points each.
-    // The active lesson contributes its partial percent as points,
-    // but only if it is NOT already in completedLessonsList (avoid double-count).
-    final int completedPoints = user.completedLessonsList.length * 100;
-    final bool currentAlreadyDone = user.completedLessonsList.contains(
-      user.currentLessonTitle,
-    );
-    final int partialPoints = currentAlreadyDone
-        ? 0
-        : user.currentLessonProgressPercent;
-    final int calculatedProgress =
-        ((completedPoints + partialPoints) / (totalLessons * 100) * 100)
-            .clamp(0, 100)
-            .toInt();
+    const totalQuizzes = 6;
+    final totalAchievements = AchievementManager.allAchievements.length;
+
+    final bool currentAlreadyDone = user.completedLessonsList.contains(user.currentLessonTitle);
+    final double partialLesson = currentAlreadyDone ? 0 : (user.currentLessonProgressPercent / 100.0);
+
+    final double lessonsScore = ((user.completedLessonsList.length + partialLesson) / totalLessons) * 50;
+    final double quizzesScore = (user.quizzesTaken / totalQuizzes) * 40;
+    final double achievementsScore = (user.unlockedAchievements.length / totalAchievements) * 10;
+
+    final int calculatedProgress = (lessonsScore + quizzesScore + achievementsScore).clamp(0, 100).toInt();
 
     return [
       Positioned(
@@ -276,6 +285,7 @@ class DashboardScreen extends StatelessWidget {
       valueLeft: 63,
       label: 'Lessons Completed',
       labelLeft: 26,
+      onTap: () => Navigator.of(context).push(fadeRoute((_) => const LessonsScreen())),
     ),
     ..._statBadge(
       context: context,
@@ -287,6 +297,7 @@ class DashboardScreen extends StatelessWidget {
       valueLeft: 197,
       label: 'Quizzes Passed',
       labelLeft: 168,
+      onTap: () => Navigator.of(context).push(fadeRoute((_) => const QuizScreen())),
     ),
     ..._statBadge(
       context: context,
@@ -298,6 +309,7 @@ class DashboardScreen extends StatelessWidget {
       valueLeft: 319,
       label: 'XP Earned',
       labelLeft: 312,
+      onTap: () => Navigator.of(context).push(fadeRoute((_) => const AchievementsScreen())),
     ),
   ];
 
@@ -313,6 +325,7 @@ class DashboardScreen extends StatelessWidget {
     required double valueLeft,
     required String label,
     required double labelLeft,
+    VoidCallback? onTap,
   }) {
     const cardTop = 304.0;
     const cardSize = 116.0;
@@ -381,7 +394,7 @@ class DashboardScreen extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(20),
-            onTap: () => pushUnderDevelopment(context, title: 'No $label'),
+            onTap: onTap ?? () => pushUnderDevelopment(context, title: 'No $label'),
           ),
         ),
       ),
@@ -583,7 +596,8 @@ class DashboardScreen extends StatelessWidget {
       icon: Icons.architecture_rounded,
       badgeColor: const Color(0xFFD97706),
       label: 'PRACTICE',
-      onTap: () => pushUnderDevelopment(context, title: 'Practice'),
+      onTap: () =>
+          Navigator.of(context).push(fadeRoute((_) => const PracticeScreen())),
     ),
     ..._categoryCard(
       context: context,
@@ -593,19 +607,19 @@ class DashboardScreen extends StatelessWidget {
       badgeColor: const Color(0xFF7C3AED),
       label: 'QUIZ',
       labelFontSize: 16,
-      onTap: () => pushUnderDevelopment(context, title: 'Quiz'),
+      onTap: () => Navigator.of(context).push(fadeRoute((_) => const QuizScreen())),
     ),
     ..._categoryCard(
       context: context,
       left: 15,
       top: 658,
-      icon: Icons.square_foot_rounded,
+      icon: Icons.sync_alt_rounded,
       badgeColor: const Color(0xFF0284C7),
-      label: 'MEASUREMENT\nTOOLS',
-      labelFontSize: 11,
+      label: 'CONVERSION',
+      labelFontSize: 12,
       onTap: () => Navigator.of(
         context,
-      ).push(fadeRoute((_) => const LessonsMeasurementTools())),
+      ).push(fadeRoute((_) => const UnitConverterScreen())),
     ),
     ..._categoryCard(
       context: context,
@@ -617,16 +631,16 @@ class DashboardScreen extends StatelessWidget {
       labelFontSize: 11,
       onTap: () => Navigator.of(
         context,
-      ).pushReplacement(fadeRoute((_) => const AchievementsScreen())),
+      ).push(fadeRoute((_) => const AchievementsScreen())),
     ),
     ..._categoryCard(
       context: context,
       left: 279,
       top: 658,
-      icon: Icons.settings_rounded,
+      icon: Icons.person_rounded,
       badgeColor: const Color(0xFF64748B),
-      label: 'SETTINGS',
-      onTap: () => pushUnderDevelopment(context, title: 'Settings'),
+      label: 'PROFILE',
+      onTap: () => Navigator.of(context).push(fadeRoute((_) => const ProfileScreen())),
     ),
   ];
 

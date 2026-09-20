@@ -20,36 +20,42 @@ class LessonsScreen extends StatelessWidget {
   static const _lessons = [
     (
       title: 'Introduction to\nMeasurement',
+      dbTitle: 'Lesson 1: Introduction to Measurement',
       duration: '10 MIN',
       difficulty: 'Easy',
       icon: Icons.menu_book_rounded,
     ),
     (
       title: 'Measuring Tools',
+      dbTitle: 'Lesson 2: Measuring Tools',
       duration: '10 MIN',
       difficulty: 'Easy',
       icon: Icons.square_foot_rounded,
     ),
     (
       title: 'Parts and\nFunctions',
+      dbTitle: 'Lesson 3: Parts and Functions',
       duration: '10 MIN',
       difficulty: 'Medium',
       icon: Icons.widgets_rounded,
     ),
     (
       title: 'Reading\nMeasurements',
+      dbTitle: 'Lesson 4: Reading Measurements',
       duration: '10 MIN',
       difficulty: 'Medium',
       icon: Icons.straighten_rounded,
     ),
     (
       title: 'Unit\nConversion',
+      dbTitle: 'Unit Conversion',
       duration: '10 MIN',
       difficulty: 'Hard',
       icon: Icons.sync_alt_rounded,
     ),
     (
       title: 'Measurement\nCalculations',
+      dbTitle: 'Measurement Calculations',
       duration: '10 MIN',
       difficulty: 'Hard',
       icon: Icons.functions_rounded,
@@ -126,7 +132,7 @@ class LessonsScreen extends StatelessWidget {
             context,
             index,
             _lessons[index],
-            user?.completedLessonsList.contains(_lessons[index].title.replaceAll('\n', ' ')) ?? false,
+            user?.completedLessonsList.contains(_lessons[index].dbTitle) ?? false,
           ),
         const DashboardBottomNavBar(currentTab: DashboardTab.lesson),
       ],
@@ -138,7 +144,7 @@ class LessonsScreen extends StatelessWidget {
   Widget _lessonCard(
     BuildContext context,
     int index,
-    ({String title, String duration, String difficulty, IconData icon}) lesson,
+    ({String title, String dbTitle, String duration, String difficulty, IconData icon}) lesson,
     bool isCompleted,
   ) {
     final top = 142.0 + (index * 102.0);
@@ -157,9 +163,8 @@ class LessonsScreen extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () {
-            final flatTitle = lesson.title.replaceAll('\n', ' ');
             UserStore.mutate(
-              (user) => user.copyWith(currentLessonTitle: flatTitle),
+              (user) => user.copyWith(currentLessonTitle: lesson.dbTitle),
             );
 
             if (index == 0) {
@@ -198,7 +203,7 @@ class LessonsScreen extends StatelessWidget {
               ).push(fadeRoute((_) => const LessonsMeasurementCalculations()));
               return;
             }
-            pushUnderDevelopment(context, title: flatTitle);
+            pushUnderDevelopment(context, title: lesson.title.replaceAll('\n', ' '));
           },
           child: Container(
             width: 377,

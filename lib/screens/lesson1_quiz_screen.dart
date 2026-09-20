@@ -1,4 +1,4 @@
-import 'dart:math';
+﻿import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -55,7 +55,7 @@ class _ScreenState extends State<Lesson1QuizScreen>
         vsync: this, duration: const Duration(milliseconds: 380));
     _fbScale = CurvedAnimation(parent: _fbCtrl, curve: Curves.elasticOut);
     _prepQ();
-    SoundService.instance.playBackgroundMusic();
+    SoundService.instance.enterQuizMusic();
   }
 
   void _prepQ() {
@@ -70,7 +70,7 @@ class _ScreenState extends State<Lesson1QuizScreen>
 
   @override
   void dispose() {
-    SoundService.instance.stopBackgroundMusic();
+    SoundService.instance.exitQuizMusic();
     _fbCtrl.dispose();
     super.dispose();
   }
