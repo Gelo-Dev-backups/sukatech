@@ -167,25 +167,10 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
             ),
           ),
         ),
-        const Positioned(left: 28, top: 266, child: _LessonImage()),
+        const Positioned(left: 25, top: 248, child: _LessonImage()),
         const Positioned(
-          left: 31,
-          top: 459,
-          child: Text(
-            'Learning Objective',
-            style: TextStyle(
-              color: _navy,
-              fontSize: 16,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.w700,
-              height: 1.25,
-              letterSpacing: 0.48,
-            ),
-          ),
-        ),
-        const Positioned(
-          left: 31,
-          top: 485,
+          left: 28,
+          top: 467,
           child: SizedBox(
             width: 345,
             child: Text(
@@ -207,8 +192,19 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           child: SizedBox(width: 354, child: Divider(color: Color(0x3A000000))),
         ),
         Positioned(
-          left: 270,
-          top: 681,
+          left: 81,
+          top: 678,
+          child: _IntroButton(
+            label: 'PRACTICE',
+            backgroundColor: _accent,
+            foregroundColor: _navy,
+            disabled: false,
+            onPressed: () => pushUnderDevelopment(context, title: 'Practice'),
+          ),
+        ),
+        Positioned(
+          left: 207,
+          top: 678,
           child: _IntroButton(
             label: 'NEXT',
             backgroundColor: _navy,
@@ -373,25 +369,17 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           child: SizedBox(width: 354, child: Divider(color: Color(0x3A000000))),
         ),
         const Positioned(
-          left: 34,
+          left: 25,
           top: 205,
           child: Text(
             'What is Carpentry Measurement?',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: _navy,
-              fontSize: 19,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.w700,
-              height: 1.05,
-              letterSpacing: 0.57,
-            ),
+            style: _sectionTitleStyle,
           ),
         ),
-        const Positioned(left: 137, top: 242, child: _MeasurementImage()),
+        const Positioned(left: 112, top: 222, child: _MeasurementImage()),
         const Positioned(
-          left: 27,
-          top: 368,
+          left: 26,
+          top: 362,
           child: SizedBox(
             width: 383,
             child: Text.rich(
@@ -399,25 +387,12 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
                 children: [
                   TextSpan(
                     text: 'Carpentry measurement',
-                    style: TextStyle(
-                      color: _navy,
-                      fontSize: 15,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w700,
-                      height: 1.33,
-                      letterSpacing: 0.45,
-                    ),
+                    style: _sectionBodyBoldStyle,
                   ),
                   TextSpan(
-                    text: ' is the process of finding the size or dimensions of materials and objects used in carpentry.',
-                    style: TextStyle(
-                      color: _navy,
-                      fontSize: 15,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w400,
-                      height: 1.33,
-                      letterSpacing: 0.45,
-                    ),
+                    text:
+                        ' is the process of finding the size or dimensions of materials and objects used in carpentry.',
+                    style: _bodyStyle,
                   ),
                 ],
               ),
@@ -426,51 +401,28 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
         ),
         const Positioned(
           left: 28,
-          top: 434,
+          top: 428,
           child: SizedBox(
-            width: 342,
+            width: 367,
             child: Text(
               'Carpentry measurement is the process of finding the size or dimensions of materials and objects used in carpentry.',
-              style: TextStyle(
-                color: _navy,
-                fontSize: 15,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w400,
-                height: 1.33,
-                letterSpacing: 0.45,
-              ),
+              style: _bodyStyle,
             ),
           ),
         ),
         const Positioned(
-          left: 26,
-          top: 502,
+          left: 25,
+          top: 496,
           child: SizedBox(
-            width: 362,
+            width: 340,
             child: Text.rich(
               TextSpan(
                 children: [
+                  TextSpan(text: 'Example:\n', style: _exampleStyle),
                   TextSpan(
-                    text: 'Example:\n',
-                    style: TextStyle(
-                      color: _navy,
-                      fontSize: 15,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w800,
-                      height: 0.60,
-                      letterSpacing: -0.15,
-                    ),
-                  ),
-                  TextSpan(
-                    text: 'If a carpenter needs a piece of wood that is 2 meters long, the carpenter must measure the wood accurately before cutting it.',
-                    style: TextStyle(
-                      color: _navy,
-                      fontSize: 15,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      height: 1.33,
-                      letterSpacing: 0.45,
-                    ),
+                    text:
+                        'If a carpenter needs a piece of wood that is 2 meters long, the carpenter must measure the wood accurately before cutting it.',
+                    style: _bodyStyle,
                   ),
                 ],
               ),
@@ -485,27 +437,10 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
             child: Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(
-                    text: 'REMEMBER : \n',
-                    style: TextStyle(
-                      color: _navy,
-                      fontSize: 15,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w800,
-                      height: 0.60,
-                      letterSpacing: -0.15,
-                    ),
-                  ),
+                  TextSpan(text: 'REMEMBER:\n', style: _exampleStyle),
                   TextSpan(
                     text: 'Measure first before you cut!',
-                    style: TextStyle(
-                      color: _navy,
-                      fontSize: 15,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      height: 1.33,
-                      letterSpacing: 0.45,
-                    ),
+                    style: _bodyStyle,
                   ),
                 ],
               ),
@@ -515,7 +450,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
         ),
         const Positioned(
           left: 28,
-          top: 665,
+          top: 655,
           child: SizedBox(width: 354, child: Divider(color: Color(0x3A000000))),
         ),
         Positioned(
@@ -527,6 +462,16 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
             foregroundColor: _navy,
             borderColor: _navy,
             onPressed: () => _selectTab(0),
+          ),
+        ),
+        Positioned(
+          left: 144,
+          top: 681,
+          child: _IntroNavButton(
+            label: 'PRACTICE',
+            backgroundColor: _accent,
+            foregroundColor: _navy,
+            onPressed: () => pushUnderDevelopment(context, title: 'Practice'),
           ),
         ),
         Positioned(
