@@ -2264,42 +2264,6 @@ class _LessonsMeasurementCalculationsState
             ),
           ),
         ),
-        if (_currentTab == _tabCount - 1)
-          Positioned(
-            left: 144,
-            top: 681,
-            child: Semantics(
-              button: true,
-              label: 'Practice',
-              child: InkWell(
-                borderRadius: BorderRadius.circular(20),
-                onTap: () {},
-                child: Container(
-                  width: 122,
-                  height: 48,
-                  decoration: ShapeDecoration(
-                    color: const Color(0xFFFFA500),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'PRACTICE',
-                      style: TextStyle(
-                        color: _navy,
-                        fontSize: 16,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w700,
-                        height: 1.25,
-                        letterSpacing: 0.48,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
         if (_currentTab > 0)
           Positioned(
             left: 28,

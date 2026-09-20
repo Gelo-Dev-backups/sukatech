@@ -7,6 +7,9 @@ import '../widgets/design_canvas.dart';
 import 'lesson1_quiz_screen.dart';
 import 'lesson2_quiz_screen.dart';
 import 'lesson3_quiz_screen.dart';
+import 'lesson4_quiz_screen.dart';
+import 'lesson5_quiz_screen.dart';
+import 'lesson6_quiz_screen.dart';
 
 class QuizScreen extends StatelessWidget {
   const QuizScreen({super.key});
@@ -158,6 +161,21 @@ class QuizScreen extends StatelessWidget {
               Navigator.of(
                 context,
               ).push(fadeRoute((_) => const Lesson3QuizScreen()));
+              return;
+            } else if (index == 3) {
+              Navigator.of(
+                context,
+              ).push(fadeRoute((_) => const Lesson4QuizScreen()));
+              return;
+            } else if (index == 4) {
+              Navigator.of(
+                context,
+              ).push(fadeRoute((_) => const Lesson5QuizScreen()));
+              return;
+            } else if (index == 5) {
+              Navigator.of(
+                context,
+              ).push(fadeRoute((_) => const Lesson6QuizScreen()));
               return;
             }
             // TODO: Route to specific quiz screens once implemented

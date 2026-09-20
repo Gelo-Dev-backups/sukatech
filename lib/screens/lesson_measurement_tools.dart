@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../data/user_store.dart';
-import '../navigation/fade_route.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
 
@@ -480,20 +479,40 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
           ),
         ),
 
-        // Objective bullet points
+        // Objective text
         const Positioned(
           left: 28,
           top: 467,
           child: SizedBox(
             width: 354,
             child: Text(
-              'At the end of this lesson, learners should be able to:\n\n• Identify common measuring tools.\n• Tell the function of each tool.\n• Choose the correct tool for a task.\n• Use measuring tools safely.',
+              'At the end of this lesson, learners should be able to:\n',
               style: TextStyle(
                 color: _navy,
                 fontSize: 15,
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.w600,
                 height: 1.33,
+                letterSpacing: 0.45,
+              ),
+            ),
+          ),
+        ),
+
+        // Objective bullet points
+        const Positioned(
+          left: 38,
+          top: 477,
+          child: SizedBox(
+            width: 340,
+            child: Text(
+              '\n1. Identify common measuring tools.\n2. Tell the function of each tool.\n3. Choose the correct tool for a task.\n4. Use measuring tools safely.',
+              style: TextStyle(
+                color: _navy,
+                fontSize: 15,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w500,
+                height: 2.0,
                 letterSpacing: 0.45,
               ),
             ),
@@ -2895,19 +2914,6 @@ class _LessonsMeasurementToolsState extends State<LessonsMeasurementTools> {
             borderColor: _navy,
             disabled: _saving,
             onPressed: () => _selectTab(7),
-          ),
-        ),
-
-        // PRACTICE button
-        Positioned(
-          left: 144,
-          top: 681,
-          child: _IntroNavButton(
-            label: 'PRACTICE',
-            backgroundColor: const Color(0xFFFFA500),
-            foregroundColor: _navy,
-            disabled: _saving,
-            onPressed: () => pushUnderDevelopment(context, title: 'Practice'),
           ),
         ),
 

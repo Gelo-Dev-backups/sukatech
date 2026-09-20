@@ -400,7 +400,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           ),
         ),
         const Positioned(
-          left: 27,
+          left: 28,
           top: 428,
           child: SizedBox(
             width: 367,
@@ -414,7 +414,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           left: 25,
           top: 496,
           child: SizedBox(
-            width: 362,
+            width: 340,
             child: Text.rich(
               TextSpan(
                 children: [
@@ -562,7 +562,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           left: 28,
           top: 333,
           child: SizedBox(
-            width: 371,
+            width: 340,
             child: Text(
               'Mensuration is the process of measuring the size, length, area, volume, or other dimensions of an object.',
               style: _bodyStyle,
@@ -570,10 +570,10 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           ),
         ),
         const Positioned(
-          left: 30,
+          left: 28,
           top: 399,
           child: SizedBox(
-            width: 371,
+            width: 340,
             child: Text(
               'In carpentry, mensuration is important because carpenters need to determine the correct dimensions of materials and structures.',
               style: _bodyStyle,
@@ -581,10 +581,10 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           ),
         ),
         const Positioned(
-          left: 27,
+          left: 28,
           top: 478,
           child: SizedBox(
-            width: 362,
+            width: 340,
             child: Text.rich(
               TextSpan(
                 children: [
@@ -603,7 +603,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           left: 24,
           top: 620,
           child: SizedBox(
-            width: 362,
+            width: 340,
             child: Text(
               'Mensuration = measuring things and finding their dimensions.',
               textAlign: TextAlign.center,
@@ -889,7 +889,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           ),
         ),
         const Positioned(
-          left: 34,
+          left: 28,
           top: 537,
           child: SizedBox(
             width: 341,
@@ -1017,7 +1017,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           ),
         ),
         const Positioned(
-          left: 30,
+          left: 28,
           top: 253,
           child: SizedBox(
             width: 341,
@@ -1028,7 +1028,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           ),
         ),
         const Positioned(
-          left: 34,
+          left: 28,
           top: 314,
           child: SizedBox(
             width: 341,
@@ -1041,7 +1041,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
         ),
         const Positioned(left: 229, top: 347, child: _LengthTermsImage()),
         const Positioned(
-          left: 30,
+          left: 28,
           top: 352,
           child: SizedBox(
             width: 189,
@@ -1052,7 +1052,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           ),
         ),
         const Positioned(
-          left: 30,
+          left: 28,
           top: 428,
           child: SizedBox(
             width: 335,
@@ -1230,7 +1230,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           ),
         ),
         const Positioned(
-          left: 34,
+          left: 28,
           top: 264,
           child: SizedBox(
             width: 341,
@@ -1243,7 +1243,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
         ),
         const Positioned(left: 195, top: 305, child: _HeightTermsImage()),
         const Positioned(
-          left: 30,
+          left: 28,
           top: 302,
           child: SizedBox(
             width: 189,
@@ -1266,7 +1266,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           ),
         ),
         const Positioned(
-          left: 30,
+          left: 28,
           top: 378,
           child: SizedBox(
             width: 335,
@@ -1622,7 +1622,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           ),
         ),
         const Positioned(
-          left: 30,
+          left: 28,
           top: 296,
           child: SizedBox(
             width: 192,
@@ -1642,7 +1642,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           ),
         ),
         const Positioned(
-          left: 30,
+          left: 28,
           top: 508,
           child: SizedBox(
             width: 192,
@@ -1654,7 +1654,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
         ),
         const Positioned(left: 218, top: 508, child: _CentimeterImage()),
         const Positioned(
-          left: 30,
+          left: 28,
           top: 402,
           child: SizedBox(
             width: 335,
@@ -2021,7 +2021,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
         ),
         Positioned(left: 212, top: 322, child: const _InchImage()),
         const Positioned(
-          left: 30,
+          left: 28,
           top: 383,
           child: SizedBox(
             width: 335,
@@ -2047,7 +2047,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           ),
         ),
         const Positioned(
-          left: 30,
+          left: 28,
           top: 508,
           child: SizedBox(
             width: 192,
@@ -2059,7 +2059,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
         ),
         Positioned(left: 222, top: 521, child: const _FootImage()),
         const Positioned(
-          left: 30,
+          left: 28,
           top: 601,
           child: SizedBox(
             width: 335,
@@ -2260,7 +2260,7 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
           ),
         ),
         const Positioned(
-          left: 36,
+          left: 28,
           top: 618,
           child: SizedBox(
             width: 327,
@@ -2295,16 +2295,6 @@ class _LessonsIntroScreenState extends State<LessonsIntroScreen> {
             foregroundColor: _navy,
             borderColor: _navy,
             onPressed: () => _selectTab(10),
-          ),
-        ),
-        Positioned(
-          left: 144,
-          top: 681,
-          child: _IntroNavButton(
-            label: 'PRACTICE_FINAL',
-            backgroundColor: _accent,
-            foregroundColor: _navy,
-            onPressed: () => pushUnderDevelopment(context, title: 'Practice'),
           ),
         ),
         Positioned(

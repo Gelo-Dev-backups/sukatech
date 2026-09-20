@@ -4805,42 +4805,6 @@ class _LessonsReadingMeasurementsState
           ),
         ),
         Positioned(
-          left: 144,
-          top: 681,
-          child: Semantics(
-            button: true,
-            child: InkWell(
-              onTap: () {
-                // TODO: Implement PRACTICE navigation
-              },
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                width: 122,
-                height: 48,
-                decoration: ShapeDecoration(
-                  color: const Color(0xFFFFA500),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Center(
-                  child: Text(
-                    'PRACTICE',
-                    style: TextStyle(
-                      color: _navy,
-                      fontSize: 16,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w700,
-                      height: 1.25,
-                      letterSpacing: 0.48,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-        Positioned(
           left: 270,
           top: 681,
           child: Semantics(
