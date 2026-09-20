@@ -58,10 +58,13 @@ class LessonsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DesignCanvas(
-      width: 409,
-      height: 849,
-      backgroundColor: Colors.white,
+    return ValueListenableBuilder(
+      valueListenable: UserStore.current,
+      builder: (context, user, child) {
+        return DesignCanvas(
+          width: 409,
+          height: 849,
+          backgroundColor: Colors.white,
       children: [
         const Positioned(
           left: 0,
@@ -119,9 +122,16 @@ class LessonsScreen extends StatelessWidget {
           ),
         ),
         for (var index = 0; index < _lessons.length; index++)
-          _lessonCard(context, index, _lessons[index]),
+          _lessonCard(
+            context,
+            index,
+            _lessons[index],
+            user?.completedLessonsList.contains(_lessons[index].title.replaceAll('\n', ' ')) ?? false,
+          ),
         const DashboardBottomNavBar(currentTab: DashboardTab.lesson),
       ],
+        );
+      },
     );
   }
 
@@ -129,6 +139,7 @@ class LessonsScreen extends StatelessWidget {
     BuildContext context,
     int index,
     ({String title, String duration, String difficulty, IconData icon}) lesson,
+    bool isCompleted,
   ) {
     final top = 142.0 + (index * 102.0);
     final difficultyColor = lesson.difficulty == 'Easy'
@@ -280,6 +291,11 @@ class LessonsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (isCompleted)
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Icon(Icons.check_circle_rounded, color: Colors.green, size: 28),
+                  ),
                 const Icon(
                   Icons.arrow_forward_ios_rounded,
                   color: _navy,

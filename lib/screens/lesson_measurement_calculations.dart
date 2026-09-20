@@ -5,7 +5,8 @@ import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
 
 class LessonsMeasurementCalculations extends StatefulWidget {
-  const LessonsMeasurementCalculations({super.key});
+  final int initialTab;
+  const LessonsMeasurementCalculations({super.key, this.initialTab = 0});
 
   @override
   State<LessonsMeasurementCalculations> createState() =>
@@ -18,14 +19,31 @@ class _LessonsMeasurementCalculationsState
   static const _navy = Color(0xFF061D3F);
   static const _lessonTitle = 'Measurement Calculations';
 
-  int _currentTab = 0;
+  late int _currentTab;
   bool _saving = false;
 
   int get _progressStep => _currentTab + 1;
 
+  @override
+  void initState() {
+    super.initState();
+    final savedTab = UserStore.current.value?.lessonLastTabs[_lessonTitle];
+    final restoredTab = savedTab ?? widget.initialTab;
+    _currentTab = restoredTab.clamp(0, _tabCount - 1);
+  }
+
   void _selectTab(int index) {
     setState(() {
-      _currentTab = index;
+      _currentTab = index.clamp(0, _tabCount - 1);
+    });
+    _persistActiveTab(_currentTab);
+  }
+
+  Future<void> _persistActiveTab(int tab) async {
+    await UserStore.mutate((user) {
+      final newTabs = Map<String, int>.from(user.lessonLastTabs);
+      newTabs[_lessonTitle] = tab;
+      return user.copyWith(lessonLastTabs: newTabs);
     });
   }
 
