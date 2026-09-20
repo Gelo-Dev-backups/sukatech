@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../data/user_store.dart';
 import '../widgets/bottom_nav_bar.dart';
+import '../widgets/practice_shared_widgets.dart';
 
 part 'lesson1_practice_data.dart';
 part 'lesson1_practice_widgets.dart';
@@ -315,7 +316,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                             onAssign: _onAssign,
                           )
                         else
-                          _Choices(
+                          PracticeChoices(
                             choices: q.choices,
                             correctIndex: q.correctIndex,
                             selected: _selected,
@@ -324,7 +325,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                         if (q.type == _QType.metricVsEnglish &&
                             !_sortSubmitted) ...[
                           const SizedBox(height: 14),
-                          _SubmitBtn(
+                          PracticeSubmitBtn(
                             enabled: _sortState!.isComplete,
                             onTap: _submitSort,
                           ),
@@ -333,7 +334,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                         if (_answered)
                           ScaleTransition(
                             scale: _fbScale,
-                            child: _FeedbackPanel(
+                            child: PracticeFeedbackPanel(
                               isCorrect: q.type == _QType.metricVsEnglish
                                   ? _sortState!.isAllCorrect
                                   : _selected == q.correctIndex,
@@ -342,7 +343,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                           ),
                         if (_answered) const SizedBox(height: 12),
                         if (_answered)
-                          _NextBtn(
+                          PracticeNextBtn(
                             isLast: _index == _questions.length - 1,
                             onTap: _next,
                           ),
@@ -487,7 +488,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                         Row(
                           children: [
                             Expanded(
-                              child: _ResultChip(
+                              child: PracticeResultChip(
                                 label: 'Accuracy',
                                 value: '$accuracy%',
                                 color: accuracy >= 70 ? _green : _red,
@@ -495,7 +496,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                             ),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: _ResultChip(
+                              child: PracticeResultChip(
                                 label: 'XP Earned',
                                 value: '+${isPerfect ? 20 : 10} XP',
                                 color: _accent,
@@ -526,14 +527,14 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                           ),
                         ),
                         const SizedBox(height: 20),
-                        _PrimaryBtn(
+                        PracticePrimaryBtn(
                           label: 'TRY AGAIN',
                           bgColor: _navy,
                           fgColor: Colors.white,
                           onTap: _restart,
                         ),
                         const SizedBox(height: 10),
-                        _PrimaryBtn(
+                        PracticePrimaryBtn(
                           label: 'BACK TO PRACTICE',
                           bgColor: Colors.white,
                           fgColor: _navy,
