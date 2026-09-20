@@ -10,7 +10,7 @@ import '../widgets/design_canvas.dart';
 import '../widgets/skeleton.dart';
 import 'achievements_screen.dart';
 import 'lesson_measurement_tools.dart';
-import 'lessons_intro_screen.dart';
+import 'lessons_introduction_screen.dart';
 import 'lessons_screen.dart';
 import 'practice_screen.dart';
 import 'profile_screen.dart';

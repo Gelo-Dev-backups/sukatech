@@ -7,7 +7,7 @@ import 'lesson_parts_and_functions.dart';
 import 'lesson_reading_measurements.dart';
 import 'lesson_measurement_calculations.dart';
 import 'lesson_unit_conversion.dart';
-import 'lessons_intro_screen.dart';
+import 'lessons_introduction_screen.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
 
@@ -21,42 +21,42 @@ class LessonsScreen extends StatelessWidget {
     (
       title: 'Introduction to\nMeasurement',
       dbTitle: 'Lesson 1: Introduction to Measurement',
-      duration: '10 MIN',
+      pages: '12 PAGES',
       difficulty: 'Easy',
       icon: Icons.menu_book_rounded,
     ),
     (
       title: 'Measuring Tools',
       dbTitle: 'Lesson 2: Measuring Tools',
-      duration: '10 MIN',
+      pages: '8 PAGES',
       difficulty: 'Easy',
       icon: Icons.square_foot_rounded,
     ),
     (
       title: 'Parts and\nFunctions',
       dbTitle: 'Lesson 3: Parts and Functions',
-      duration: '10 MIN',
+      pages: '8 PAGES',
       difficulty: 'Medium',
       icon: Icons.widgets_rounded,
     ),
     (
       title: 'Reading\nMeasurements',
       dbTitle: 'Lesson 4: Reading Measurements',
-      duration: '10 MIN',
+      pages: '11 PAGES',
       difficulty: 'Medium',
       icon: Icons.straighten_rounded,
     ),
     (
       title: 'Unit\nConversion',
       dbTitle: 'Unit Conversion',
-      duration: '10 MIN',
+      pages: '10 PAGES',
       difficulty: 'Hard',
       icon: Icons.sync_alt_rounded,
     ),
     (
       title: 'Measurement\nCalculations',
       dbTitle: 'Measurement Calculations',
-      duration: '10 MIN',
+      pages: '12 PAGES',
       difficulty: 'Hard',
       icon: Icons.functions_rounded,
     ),
@@ -71,71 +71,72 @@ class LessonsScreen extends StatelessWidget {
           width: 409,
           height: 849,
           backgroundColor: Colors.white,
-      children: [
-        const Positioned(
-          left: 0,
-          top: 0,
-          child: SizedBox(
-            width: 409,
-            height: 122,
-            child: DecoratedBox(decoration: BoxDecoration(color: _navy)),
-          ),
-        ),
-        Positioned(
-          left: 18,
-          top: 56,
-          child: Navigator.of(context).canPop()
-              ? IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                )
-              : const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.menu_book_rounded,
-                    color: Colors.white,
-                    size: 28,
-                  ),
-                ),
-        ),
-        const Positioned(
-          left: 0,
-          right: 0,
-          top: 68,
-          child: Text(
-            'Lessons',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.60,
+          children: [
+            const Positioned(
+              left: 0,
+              top: 0,
+              child: SizedBox(
+                width: 409,
+                height: 122,
+                child: DecoratedBox(decoration: BoxDecoration(color: _navy)),
+              ),
             ),
-          ),
-        ),
-        const Positioned(
-          right: 28,
-          top: 62,
-          child: Icon(
-            Icons.local_library_rounded,
-            color: Colors.white,
-            size: 32,
-          ),
-        ),
-        for (var index = 0; index < _lessons.length; index++)
-          _lessonCard(
-            context,
-            index,
-            _lessons[index],
-            user?.completedLessonsList.contains(_lessons[index].dbTitle) ?? false,
-          ),
-        const DashboardBottomNavBar(currentTab: DashboardTab.lesson),
-      ],
+            Positioned(
+              left: 18,
+              top: 56,
+              child: Navigator.of(context).canPop()
+                  ? IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    )
+                  : const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.menu_book_rounded,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
+            ),
+            const Positioned(
+              left: 0,
+              right: 0,
+              top: 68,
+              child: Text(
+                'Lessons',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.60,
+                ),
+              ),
+            ),
+            const Positioned(
+              right: 28,
+              top: 62,
+              child: Icon(
+                Icons.local_library_rounded,
+                color: Colors.white,
+                size: 32,
+              ),
+            ),
+            for (var index = 0; index < _lessons.length; index++)
+              _lessonCard(
+                context,
+                index,
+                _lessons[index],
+                user?.completedLessonsList.contains(_lessons[index].dbTitle) ??
+                    false,
+              ),
+            const DashboardBottomNavBar(currentTab: DashboardTab.lesson),
+          ],
         );
       },
     );
@@ -144,7 +145,14 @@ class LessonsScreen extends StatelessWidget {
   Widget _lessonCard(
     BuildContext context,
     int index,
-    ({String title, String dbTitle, String duration, String difficulty, IconData icon}) lesson,
+    ({
+      String title,
+      String dbTitle,
+      String pages,
+      String difficulty,
+      IconData icon,
+    })
+    lesson,
     bool isCompleted,
   ) {
     final top = 142.0 + (index * 102.0);
@@ -203,7 +211,10 @@ class LessonsScreen extends StatelessWidget {
               ).push(fadeRoute((_) => const LessonsMeasurementCalculations()));
               return;
             }
-            pushUnderDevelopment(context, title: lesson.title.replaceAll('\n', ' '));
+            pushUnderDevelopment(
+              context,
+              title: lesson.title.replaceAll('\n', ' '),
+            );
           },
           child: Container(
             width: 377,
@@ -276,12 +287,12 @@ class LessonsScreen extends StatelessWidget {
                       Row(
                         children: [
                           const Icon(
-                            Icons.schedule_rounded,
+                            Icons.auto_stories_rounded,
                             size: 14,
                             color: _navy,
                           ),
                           const SizedBox(width: 4),
-                          Text(lesson.duration, style: _metadataStyle),
+                          Text(lesson.pages, style: _metadataStyle),
                           const SizedBox(width: 12),
                           Icon(Icons.circle, size: 8, color: difficultyColor),
                           const SizedBox(width: 4),
@@ -299,7 +310,11 @@ class LessonsScreen extends StatelessWidget {
                 if (isCompleted)
                   const Padding(
                     padding: EdgeInsets.only(left: 8.0),
-                    child: Icon(Icons.check_circle_rounded, color: Colors.green, size: 28),
+                    child: Icon(
+                      Icons.check_circle_rounded,
+                      color: Colors.green,
+                      size: 28,
+                    ),
                   ),
                 const Icon(
                   Icons.arrow_forward_ios_rounded,

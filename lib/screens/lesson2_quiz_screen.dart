@@ -239,11 +239,17 @@ class _ScreenState extends State<Lesson2QuizScreen>
       final maxC = _consecutive > user.maxConsecutiveCorrectAnswers
           ? _consecutive
           : user.maxConsecutiveCorrectAnswers;
+      final newTabs = Map<String, int>.from(user.lessonLastTabs);
+      final prevHigh = newTabs['quiz_high_score_1'] ?? 0;
+      if (_score > prevHigh) {
+        newTabs['quiz_high_score_1'] = _score;
+      }
       return user.copyWith(
         completedLessonTabs: tabs,
         xpEarned: xp,
         practiceCompleted: practiced,
         maxConsecutiveCorrectAnswers: maxC,
+        lessonLastTabs: newTabs,
       );
     });
   }

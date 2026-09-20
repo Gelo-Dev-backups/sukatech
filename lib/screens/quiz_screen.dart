@@ -58,66 +58,76 @@ class QuizScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DesignCanvas(
-      width: 409,
-      height: 849,
-      backgroundColor: Colors.white,
-      children: [
-        const Positioned(
-          left: 0,
-          top: 0,
-          child: SizedBox(
-            width: 409,
-            height: 122,
-            child: DecoratedBox(decoration: BoxDecoration(color: _navy)),
-          ),
-        ),
-        Positioned(
-          left: 18,
-          top: 56,
-          child: Navigator.of(context).canPop()
-              ? IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                )
-              : const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.fact_check_rounded,
-                    color: Colors.white,
-                    size: 28,
-                  ),
-                ),
-        ),
-        const Positioned(
-          left: 0,
-          right: 0,
-          top: 68,
-          child: Text(
-            'Quiz',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.60,
+    return ValueListenableBuilder(
+      valueListenable: UserStore.current,
+      builder: (context, user, child) {
+        return DesignCanvas(
+          width: 409,
+          height: 849,
+          backgroundColor: Colors.white,
+          children: [
+            const Positioned(
+              left: 0,
+              top: 0,
+              child: SizedBox(
+                width: 409,
+                height: 122,
+                child: DecoratedBox(decoration: BoxDecoration(color: _navy)),
+              ),
             ),
-          ),
-        ),
-        const Positioned(
-          right: 28,
-          top: 62,
-          child: Icon(Icons.fact_check_rounded, color: Colors.white, size: 32),
-        ),
-        for (var index = 0; index < _quizzes.length; index++)
-          _quizCard(context, index, _quizzes[index]),
-        const DashboardBottomNavBar(currentTab: DashboardTab.quiz),
-      ],
+            Positioned(
+              left: 18,
+              top: 56,
+              child: Navigator.of(context).canPop()
+                  ? IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    )
+                  : const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.fact_check_rounded,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
+            ),
+            const Positioned(
+              left: 0,
+              right: 0,
+              top: 68,
+              child: Text(
+                'Quiz',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.60,
+                ),
+              ),
+            ),
+            const Positioned(
+              right: 28,
+              top: 62,
+              child: Icon(Icons.fact_check_rounded, color: Colors.white, size: 32),
+            ),
+            for (var index = 0; index < _quizzes.length; index++)
+              _quizCard(
+                context,
+                index,
+                _quizzes[index],
+                user?.lessonLastTabs['quiz_high_score_$index'] ?? 0,
+              ),
+            const DashboardBottomNavBar(currentTab: DashboardTab.quiz),
+          ],
+        );
+      },
     );
   }
 
@@ -125,6 +135,7 @@ class QuizScreen extends StatelessWidget {
     BuildContext context,
     int index,
     ({String title, String items, String difficulty, IconData icon}) quiz,
+    int highScore,
   ) {
     final top = 142.0 + (index * 102.0);
     final difficultyColor = quiz.difficulty == 'Easy'
@@ -249,29 +260,93 @@ class QuizScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.format_list_numbered_rounded,
-                            size: 14,
-                            color: _navy,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(quiz.items, style: _metadataStyle),
-                          const SizedBox(width: 12),
-                          Icon(Icons.circle, size: 8, color: difficultyColor),
-                          const SizedBox(width: 4),
-                          Text(
-                            quiz.difficulty,
-                            style: _metadataStyle.copyWith(
-                              color: difficultyColor,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.format_list_numbered_rounded,
+                              size: 14,
+                              color: _navy,
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 4),
+                            Text(quiz.items, style: _metadataStyle),
+                            const SizedBox(width: 10),
+                            Icon(Icons.circle, size: 6, color: difficultyColor),
+                            const SizedBox(width: 4),
+                            Text(
+                              quiz.difficulty,
+                              style: _metadataStyle.copyWith(
+                                color: difficultyColor,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Icon(
+                              Icons.emoji_events_rounded,
+                              size: 13,
+                              color: highScore > 0 ? _accent : const Color(0xFF8B9BB4),
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
+                              highScore > 0 ? 'High: $highScore%' : 'High: --',
+                              style: _metadataStyle.copyWith(
+                                color: highScore > 0 ? _navy : const Color(0xFF8B9BB4),
+                                fontWeight: highScore > 0
+                                    ? FontWeight.w700
+                                    : FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
+                if (highScore > 0)
+                  Container(
+                    margin: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 7,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: highScore >= 70
+                          ? const Color(0xFFE8F5E9)
+                          : const Color(0xFFFFF3E0),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: highScore >= 70
+                            ? const Color(0xFF2E7D32)
+                            : const Color(0xFFFFA500),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.emoji_events_rounded,
+                          size: 12,
+                          color: highScore >= 70
+                              ? const Color(0xFF2E7D32)
+                              : const Color(0xFFFFA500),
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          '$highScore%',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w700,
+                            color: highScore >= 70
+                                ? const Color(0xFF2E7D32)
+                                : const Color(0xFFE65100),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 const Icon(
                   Icons.arrow_forward_ios_rounded,
                   color: _navy,

@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -170,12 +170,18 @@ class _ScreenState extends State<Lesson1QuizScreen>
       final maxC = _consecutive > user.maxConsecutiveCorrectAnswers
           ? _consecutive
           : user.maxConsecutiveCorrectAnswers;
+      final newTabs = Map<String, int>.from(user.lessonLastTabs);
+      final prevHigh = newTabs['quiz_high_score_0'] ?? 0;
+      if (_score > prevHigh) {
+        newTabs['quiz_high_score_0'] = _score;
+      }
       return user.copyWith(
         completedLessonTabs: tabs,
         xpEarned: xp,
         quizzesTaken: quizzes,
         correctMeasurementBasics: basics,
         maxConsecutiveCorrectAnswers: maxC,
+        lessonLastTabs: newTabs,
       );
     });
   }
