@@ -1,4 +1,4 @@
-part of 'lesson1_practice_screen.dart';
+part of 'lesson1_quiz_screen.dart';
 
 class _TypeBadge extends StatelessWidget {
   const _TypeBadge({required this.type});

@@ -4,8 +4,8 @@ import '../navigation/fade_route.dart';
 import '../screens/achievements_screen.dart';
 import '../screens/dashboard_screen.dart';
 import '../screens/lessons_screen.dart';
-import '../screens/practice_screen.dart';
 import '../screens/profile_screen.dart';
+import '../screens/practice_screen.dart';
 import '../screens/quiz_screen.dart';
 import '../screens/unit_converter_screen.dart';
 
@@ -86,26 +86,35 @@ class DashboardBottomNavBar extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 14, top: 10),
                 child: Row(
                   children: [
-                    // Left side items
-                    for (final item in _leftItems)
-                      Expanded(
-                        child: _NavButton(
-                          item: item,
-                          active: item.tab == currentTab,
-                          onTap: () => _navigate(context, item.tab),
-                        ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          for (final item in _leftItems)
+                            Expanded(
+                              child: _NavButton(
+                                item: item,
+                                active: item.tab == currentTab,
+                                onTap: () => _navigate(context, item.tab),
+                              ),
+                            ),
+                        ],
                       ),
-                    // Centre placeholder (space for the FAB)
-                    const Expanded(child: SizedBox()),
-                    // Right side items
-                    for (final item in _rightItems)
-                      Expanded(
-                        child: _NavButton(
-                          item: item,
-                          active: item.tab == currentTab,
-                          onTap: () => _navigate(context, item.tab),
-                        ),
+                    ),
+                    const SizedBox(width: 60),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          for (final item in _rightItems)
+                            Expanded(
+                              child: _NavButton(
+                                item: item,
+                                active: item.tab == currentTab,
+                                onTap: () => _navigate(context, item.tab),
+                              ),
+                            ),
+                        ],
                       ),
+                    ),
                   ],
                 ),
               ),

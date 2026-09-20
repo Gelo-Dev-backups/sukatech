@@ -1,4 +1,4 @@
-part of 'lesson2_practice_screen.dart';
+part of 'lesson2_quiz_screen.dart';
 
 // ---------------------------------------------------------
 // REUSABLE TOOL ICONS (Procedurally drawn for simplicity)
@@ -11,48 +11,53 @@ class _ToolIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    IconData icon;
-    Color color;
+    String assetName;
     switch (toolName) {
       case 'Tape Measure':
-        icon = Icons.straighten_rounded;
-        color = const Color(0xFFFDD835); // Yellow tape
+        assetName = 'lib/assets/images/tape-measure.png';
         break;
       case 'Steel Rule':
-        icon = Icons.linear_scale_rounded;
-        color = const Color(0xFF9E9E9E); // Silver/grey
+        assetName = 'lib/assets/images/steel-rule.png';
         break;
       case 'Try Square':
-        icon = Icons.architecture_rounded;
-        color = const Color(0xFF8D6E63); // Wood handle
+        assetName = 'lib/assets/images/try-square.png';
         break;
       case 'Straight Edge':
-        icon = Icons.horizontal_rule_rounded;
-        color = const Color(0xFFB0BEC5); // Metal edge
+        assetName = 'lib/assets/images/straight-edge.png';
         break;
       case 'Vernier Caliper':
-        icon = Icons.tune_rounded;
-        color = const Color(0xFF78909C); // Metal caliper
+        assetName = 'lib/assets/images/venice-caliper.png';
         break;
       case 'Folding Rule':
-        icon = Icons.timeline_rounded;
-        color = const Color(0xFFFFCC80); // Wooden sections
+        assetName = 'lib/assets/images/folding-rule.png';
         break;
       default:
-        icon = Icons.build_rounded;
-        color = PracticeStyles.navy;
+        assetName = 'lib/assets/images/tape-measure.png';
     }
 
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.15),
+        color: Colors.white,
         shape: BoxShape.circle,
-        border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
+        border: Border.all(color: QuizStyles.navy.withValues(alpha: 0.15), width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: QuizStyles.navy.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Center(
-        child: Icon(icon, color: color, size: size * 0.5),
+      child: ClipOval(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset(
+            assetName,
+            fit: BoxFit.contain,
+          ),
+        ),
       ),
     );
   }
@@ -138,9 +143,9 @@ class _ConnectDotsActivityState extends State<_ConnectDotsActivity> {
             child: Text(
               'Great! You matched all the items!',
               style: TextStyle(
-                color: PracticeStyles.green,
+                color: QuizStyles.green,
                 fontSize: 14,
-                fontFamily: PracticeStyles.montserrat,
+                fontFamily: QuizStyles.montserrat,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -159,18 +164,18 @@ class _ConnectDotsActivityState extends State<_ConnectDotsActivity> {
 
                   Color bg = Colors.white;
                   Color border = const Color(0xFFDDE0E8);
-                  Color text = PracticeStyles.navy;
+                  Color text = QuizStyles.navy;
 
                   if (matched) {
-                    bg = PracticeStyles.green.withValues(alpha: 0.1);
-                    border = PracticeStyles.green;
-                    text = PracticeStyles.green;
+                    bg = QuizStyles.green.withValues(alpha: 0.1);
+                    border = QuizStyles.green;
+                    text = QuizStyles.green;
                   } else if (isError) {
-                    bg = PracticeStyles.red.withValues(alpha: 0.1);
-                    border = PracticeStyles.red;
+                    bg = QuizStyles.red.withValues(alpha: 0.1);
+                    border = QuizStyles.red;
                   } else if (selected) {
-                    bg = PracticeStyles.accent.withValues(alpha: 0.15);
-                    border = PracticeStyles.accent;
+                    bg = QuizStyles.accent.withValues(alpha: 0.15);
+                    border = QuizStyles.accent;
                   }
 
                   return Padding(
@@ -185,15 +190,22 @@ class _ConnectDotsActivityState extends State<_ConnectDotsActivity> {
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: border, width: matched || selected ? 2 : 1),
                         ),
-                        child: Text(
-                          l,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: text,
-                            fontSize: 12,
-                            fontFamily: PracticeStyles.montserrat,
-                            fontWeight: FontWeight.w700,
-                          ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _ToolIcon(toolName: l, size: 40),
+                            const SizedBox(height: 6),
+                            Text(
+                              l,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: text,
+                                fontSize: 11,
+                                fontFamily: QuizStyles.montserrat,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -212,15 +224,15 @@ class _ConnectDotsActivityState extends State<_ConnectDotsActivity> {
 
                   Color bg = Colors.white;
                   Color border = const Color(0xFFDDE0E8);
-                  Color text = PracticeStyles.navy;
+                  Color text = QuizStyles.navy;
 
                   if (matched) {
-                    bg = PracticeStyles.green.withValues(alpha: 0.1);
-                    border = PracticeStyles.green;
-                    text = PracticeStyles.green;
+                    bg = QuizStyles.green.withValues(alpha: 0.1);
+                    border = QuizStyles.green;
+                    text = QuizStyles.green;
                   } else if (isError) {
-                    bg = PracticeStyles.red.withValues(alpha: 0.1);
-                    border = PracticeStyles.red;
+                    bg = QuizStyles.red.withValues(alpha: 0.1);
+                    border = QuizStyles.red;
                   }
 
                   return Padding(
@@ -241,7 +253,7 @@ class _ConnectDotsActivityState extends State<_ConnectDotsActivity> {
                           style: TextStyle(
                             color: text,
                             fontSize: 12,
-                            fontFamily: PracticeStyles.montserrat,
+                            fontFamily: QuizStyles.montserrat,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -286,7 +298,7 @@ class _DragToTaskActivity extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: PracticeStyles.navy.withValues(alpha: 0.04),
+            color: QuizStyles.navy.withValues(alpha: 0.04),
             borderRadius: BorderRadius.circular(14),
           ),
           child: Column(
@@ -294,9 +306,9 @@ class _DragToTaskActivity extends StatelessWidget {
               const Text(
                 'TASK',
                 style: TextStyle(
-                  color: PracticeStyles.navy,
+                  color: QuizStyles.navy,
                   fontSize: 10,
-                  fontFamily: PracticeStyles.montserrat,
+                  fontFamily: QuizStyles.montserrat,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 1,
                 ),
@@ -306,9 +318,9 @@ class _DragToTaskActivity extends StatelessWidget {
                 task,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  color: PracticeStyles.navy,
+                  color: QuizStyles.navy,
                   fontSize: 15,
-                  fontFamily: PracticeStyles.montserrat,
+                  fontFamily: QuizStyles.montserrat,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -319,16 +331,16 @@ class _DragToTaskActivity extends StatelessWidget {
                 builder: (context, candidateData, rejectedData) {
                   final hovering = candidateData.isNotEmpty;
                   Color borderColor = const Color(0xFFDDE0E8);
-                  if (hovering) borderColor = PracticeStyles.accent;
+                  if (hovering) borderColor = QuizStyles.accent;
                   if (submitted) {
-                    borderColor = droppedTool == correctTool ? PracticeStyles.green : PracticeStyles.red;
+                    borderColor = droppedTool == correctTool ? QuizStyles.green : QuizStyles.red;
                   }
 
                   return Container(
                     height: 100,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: hovering ? PracticeStyles.accent.withValues(alpha: 0.1) : Colors.white,
+                      color: hovering ? QuizStyles.accent.withValues(alpha: 0.1) : Colors.white,
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(color: borderColor, width: 2),
                     ),
@@ -343,9 +355,9 @@ class _DragToTaskActivity extends StatelessWidget {
                             child: Text(
                               'Drop correct tool here',
                               style: TextStyle(
-                                color: PracticeStyles.navy.withValues(alpha: 0.4),
+                                color: QuizStyles.navy.withValues(alpha: 0.4),
                                 fontSize: 13,
-                                fontFamily: PracticeStyles.montserrat,
+                                fontFamily: QuizStyles.montserrat,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -393,10 +405,10 @@ class _DraggableToolCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: active ? PracticeStyles.navy : PracticeStyles.navy.withValues(alpha: 0.5),
+        color: active ? QuizStyles.navy : QuizStyles.navy.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(20),
         boxShadow: isDragging
-            ? [BoxShadow(color: PracticeStyles.navy.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))]
+            ? [BoxShadow(color: QuizStyles.navy.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))]
             : null,
       ),
       child: Row(
@@ -409,7 +421,7 @@ class _DraggableToolCard extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
               fontSize: 13,
-              fontFamily: PracticeStyles.montserrat,
+              fontFamily: QuizStyles.montserrat,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -492,7 +504,7 @@ class _GenericSortActivity extends StatelessWidget {
                             style: TextStyle(
                               color: cat.color,
                               fontSize: 10,
-                              fontFamily: PracticeStyles.montserrat,
+                              fontFamily: QuizStyles.montserrat,
                               fontWeight: FontWeight.w800,
                               letterSpacing: 0.5,
                             ),
@@ -500,7 +512,7 @@ class _GenericSortActivity extends StatelessWidget {
                           const SizedBox(height: 8),
                           ...itemsInCat.map((item) {
                             final isCorrect = cat.correctItems.contains(item);
-                            final color = submitted ? (isCorrect ? PracticeStyles.green : PracticeStyles.red) : PracticeStyles.navy;
+                            final color = submitted ? (isCorrect ? QuizStyles.green : QuizStyles.red) : QuizStyles.navy;
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 6),
                               child: GestureDetector(
@@ -548,7 +560,7 @@ class _SortItemCard extends StatelessWidget {
         style: TextStyle(
           color: color,
           fontSize: 11,
-          fontFamily: PracticeStyles.montserrat,
+          fontFamily: QuizStyles.montserrat,
           fontWeight: FontWeight.w700,
         ),
       ),

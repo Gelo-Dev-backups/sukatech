@@ -4,8 +4,7 @@ import '../data/user_store.dart';
 import '../navigation/fade_route.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
-import 'lesson1_practice_screen.dart';
-import 'lesson2_practice_screen.dart';
+
 
 class PracticeScreen extends StatelessWidget {
   const PracticeScreen({super.key});
@@ -108,17 +107,6 @@ class PracticeScreen extends StatelessWidget {
               (user) => user.copyWith(currentLessonTitle: flatTitle),
             );
 
-            if (index == 0) {
-              Navigator.of(
-                context,
-              ).push(fadeRoute((_) => const Lesson1PracticeScreen()));
-              return;
-            } else if (index == 1) {
-              Navigator.of(
-                context,
-              ).push(fadeRoute((_) => const Lesson2PracticeScreen()));
-              return;
-            }
             // TODO: Route other practice screens once implemented
             pushUnderDevelopment(context, title: "$flatTitle Practice");
           },

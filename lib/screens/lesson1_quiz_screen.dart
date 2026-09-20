@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 
 import '../data/user_store.dart';
 import '../widgets/bottom_nav_bar.dart';
-import '../widgets/practice_shared_widgets.dart';
+import '../widgets/design_canvas.dart';
+import '../widgets/quiz_shared_widgets.dart';
 
-part 'lesson1_practice_data.dart';
-part 'lesson1_practice_widgets.dart';
+part 'lesson1_quiz_data.dart';
+part 'lesson1_quiz_widgets.dart';
 
 const _navy = Color(0xFF061D3F);
 const _accent = Color(0xFFFFA500);
@@ -18,14 +19,14 @@ const _montserrat = 'Montserrat';
 const _practiceXpKey = 'lesson_01_practice_intro_measurement_xp';
 const _practicePerfectKey = 'lesson_01_practice_intro_measurement_perfect';
 
-class Lesson1PracticeScreen extends StatefulWidget {
-  const Lesson1PracticeScreen({super.key});
+class Lesson1QuizScreen extends StatefulWidget {
+  const Lesson1QuizScreen({super.key});
 
   @override
-  State<Lesson1PracticeScreen> createState() => _ScreenState();
+  State<Lesson1QuizScreen> createState() => _ScreenState();
 }
 
-class _ScreenState extends State<Lesson1PracticeScreen>
+class _ScreenState extends State<Lesson1QuizScreen>
     with SingleTickerProviderStateMixin {
   late List<_Q> _questions;
   int _index = 0;
@@ -129,11 +130,11 @@ class _ScreenState extends State<Lesson1PracticeScreen>
     await UserStore.mutate((user) {
       final tabs = List<String>.from(user.completedLessonTabs);
       int xp = user.xpEarned;
-      int practiced = user.practiceCompleted;
+      int quizzes = user.quizzesTaken;
       if (!tabs.contains(_practiceXpKey)) {
         tabs.add(_practiceXpKey);
         xp += 10;
-        practiced++;
+        quizzes++;
       }
       if (perfect && !tabs.contains(_practicePerfectKey)) {
         tabs.add(_practicePerfectKey);
@@ -153,7 +154,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
       return user.copyWith(
         completedLessonTabs: tabs,
         xpEarned: xp,
-        practiceCompleted: practiced,
+        quizzesTaken: quizzes,
         correctMeasurementBasics: basics,
         maxConsecutiveCorrectAnswers: maxC,
       );
@@ -182,11 +183,12 @@ class _ScreenState extends State<Lesson1PracticeScreen>
   Widget _questionScreen(BuildContext context) {
     final q = _q;
     final progress = (_index + 1) / _questions.length;
-    return Scaffold(
+    return DesignCanvas(
+      width: 409,
+      height: 849,
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Positioned.fill(
+      children: [
+        Positioned.fill(
             bottom: 84,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -221,7 +223,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                               ),
                             ),
                             Text(
-                              'Interactive Practice',
+                              'Interactive Quiz',
                               style: TextStyle(
                                 color: _accent,
                                 fontSize: 10,
@@ -316,7 +318,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                             onAssign: _onAssign,
                           )
                         else
-                          PracticeChoices(
+                          QuizChoices(
                             choices: q.choices,
                             correctIndex: q.correctIndex,
                             selected: _selected,
@@ -325,7 +327,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                         if (q.type == _QType.metricVsEnglish &&
                             !_sortSubmitted) ...[
                           const SizedBox(height: 14),
-                          PracticeSubmitBtn(
+                          QuizSubmitBtn(
                             enabled: _sortState!.isComplete,
                             onTap: _submitSort,
                           ),
@@ -334,7 +336,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                         if (_answered)
                           ScaleTransition(
                             scale: _fbScale,
-                            child: PracticeFeedbackPanel(
+                            child: QuizFeedbackPanel(
                               isCorrect: q.type == _QType.metricVsEnglish
                                   ? _sortState!.isAllCorrect
                                   : _selected == q.correctIndex,
@@ -343,7 +345,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                           ),
                         if (_answered) const SizedBox(height: 12),
                         if (_answered)
-                          PracticeNextBtn(
+                          QuizNextBtn(
                             isLast: _index == _questions.length - 1,
                             onTap: _next,
                           ),
@@ -355,9 +357,8 @@ class _ScreenState extends State<Lesson1PracticeScreen>
               ],
             ),
           ),
-          const DashboardBottomNavBar(currentTab: DashboardTab.practice),
-        ],
-      ),
+          const DashboardBottomNavBar(currentTab: DashboardTab.quiz),
+      ],
     );
   }
 
@@ -423,11 +424,12 @@ class _ScreenState extends State<Lesson1PracticeScreen>
       msgColor = _red;
     }
 
-    return Scaffold(
+    return DesignCanvas(
+      width: 409,
+      height: 849,
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Positioned.fill(
+      children: [
+        Positioned.fill(
             bottom: 84,
             child: Column(
               children: [
@@ -439,7 +441,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                   ),
                   child: const Center(
                     child: Text(
-                      'Practice Complete! 🏆',
+                      'Quiz Complete! 🏆',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -488,7 +490,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                         Row(
                           children: [
                             Expanded(
-                              child: PracticeResultChip(
+                              child: QuizResultChip(
                                 label: 'Accuracy',
                                 value: '$accuracy%',
                                 color: accuracy >= 70 ? _green : _red,
@@ -496,7 +498,7 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                             ),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: PracticeResultChip(
+                              child: QuizResultChip(
                                 label: 'XP Earned',
                                 value: '+${isPerfect ? 20 : 10} XP',
                                 color: _accent,
@@ -527,15 +529,15 @@ class _ScreenState extends State<Lesson1PracticeScreen>
                           ),
                         ),
                         const SizedBox(height: 20),
-                        PracticePrimaryBtn(
+                        QuizPrimaryBtn(
                           label: 'TRY AGAIN',
                           bgColor: _navy,
                           fgColor: Colors.white,
                           onTap: _restart,
                         ),
                         const SizedBox(height: 10),
-                        PracticePrimaryBtn(
-                          label: 'BACK TO PRACTICE',
+                        QuizPrimaryBtn(
+                          label: 'BACK TO QUIZ',
                           bgColor: Colors.white,
                           fgColor: _navy,
                           borderColor: _navy,
@@ -548,9 +550,8 @@ class _ScreenState extends State<Lesson1PracticeScreen>
               ],
             ),
           ),
-          const DashboardBottomNavBar(currentTab: DashboardTab.practice),
-        ],
-      ),
+          const DashboardBottomNavBar(currentTab: DashboardTab.quiz),
+      ],
     );
   }
 }

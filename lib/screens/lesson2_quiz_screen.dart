@@ -4,21 +4,22 @@ import 'package:flutter/material.dart';
 
 import '../data/user_store.dart';
 import '../widgets/bottom_nav_bar.dart';
-import '../widgets/practice_shared_widgets.dart';
+import '../widgets/design_canvas.dart';
+import '../widgets/quiz_shared_widgets.dart';
 
-part 'lesson2_practice_data.dart';
-part 'lesson2_practice_widgets.dart';
+part 'lesson2_quiz_data.dart';
+part 'lesson2_quiz_widgets.dart';
 
 const _practiceXpKey = 'lesson_02_practice_measuring_tools_xp';
 
-class Lesson2PracticeScreen extends StatefulWidget {
-  const Lesson2PracticeScreen({super.key});
+class Lesson2QuizScreen extends StatefulWidget {
+  const Lesson2QuizScreen({super.key});
 
   @override
-  State<Lesson2PracticeScreen> createState() => _ScreenState();
+  State<Lesson2QuizScreen> createState() => _ScreenState();
 }
 
-class _ScreenState extends State<Lesson2PracticeScreen>
+class _ScreenState extends State<Lesson2QuizScreen>
     with SingleTickerProviderStateMixin {
   late List<_Q> _questions;
   int _index = 0;
@@ -244,10 +245,9 @@ class _ScreenState extends State<Lesson2PracticeScreen>
 
   Widget _questionScreen(BuildContext context) {
     final progress = (_index + 1) / _questions.length;
-    return Scaffold(
+    return DesignCanvas(width: 409, height: 849,
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
+      children: [
           Positioned.fill(
             bottom: 84,
             child: Column(
@@ -255,7 +255,7 @@ class _ScreenState extends State<Lesson2PracticeScreen>
               children: [
                 // Header
                 Container(
-                  color: PracticeStyles.navy,
+                  color: QuizStyles.navy,
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).padding.top + 8,
                     left: 4,
@@ -278,16 +278,16 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 13,
-                                fontFamily: PracticeStyles.montserrat,
+                                fontFamily: QuizStyles.montserrat,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
                             Text(
                               'Interactive Practice',
                               style: TextStyle(
-                                color: PracticeStyles.accent,
+                                color: QuizStyles.accent,
                                 fontSize: 10,
-                                fontFamily: PracticeStyles.montserrat,
+                                fontFamily: QuizStyles.montserrat,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -306,7 +306,7 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 11,
-                            fontFamily: PracticeStyles.montserrat,
+                            fontFamily: QuizStyles.montserrat,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -316,7 +316,7 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                 ),
                 // Progress bar
                 Container(
-                  color: PracticeStyles.navy,
+                  color: QuizStyles.navy,
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -329,7 +329,7 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                             style: const TextStyle(
                               color: Colors.white60,
                               fontSize: 10,
-                              fontFamily: PracticeStyles.montserrat,
+                              fontFamily: QuizStyles.montserrat,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -338,7 +338,7 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                             style: const TextStyle(
                               color: Colors.white60,
                               fontSize: 10,
-                              fontFamily: PracticeStyles.montserrat,
+                              fontFamily: QuizStyles.montserrat,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -352,7 +352,7 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                           minHeight: 6,
                           backgroundColor: Colors.white24,
                           valueColor:
-                              const AlwaysStoppedAnimation<Color>(PracticeStyles.green),
+                              const AlwaysStoppedAnimation<Color>(QuizStyles.green),
                         ),
                       ),
                     ],
@@ -370,7 +370,7 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                         _buildActivity(),
                         if (_needsSubmitButton()) ...[
                           const SizedBox(height: 14),
-                          PracticeSubmitBtn(
+                          QuizSubmitBtn(
                             enabled: _isActivityReadyToSubmit(),
                             onTap: _submitActivity,
                           ),
@@ -379,14 +379,14 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                         if (_answered)
                           ScaleTransition(
                             scale: _fbScale,
-                            child: PracticeFeedbackPanel(
+                            child: QuizFeedbackPanel(
                               isCorrect: _isAnswerCorrect(),
                               explanation: _getExplanation(),
                             ),
                           ),
                         if (_answered) const SizedBox(height: 12),
                         if (_answered)
-                          PracticeNextBtn(
+                          QuizNextBtn(
                             isLast: _index == _questions.length - 1,
                             onTap: _next,
                           ),
@@ -398,9 +398,8 @@ class _ScreenState extends State<Lesson2PracticeScreen>
               ],
             ),
           ),
-          const DashboardBottomNavBar(currentTab: DashboardTab.practice),
+          const DashboardBottomNavBar(currentTab: DashboardTab.quiz),
         ],
-      ),
     );
   }
 
@@ -438,7 +437,7 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                 style: TextStyle(
                   color: color,
                   fontSize: 11,
-                  fontFamily: PracticeStyles.montserrat,
+                  fontFamily: QuizStyles.montserrat,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.3,
                 ),
@@ -464,23 +463,23 @@ class _ScreenState extends State<Lesson2PracticeScreen>
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: PracticeStyles.navy.withValues(alpha: 0.04),
+              color: QuizStyles.navy.withValues(alpha: 0.04),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: PracticeStyles.navy.withValues(alpha: 0.10)),
+              border: Border.all(color: QuizStyles.navy.withValues(alpha: 0.10)),
             ),
             child: Text(
               q.prompt,
               style: const TextStyle(
-                color: PracticeStyles.navy,
+                color: QuizStyles.navy,
                 fontSize: 15,
-                fontFamily: PracticeStyles.montserrat,
+                fontFamily: QuizStyles.montserrat,
                 fontWeight: FontWeight.w700,
                 height: 1.45,
               ),
             ),
           ),
           const SizedBox(height: 16),
-          PracticeChoices(
+          QuizChoices(
             choices: q.choices,
             correctIndex: q.correctIndex,
             selected: _selected,
@@ -498,9 +497,9 @@ class _ScreenState extends State<Lesson2PracticeScreen>
           Text(
             q.prompt,
             style: const TextStyle(
-              color: PracticeStyles.navy,
+              color: QuizStyles.navy,
               fontSize: 14,
-              fontFamily: PracticeStyles.montserrat,
+              fontFamily: QuizStyles.montserrat,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -529,8 +528,8 @@ class _ScreenState extends State<Lesson2PracticeScreen>
       final q = _q as _QSafetySort;
       return _GenericSortActivity(
         categories: const [
-          (name: 'SAFE', color: PracticeStyles.green, correctItems: []), // Populated later
-          (name: 'UNSAFE', color: PracticeStyles.red, correctItems: []),
+          (name: 'SAFE', color: QuizStyles.green, correctItems: []), // Populated later
+          (name: 'UNSAFE', color: QuizStyles.red, correctItems: []),
         ].map((c) {
           final corrects = q.items.entries
               .where((e) => (c.name == 'SAFE' && e.value) || (c.name == 'UNSAFE' && !e.value))
@@ -575,23 +574,23 @@ class _ScreenState extends State<Lesson2PracticeScreen>
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: PracticeStyles.navy.withValues(alpha: 0.04),
+              color: QuizStyles.navy.withValues(alpha: 0.04),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: PracticeStyles.navy.withValues(alpha: 0.10)),
+              border: Border.all(color: QuizStyles.navy.withValues(alpha: 0.10)),
             ),
             child: Text(
               step.prompt,
               style: const TextStyle(
-                color: PracticeStyles.navy,
+                color: QuizStyles.navy,
                 fontSize: 15,
-                fontFamily: PracticeStyles.montserrat,
+                fontFamily: QuizStyles.montserrat,
                 fontWeight: FontWeight.w700,
                 height: 1.45,
               ),
             ),
           ),
           const SizedBox(height: 16),
-          PracticeChoices(
+          QuizChoices(
             choices: q.toolChoices,
             correctIndex: q.toolChoices.indexOf(step.correctTool),
             selected: _selected,
@@ -639,25 +638,24 @@ class _ScreenState extends State<Lesson2PracticeScreen>
     final Color msgColor;
     if (accuracy >= 90) {
       msg = 'Excellent! You know your measuring tools. 🎉';
-      msgColor = PracticeStyles.green;
+      msgColor = QuizStyles.green;
     } else if (accuracy >= 70) {
       msg = 'Good work! Review a few tools and try again. 💪';
-      msgColor = PracticeStyles.accent;
+      msgColor = QuizStyles.accent;
     } else {
       msg = 'Keep practicing! Review the lesson and try again. 📖';
-      msgColor = PracticeStyles.red;
+      msgColor = QuizStyles.red;
     }
 
-    return Scaffold(
+    return DesignCanvas(width: 409, height: 849,
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
+      children: [
           Positioned.fill(
             bottom: 84,
             child: Column(
               children: [
                 Container(
-                  color: PracticeStyles.navy,
+                  color: QuizStyles.navy,
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).padding.top + 12,
                     bottom: 14,
@@ -668,7 +666,7 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
-                        fontFamily: PracticeStyles.montserrat,
+                        fontFamily: QuizStyles.montserrat,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -683,19 +681,19 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                           width: 86,
                           height: 86,
                           decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: PracticeStyles.navy),
+                              shape: BoxShape.circle, color: QuizStyles.navy),
                           child: const Center(
                             child: Icon(Icons.handyman_rounded,
-                                color: PracticeStyles.accent, size: 40),
+                                color: QuizStyles.accent, size: 40),
                           ),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           '$_score / ${_questions.length}',
                           style: const TextStyle(
-                            color: PracticeStyles.navy,
+                            color: QuizStyles.navy,
                             fontSize: 52,
-                            fontFamily: PracticeStyles.montserrat,
+                            fontFamily: QuizStyles.montserrat,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -704,7 +702,7 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                           style: TextStyle(
                             color: Color(0xFF8B9BB4),
                             fontSize: 12,
-                            fontFamily: PracticeStyles.montserrat,
+                            fontFamily: QuizStyles.montserrat,
                             fontWeight: FontWeight.w700,
                             letterSpacing: 1.2,
                           ),
@@ -713,18 +711,18 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                         Row(
                           children: [
                             Expanded(
-                              child: PracticeResultChip(
+                              child: QuizResultChip(
                                 label: 'Accuracy',
                                 value: '$accuracy%',
-                                color: accuracy >= 70 ? PracticeStyles.green : PracticeStyles.red,
+                                color: accuracy >= 70 ? QuizStyles.green : QuizStyles.red,
                               ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: PracticeResultChip(
+                              child: QuizResultChip(
                                 label: 'XP Earned',
                                 value: '+10 XP', // Always 10 XP as per requirements
-                                color: PracticeStyles.accent,
+                                color: QuizStyles.accent,
                               ),
                             ),
                           ],
@@ -745,25 +743,25 @@ class _ScreenState extends State<Lesson2PracticeScreen>
                             style: TextStyle(
                               color: msgColor,
                               fontSize: 13,
-                              fontFamily: PracticeStyles.montserrat,
+                              fontFamily: QuizStyles.montserrat,
                               fontWeight: FontWeight.w600,
                               height: 1.4,
                             ),
                           ),
                         ),
                         const SizedBox(height: 20),
-                        PracticePrimaryBtn(
+                        QuizPrimaryBtn(
                           label: 'TRY AGAIN',
-                          bgColor: PracticeStyles.navy,
+                          bgColor: QuizStyles.navy,
                           fgColor: Colors.white,
                           onTap: _restart,
                         ),
                         const SizedBox(height: 10),
-                        PracticePrimaryBtn(
+                        QuizPrimaryBtn(
                           label: 'BACK TO LESSON',
                           bgColor: Colors.white,
-                          fgColor: PracticeStyles.navy,
-                          borderColor: PracticeStyles.navy,
+                          fgColor: QuizStyles.navy,
+                          borderColor: QuizStyles.navy,
                           onTap: () => Navigator.of(context).pop(),
                         ),
                       ],
@@ -773,9 +771,9 @@ class _ScreenState extends State<Lesson2PracticeScreen>
               ],
             ),
           ),
-          const DashboardBottomNavBar(currentTab: DashboardTab.practice),
+          const DashboardBottomNavBar(currentTab: DashboardTab.quiz),
         ],
-      ),
     );
   }
 }
+

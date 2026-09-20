@@ -1,4 +1,4 @@
-part of 'lesson2_practice_screen.dart';
+part of 'lesson2_quiz_screen.dart';
 
 enum _QType {
   connectTool,
@@ -397,5 +397,5 @@ List<_Q> _buildSession(Random rng) {
       counters[type] = idx + 1;
     }
   }
-  return result;
+  result.shuffle(rng); return result;
 }

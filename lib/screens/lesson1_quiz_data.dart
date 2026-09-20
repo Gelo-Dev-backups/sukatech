@@ -1,4 +1,4 @@
-part of 'lesson1_practice_screen.dart';
+part of 'lesson1_quiz_screen.dart';
 
 enum _QType {
   identifyDimension,
@@ -264,7 +264,7 @@ List<_Q> _buildSession(Random rng) {
       counters[type] = idx + 1;
     }
   }
-  return result;
+  result.shuffle(rng); return result;
 }
 
 const _metricUnits = {'mm', 'cm', 'm'};

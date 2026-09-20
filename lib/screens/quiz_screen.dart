@@ -4,6 +4,8 @@ import '../data/user_store.dart';
 import '../navigation/fade_route.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
+import 'lesson1_quiz_screen.dart';
+import 'lesson2_quiz_screen.dart';
 
 class QuizScreen extends StatelessWidget {
   const QuizScreen({super.key});
@@ -141,6 +143,17 @@ class QuizScreen extends StatelessWidget {
               (user) => user.copyWith(currentLessonTitle: flatTitle),
             );
 
+            if (index == 0) {
+              Navigator.of(
+                context,
+              ).push(fadeRoute((_) => const Lesson1QuizScreen()));
+              return;
+            } else if (index == 1) {
+              Navigator.of(
+                context,
+              ).push(fadeRoute((_) => const Lesson2QuizScreen()));
+              return;
+            }
             // TODO: Route to specific quiz screens once implemented
             pushUnderDevelopment(context, title: "$flatTitle Quiz");
           },

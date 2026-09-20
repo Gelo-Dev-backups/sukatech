@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class PracticeStyles {
+class QuizStyles {
   static const navy = Color(0xFF061D3F);
   static const accent = Color(0xFFFFA500);
   static const green = Color(0xFF05831C);
@@ -8,8 +8,8 @@ class PracticeStyles {
   static const montserrat = 'Montserrat';
 }
 
-class PracticeChoices extends StatelessWidget {
-  const PracticeChoices({
+class QuizChoices extends StatelessWidget {
+  const QuizChoices({
     super.key,
     required this.choices,
     required this.correctIndex,
@@ -35,28 +35,28 @@ class PracticeChoices extends StatelessWidget {
 
         Color bgColor = Colors.white;
         Color borderColor = const Color(0xFFDDE0E8);
-        Color textColor = PracticeStyles.navy;
-        Color letterBg = PracticeStyles.navy.withValues(alpha: 0.08);
-        Color letterColor = PracticeStyles.navy.withValues(alpha: 0.5);
+        Color textColor = QuizStyles.navy;
+        Color letterBg = QuizStyles.navy.withValues(alpha: 0.08);
+        Color letterColor = QuizStyles.navy.withValues(alpha: 0.5);
         Widget? trail;
 
         if (answered) {
           if (isCorrect) {
-            bgColor = PracticeStyles.green.withValues(alpha: 0.08);
-            borderColor = PracticeStyles.green;
-            textColor = PracticeStyles.green;
-            letterBg = PracticeStyles.green;
+            bgColor = QuizStyles.green.withValues(alpha: 0.08);
+            borderColor = QuizStyles.green;
+            textColor = QuizStyles.green;
+            letterBg = QuizStyles.green;
             letterColor = Colors.white;
             trail = const Icon(Icons.check_circle_rounded,
-                color: PracticeStyles.green, size: 20);
+                color: QuizStyles.green, size: 20);
           } else if (isSelected) {
-            bgColor = PracticeStyles.red.withValues(alpha: 0.08);
-            borderColor = PracticeStyles.red;
-            textColor = PracticeStyles.red;
-            letterBg = PracticeStyles.red;
+            bgColor = QuizStyles.red.withValues(alpha: 0.08);
+            borderColor = QuizStyles.red;
+            textColor = QuizStyles.red;
+            letterBg = QuizStyles.red;
             letterColor = Colors.white;
             trail =
-                const Icon(Icons.cancel_rounded, color: PracticeStyles.red, size: 20);
+                const Icon(Icons.cancel_rounded, color: QuizStyles.red, size: 20);
           }
         }
 
@@ -106,7 +106,7 @@ class PracticeChoices extends StatelessWidget {
                             style: TextStyle(
                               color: letterColor,
                               fontSize: 13,
-                              fontFamily: PracticeStyles.montserrat,
+                              fontFamily: QuizStyles.montserrat,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
@@ -119,7 +119,7 @@ class PracticeChoices extends StatelessWidget {
                           style: TextStyle(
                             color: textColor,
                             fontSize: 14,
-                            fontFamily: PracticeStyles.montserrat,
+                            fontFamily: QuizStyles.montserrat,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -137,8 +137,8 @@ class PracticeChoices extends StatelessWidget {
   }
 }
 
-class PracticeSubmitBtn extends StatelessWidget {
-  const PracticeSubmitBtn({super.key, required this.enabled, required this.onTap});
+class QuizSubmitBtn extends StatelessWidget {
+  const QuizSubmitBtn({super.key, required this.enabled, required this.onTap});
   final bool enabled;
   final VoidCallback onTap;
 
@@ -161,7 +161,7 @@ class PracticeSubmitBtn extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 14,
-                fontFamily: PracticeStyles.montserrat,
+                fontFamily: QuizStyles.montserrat,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.5,
               ),
@@ -173,8 +173,8 @@ class PracticeSubmitBtn extends StatelessWidget {
   }
 }
 
-class PracticeFeedbackPanel extends StatelessWidget {
-  const PracticeFeedbackPanel({
+class QuizFeedbackPanel extends StatelessWidget {
+  const QuizFeedbackPanel({
     super.key,
     required this.isCorrect,
     required this.explanation,
@@ -184,7 +184,7 @@ class PracticeFeedbackPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isCorrect ? PracticeStyles.green : PracticeStyles.red;
+    final color = isCorrect ? QuizStyles.green : QuizStyles.red;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -201,7 +201,7 @@ class PracticeFeedbackPanel extends StatelessWidget {
             style: TextStyle(
               color: color,
               fontSize: 14,
-              fontFamily: PracticeStyles.montserrat,
+              fontFamily: QuizStyles.montserrat,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -209,9 +209,9 @@ class PracticeFeedbackPanel extends StatelessWidget {
           Text(
             explanation,
             style: TextStyle(
-              color: PracticeStyles.navy.withValues(alpha: 0.75),
+              color: QuizStyles.navy.withValues(alpha: 0.75),
               fontSize: 12,
-              fontFamily: PracticeStyles.montserrat,
+              fontFamily: QuizStyles.montserrat,
               fontWeight: FontWeight.w500,
               height: 1.45,
             ),
@@ -222,15 +222,15 @@ class PracticeFeedbackPanel extends StatelessWidget {
   }
 }
 
-class PracticeNextBtn extends StatelessWidget {
-  const PracticeNextBtn({super.key, required this.isLast, required this.onTap});
+class QuizNextBtn extends StatelessWidget {
+  const QuizNextBtn({super.key, required this.isLast, required this.onTap});
   final bool isLast;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: PracticeStyles.navy,
+      color: QuizStyles.navy,
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         onTap: onTap,
@@ -246,7 +246,7 @@ class PracticeNextBtn extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
-                  fontFamily: PracticeStyles.montserrat,
+                  fontFamily: QuizStyles.montserrat,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.5,
                 ),
@@ -256,7 +256,7 @@ class PracticeNextBtn extends StatelessWidget {
                 isLast
                     ? Icons.emoji_events_rounded
                     : Icons.arrow_forward_rounded,
-                color: PracticeStyles.accent,
+                color: QuizStyles.accent,
                 size: 18,
               ),
             ],
@@ -267,8 +267,8 @@ class PracticeNextBtn extends StatelessWidget {
   }
 }
 
-class PracticeResultChip extends StatelessWidget {
-  const PracticeResultChip({
+class QuizResultChip extends StatelessWidget {
+  const QuizResultChip({
     super.key,
     required this.label,
     required this.value,
@@ -294,7 +294,7 @@ class PracticeResultChip extends StatelessWidget {
             style: TextStyle(
               color: color,
               fontSize: 24,
-              fontFamily: PracticeStyles.montserrat,
+              fontFamily: QuizStyles.montserrat,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -304,7 +304,7 @@ class PracticeResultChip extends StatelessWidget {
             style: TextStyle(
               color: color.withValues(alpha: 0.65),
               fontSize: 11,
-              fontFamily: PracticeStyles.montserrat,
+              fontFamily: QuizStyles.montserrat,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -314,8 +314,8 @@ class PracticeResultChip extends StatelessWidget {
   }
 }
 
-class PracticePrimaryBtn extends StatelessWidget {
-  const PracticePrimaryBtn({
+class QuizPrimaryBtn extends StatelessWidget {
+  const QuizPrimaryBtn({
     super.key,
     required this.label,
     required this.bgColor,
@@ -352,7 +352,7 @@ class PracticePrimaryBtn extends StatelessWidget {
             style: TextStyle(
               color: fgColor,
               fontSize: 14,
-              fontFamily: PracticeStyles.montserrat,
+              fontFamily: QuizStyles.montserrat,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.4,
             ),
