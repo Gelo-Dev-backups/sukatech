@@ -617,7 +617,7 @@ class DashboardScreen extends StatelessWidget {
       labelFontSize: 11,
       onTap: () => Navigator.of(
         context,
-      ).push(fadeRoute((_) => const AchievementsScreen())),
+      ).pushReplacement(fadeRoute((_) => const AchievementsScreen())),
     ),
     ..._categoryCard(
       context: context,

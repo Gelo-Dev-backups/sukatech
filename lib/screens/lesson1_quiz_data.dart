@@ -2,7 +2,7 @@ part of 'lesson1_quiz_screen.dart';
 
 enum _QType {
   identifyDimension,
-  fillInBlank,
+  multipleChoice,
   metricVsEnglish,
   whatIsMeasured,
   carpenterDecision,
@@ -110,42 +110,42 @@ const _pool = <_RawQ>[
 
   // FILL IN THE BLANK
   _RawQ(
-    type: _QType.fillInBlank,
+    type: _QType.multipleChoice,
     prompt: 'A wooden board is 25 ___ thick.\n(Hint: Use a small metric unit for thickness.)',
     choices: ['mm', 'cm', 'm', 'ft'],
     explanation: 'Millimeters (mm) are ideal for small dimensions such as material thickness.',
     blankWord: 'mm',
   ),
   _RawQ(
-    type: _QType.fillInBlank,
+    type: _QType.multipleChoice,
     prompt: 'A wooden plank is 2 ___ long.\n(Hint: Use a large metric unit for length.)',
     choices: ['m', 'mm', 'cm', 'in'],
     explanation: 'Meters (m) are used for larger measurements like the full length of a long board.',
     blankWord: 'm',
   ),
   _RawQ(
-    type: _QType.fillInBlank,
+    type: _QType.multipleChoice,
     prompt: 'A board has a width of 20 ___.\n(Hint: Use a medium metric unit for width.)',
     choices: ['cm', 'mm', 'm', 'ft'],
     explanation: 'Centimeters (cm) are used for moderate measurements like board widths.',
     blankWord: 'cm',
   ),
   _RawQ(
-    type: _QType.fillInBlank,
+    type: _QType.multipleChoice,
     prompt: 'A piece of wood is 12 ___ long.\n(Hint: Use an English unit for shorter measurements.)',
     choices: ['in', 'mm', 'cm', 'm'],
     explanation: 'Inches (in) are used in the English system for shorter measurements.',
     blankWord: 'in',
   ),
   _RawQ(
-    type: _QType.fillInBlank,
+    type: _QType.multipleChoice,
     prompt: 'A board is 6 ___ long.\n(Hint: Use an English unit for longer boards.)',
     choices: ['ft', 'mm', 'cm', 'm'],
     explanation: 'Feet (ft) are used in the English system for longer boards.',
     blankWord: 'ft',
   ),
   _RawQ(
-    type: _QType.fillInBlank,
+    type: _QType.multipleChoice,
     prompt: 'A nail is 50 ___ long.\n(Hint: Use the smallest metric unit for hardware.)',
     choices: ['mm', 'cm', 'm', 'ft'],
     explanation: 'Millimeters (mm) are best for small objects like nails and screws.',
@@ -235,14 +235,14 @@ const _pool = <_RawQ>[
 
 const _sessionOrder = [
   _QType.identifyDimension,
-  _QType.fillInBlank,
+  _QType.multipleChoice,
   _QType.metricVsEnglish,
   _QType.identifyDimension,
-  _QType.fillInBlank,
+  _QType.multipleChoice,
   _QType.carpenterDecision,
-  _QType.fillInBlank,
+  _QType.multipleChoice,
+  _QType.whatIsMeasured,
   _QType.identifyDimension,
-  _QType.metricVsEnglish,
   _QType.carpenterDecision,
 ];
 

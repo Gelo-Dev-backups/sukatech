@@ -5,7 +5,6 @@ import '../navigation/fade_route.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
 
-
 class PracticeScreen extends StatelessWidget {
   const PracticeScreen({super.key});
 

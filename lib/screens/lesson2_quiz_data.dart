@@ -1,13 +1,11 @@
 part of 'lesson2_quiz_screen.dart';
 
 enum _QType {
-  connectTool,
   dragToTask,
   toolId,
   safetySort,
   scenarioChoice,
-  mainUseMatch,
-  workstationConnect,
+
   safetyScenario,
   toolSort,
   finalChallenge,
@@ -34,16 +32,7 @@ class _QMultipleChoice extends _Q {
   final String? visualKey;
 }
 
-class _QConnectPairs extends _Q {
-  _QConnectPairs({
-    required super.type,
-    required this.pairs,
-    required this.prompt,
-  });
-  // Map of Left (e.g. Tool) -> Right (e.g. Function)
-  final Map<String, String> pairs;
-  final String prompt;
-}
+
 
 class _QDragToTask extends _Q {
   _QDragToTask({
@@ -93,19 +82,7 @@ class _QFinalSequence extends _Q {
 // ---------------------------------------------------------
 
 final _pool = <_Q>[
-  // 1. CONNECT THE TOOL
-  _QConnectPairs(
-    type: _QType.connectTool,
-    prompt: 'Connect each tool to its function.',
-    pairs: {
-      'Tape Measure': 'Measures long distances',
-      'Steel Rule': 'Measures short distances',
-      'Try Square': 'Checks 90° angles',
-      'Straight Edge': 'Checks straightness',
-      'Vernier Caliper': 'Accurate small measurements',
-      'Folding Rule': 'Measures length and folds for storage',
-    },
-  ),
+
 
   // 2. DRAG AND DROP TOOL TO TASK
   _QDragToTask(
@@ -276,33 +253,7 @@ final _pool = <_Q>[
     explanation: 'A Folding Rule has sections that fold together for easy storage and measuring.',
   ),
 
-  // 6. MAIN USE MATCH
-  _QConnectPairs(
-    type: _QType.mainUseMatch,
-    prompt: 'Match each tool to its MAIN use.',
-    pairs: {
-      'Tape Measure': 'Long Measurements',
-      'Steel Rule': 'Short Measurements',
-      'Try Square': '90° Angle',
-      'Straight Edge': 'Checks Straightness',
-      'Vernier Caliper': 'Accurate Small Measurements',
-      'Folding Rule': 'Foldable Measuring',
-    },
-  ),
 
-  // 7. TOOL FUNCTION CONNECT-THE-DOTS (Workstation)
-  _QConnectPairs(
-    type: _QType.workstationConnect,
-    prompt: 'Connect the tool to the appropriate workstation task.',
-    pairs: {
-      'Tape Measure': 'Long board',
-      'Try Square': '90° corner',
-      'Straight Edge': 'Straight board',
-      'Vernier Caliper': 'Small diameter / inside hole',
-      'Steel Rule': 'Small wood piece',
-      'Folding Rule': 'Foldable measuring task',
-    },
-  ),
 
   // 8. SAFETY SCENARIO
   _QMultipleChoice(
@@ -367,15 +318,15 @@ final _pool = <_Q>[
 ];
 
 const _sessionOrder = [
-  _QType.connectTool,
   _QType.dragToTask,
   _QType.toolId,
   _QType.safetySort,
   _QType.scenarioChoice,
-  _QType.mainUseMatch,
-  _QType.workstationConnect,
+  _QType.dragToTask,
   _QType.safetyScenario,
+  _QType.toolId,
   _QType.toolSort,
+  _QType.scenarioChoice,
   _QType.finalChallenge,
 ];
 

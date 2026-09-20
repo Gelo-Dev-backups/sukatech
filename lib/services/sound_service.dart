@@ -10,34 +10,44 @@ class SoundService {
     const prefix = 'lib/assets/sound_effects/';
     AudioCache.instance.prefix = prefix;
     _bgmPlayer.audioCache = AudioCache(prefix: prefix);
-    _sfxPlayer.audioCache = AudioCache(prefix: prefix);
+    for (var p in _sfxPlayers) {
+      p.audioCache = AudioCache(prefix: prefix);
+    }
     _specialSfxPlayer.audioCache = AudioCache(prefix: prefix);
   }
   static final SoundService instance = SoundService._();
 
   final AudioPlayer _bgmPlayer = AudioPlayer();
-  final AudioPlayer _sfxPlayer = AudioPlayer();
+  final List<AudioPlayer> _sfxPlayers = List.generate(4, (_) => AudioPlayer());
+  int _currentSfxIndex = 0;
   final AudioPlayer _specialSfxPlayer = AudioPlayer(); // For XP/Achievements so they don't get cut off
 
-  bool _isInitialized = false;
+  Future<void>? _initFuture;
   Set<String>? _availableAssets;
 
-  Future<void> init() async {
-    if (_isInitialized) return;
+  Future<void> init() {
+    _initFuture ??= _initInternal();
+    return _initFuture!;
+  }
+
+  Future<void> _initInternal() async {
     try {
       const prefix = 'lib/assets/sound_effects/';
       AudioCache.instance.prefix = prefix;
       _bgmPlayer.audioCache.prefix = prefix;
-      _sfxPlayer.audioCache.prefix = prefix;
+      for (var p in _sfxPlayers) {
+        p.audioCache.prefix = prefix;
+      }
       _specialSfxPlayer.audioCache.prefix = prefix;
 
       await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
       await _bgmPlayer.setVolume(0.3); // 30% volume for background music
-      await _sfxPlayer.setVolume(1.0);
+      for (var p in _sfxPlayers) {
+        await p.setVolume(1.0);
+      }
       await _specialSfxPlayer.setVolume(1.0);
 
       await _loadAssetManifest();
-      _isInitialized = true;
     } catch (e) {
       debugPrint('Audio initialization failed: $e');
     }
@@ -70,7 +80,18 @@ class SoundService {
     try {
       await init();
       final fileName = _resolveFile(candidates);
-      final player = special ? _specialSfxPlayer : _sfxPlayer;
+      AudioPlayer player;
+      if (special) {
+        player = _specialSfxPlayer;
+      } else {
+        player = _sfxPlayers[_currentSfxIndex];
+        _currentSfxIndex = (_currentSfxIndex + 1) % _sfxPlayers.length;
+      }
+      
+      // Stop before playing if it's currently active (especially needed for single special player)
+      if (player.state == PlayerState.playing) {
+        await player.stop();
+      }
       await player.play(AssetSource(fileName));
     } catch (e) {
       debugPrint('Failed to play sound effect ($candidates): $e');
@@ -111,7 +132,10 @@ class SoundService {
       final bgmList = ['bg-music1.mp3', 'bg-music2.mp3'];
       final chosen = bgmList[Random().nextInt(bgmList.length)];
       final fileName = _resolveFile([chosen, ...bgmList]);
-      await _bgmPlayer.play(AssetSource(fileName));
+      
+      if (_bgmPlayer.state != PlayerState.playing) {
+        await _bgmPlayer.play(AssetSource(fileName));
+      }
     } catch (e) {
       debugPrint('Failed to start background music: $e');
     }

@@ -12,9 +12,9 @@ class _TypeBadge extends StatelessWidget {
           Icons.straighten_rounded,
           const Color(0xFF1565C0),
         ),
-      _QType.fillInBlank => (
-          'Fill in the Blank — Choose the Unit',
-          Icons.tune_rounded,
+      _QType.multipleChoice => (
+          'Knowledge Check',
+          Icons.check_circle_outline,
           const Color(0xFF2E7D32),
         ),
       _QType.metricVsEnglish => (
@@ -237,242 +237,17 @@ class _BoardPainter extends CustomPainter {
       old.highlight != highlight || old.highlightCorrect != highlightCorrect;
 }
 
-class _FillBlankCard extends StatelessWidget {
-  const _FillBlankCard({required this.blankWord, required this.answered});
-  final String blankWord;
-  final bool answered;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 110,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF0F3260), _navy],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: _navy.withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.straighten_rounded,
-              color: Colors.white.withValues(alpha: 0.4), size: 32),
-          const SizedBox(width: 22),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Measurement Unit',
-                style: TextStyle(
-                  color: Colors.white54,
-                  fontSize: 9,
-                  fontFamily: _montserrat,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
-                ),
-              ),
-              const SizedBox(height: 6),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
-                decoration: BoxDecoration(
-                  color: answered
-                      ? _accent.withValues(alpha: 0.2)
-                      : Colors.white.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                      color: answered ? _accent : Colors.white30,
-                      width: answered ? 2 : 1),
-                ),
-                child: Text(
-                  answered ? blankWord : '?',
-                  style: TextStyle(
-                    color: answered ? _accent : Colors.white60,
-                    fontSize: answered ? 28 : 24,
-                    fontFamily: _montserrat,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 22),
-          Icon(Icons.square_foot_rounded,
-              color: Colors.white.withValues(alpha: 0.4), size: 32),
-        ],
-      ),
-    );
-  }
-}
-
-class _FillBlankPrompt extends StatelessWidget {
-  const _FillBlankPrompt(
-      {required this.prompt,
-      required this.answered,
-      required this.selectedWord});
-  final String prompt;
-  final bool answered;
-  final String? selectedWord;
-
-  @override
-  Widget build(BuildContext context) {
-    final parts = prompt.split('___');
-    if (parts.length != 2) return _plain(prompt);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        color: const Color(0xFF2E7D32).withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(14),
-        border:
-            Border.all(color: const Color(0xFF2E7D32).withValues(alpha: 0.20)),
-      ),
-      child: RichText(
-        text: TextSpan(
-          style: const TextStyle(
-            color: _navy,
-            fontSize: 16,
-            fontFamily: _montserrat,
-            fontWeight: FontWeight.w700,
-            height: 1.5,
-          ),
-          children: [
-            TextSpan(text: parts[0]),
-            WidgetSpan(
-              alignment: PlaceholderAlignment.middle,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
-                decoration: BoxDecoration(
-                  color: answered
-                      ? _green.withValues(alpha: 0.15)
-                      : _accent.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                      color: answered ? _green : _accent,
-                      width: answered ? 2 : 1.5),
-                ),
-                child: Text(
-                  answered && selectedWord != null ? selectedWord! : '  ___  ',
-                  style: TextStyle(
-                    color: answered ? _green : _navy,
-                    fontSize: 16,
-                    fontFamily: _montserrat,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-            ),
-            TextSpan(text: parts[1]),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _plain(String text) => Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: _navy.withValues(alpha: 0.04),
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: _navy,
-            fontSize: 15,
-            fontFamily: _montserrat,
-            fontWeight: FontWeight.w700,
-            height: 1.45,
-          ),
-        ),
-      );
-}
 
 class _MetricEnglishInfoCard extends StatelessWidget {
   const _MetricEnglishInfoCard();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 90,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF4A148C), Color(0xFF6A1B9A)],
-        ),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _SysPreview('METRIC / SI', const ['mm', 'cm', 'm'],
-              const Color(0xFF64B5F6)),
-          Container(width: 1, height: 50, color: Colors.white24),
-          _SysPreview(
-              'ENGLISH', const ['in', 'ft'], const Color(0xFFFFCC80)),
-        ],
-      ),
-    );
+    return const SizedBox.shrink();
   }
 }
 
-class _SysPreview extends StatelessWidget {
-  const _SysPreview(this.label, this.units, this.color);
-  final String label;
-  final List<String> units;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: color,
-            fontSize: 9,
-            fontFamily: _montserrat,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 0.8,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: units
-              .map((u) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3),
-                    child: Text(
-                      u,
-                      style: TextStyle(
-                        color: color.withValues(alpha: 0.75),
-                        fontSize: 13,
-                        fontFamily: _montserrat,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ))
-              .toList(),
-        ),
-      ],
-    );
-  }
-}
 
 class _CarpenterCard extends StatelessWidget {
   const _CarpenterCard();

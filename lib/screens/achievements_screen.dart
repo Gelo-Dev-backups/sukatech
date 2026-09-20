@@ -4,6 +4,7 @@ import '../data/achievement_manager.dart';
 import '../data/user_store.dart';
 import '../models/achievement.dart';
 import '../models/user.dart';
+import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
 
 class AchievementsScreen extends StatelessWidget {
@@ -100,8 +101,9 @@ class AchievementsScreen extends StatelessWidget {
             // Achievements List
             Positioned.fill(
               top: 170,
+              bottom: 84, // Leave space for bottom nav bar
               child: ListView.builder(
-                padding: const EdgeInsets.only(top: 8, bottom: 40),
+                padding: const EdgeInsets.only(top: 8, bottom: 20),
                 itemCount: AchievementManager.allAchievements.length,
                 itemBuilder: (context, index) {
                   final ach = AchievementManager.allAchievements[index];
@@ -114,19 +116,9 @@ class AchievementsScreen extends StatelessWidget {
                 },
               ),
             ),
-            // Back Button
-            Positioned(
-              left: 18,
-              top: 56,
-              child: IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: Colors.white,
-                  size: 24,
-                ),
-              ),
-            ),
+            
+            // Bottom Nav Bar
+            const DashboardBottomNavBar(currentTab: DashboardTab.achievements),
           ],
         );
       },

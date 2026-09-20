@@ -390,8 +390,8 @@ class _ScreenState extends State<Lesson1QuizScreen>
           answered: _answered,
           correct: _selected == q.correctIndex,
         );
-      case _QType.fillInBlank:
-        return _FillBlankCard(blankWord: q.blankWord ?? '', answered: _answered);
+      case _QType.multipleChoice:
+        return const SizedBox.shrink();
       case _QType.metricVsEnglish:
         return const _MetricEnglishInfoCard();
       case _QType.carpenterDecision:
@@ -400,13 +400,7 @@ class _ScreenState extends State<Lesson1QuizScreen>
   }
 
   Widget _buildPrompt(_Q q) {
-    if (q.type == _QType.fillInBlank) {
-      return _FillBlankPrompt(
-        prompt: q.prompt,
-        answered: _answered,
-        selectedWord: _answered ? q.choices[q.correctIndex] : null,
-      );
-    }
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(

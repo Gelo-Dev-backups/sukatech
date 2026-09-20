@@ -8,19 +8,19 @@ import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
 import '../widgets/quiz_shared_widgets.dart';
 
-part 'lesson2_quiz_data.dart';
-part 'lesson2_quiz_widgets.dart';
+part 'lesson3_quiz_data.dart';
+part 'lesson3_quiz_widgets.dart';
 
-const _practiceXpKey = 'lesson_02_practice_measuring_tools_xp';
+const _practiceXpKey = 'lesson_03_practice_parts_functions_xp';
 
-class Lesson2QuizScreen extends StatefulWidget {
-  const Lesson2QuizScreen({super.key});
+class Lesson3QuizScreen extends StatefulWidget {
+  const Lesson3QuizScreen({super.key});
 
   @override
-  State<Lesson2QuizScreen> createState() => _ScreenState();
+  State<Lesson3QuizScreen> createState() => _ScreenState();
 }
 
-class _ScreenState extends State<Lesson2QuizScreen>
+class _ScreenState extends State<Lesson3QuizScreen>
     with SingleTickerProviderStateMixin {
   late List<_Q> _questions;
   int _index = 0;
@@ -45,7 +45,7 @@ class _ScreenState extends State<Lesson2QuizScreen>
 
     if (_q is _QDragToTask) return _activitySubmitted;
     if (_q is _QSafetySort || _q is _QCategorySort) return _activitySubmitted;
-    if (_q is _QFinalSequence) return _selected != null; // Handle step by step later if needed, but for now just use a simple state
+    if (_q is _QFinalSequence) return _selected != null; 
     return false;
   }
 
@@ -173,7 +173,6 @@ class _ScreenState extends State<Lesson2QuizScreen>
 
     if (_q is _QDragToTask) return _droppedTool == (_q as _QDragToTask).correctTool;
     if (_q is _QSafetySort || _q is _QCategorySort) {
-      // Re-evaluate since we don't store sort accuracy separately
       if (_q is _QSafetySort) {
         final qs = _q as _QSafetySort;
         for (final entry in _sortAssignments.entries) {
@@ -201,7 +200,7 @@ class _ScreenState extends State<Lesson2QuizScreen>
       final step = q.steps.first;
       return _selected == q.toolChoices.indexOf(step.correctTool);
     }
-    return false; // Default for unimplemented
+    return false;
   }
 
   void _next() {
@@ -297,7 +296,7 @@ class _ScreenState extends State<Lesson2QuizScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
                             Text(
-                              'Measuring Tools',
+                              'Parts and Functions',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 13,
@@ -429,13 +428,13 @@ class _ScreenState extends State<Lesson2QuizScreen>
   Widget _buildTypeBadge() {
     final (label, icon, color) = switch (_q.type) {
       _QType.dragToTask => ('Drag Tool to Task', Icons.touch_app_rounded, const Color(0xFF1565C0)),
-      _QType.toolId => ('Tool Identification', Icons.search_rounded, const Color(0xFFE65100)),
-      _QType.safetySort => ('Safety Challenge', Icons.security_rounded, const Color(0xFF00695C)),
-      _QType.scenarioChoice => ('What Tool Would You Choose?', Icons.handyman_rounded, const Color(0xFF4E342E)),
+      _QType.toolId => ('Part Identification', Icons.search_rounded, const Color(0xFFE65100)),
+      _QType.safetySort => ('Knowledge Check', Icons.check_circle_outline_rounded, const Color(0xFF00695C)),
+      _QType.scenarioChoice => ('What Part Would You Choose?', Icons.handyman_rounded, const Color(0xFF4E342E)),
 
-      _QType.safetyScenario => ('Safety Scenario', Icons.warning_rounded, const Color(0xFFD84315)),
+      _QType.safetyScenario => ('Scenario', Icons.info_outline_rounded, const Color(0xFFD84315)),
       _QType.toolSort => ('Tool Sorting', Icons.sort_rounded, const Color(0xFF0277BD)),
-      _QType.finalChallenge => ('Final Carpenter Challenge', Icons.star_rounded, const Color(0xFFF9A825)),
+      _QType.finalChallenge => ('Final Challenge', Icons.star_rounded, const Color(0xFFF9A825)),
     };
 
     return Row(
@@ -528,11 +527,11 @@ class _ScreenState extends State<Lesson2QuizScreen>
       final q = _q as _QSafetySort;
       return _GenericSortActivity(
         categories: const [
-          (name: 'SAFE', color: QuizStyles.green, correctItems: []), // Populated later
-          (name: 'UNSAFE', color: QuizStyles.red, correctItems: []),
+          (name: 'TRUE', color: QuizStyles.green, correctItems: []), 
+          (name: 'FALSE', color: QuizStyles.red, correctItems: []),
         ].map((c) {
           final corrects = q.items.entries
-              .where((e) => (c.name == 'SAFE' && e.value) || (c.name == 'UNSAFE' && !e.value))
+              .where((e) => (c.name == 'TRUE' && e.value) || (c.name == 'FALSE' && !e.value))
               .map((e) => e.key)
               .toList();
           return (name: c.name, color: c.color, correctItems: corrects);
@@ -548,8 +547,8 @@ class _ScreenState extends State<Lesson2QuizScreen>
       final q = _q as _QCategorySort;
       final cats = q.categories.entries.map((e) {
         Color color;
-        if (e.key.contains('LENGTH')) color = const Color(0xFF1565C0);
-        else if (e.key.contains('CHECKS')) color = const Color(0xFFE65100);
+        if (e.key.contains('TAPE MEASURE')) color = const Color(0xFF1565C0);
+        else if (e.key.contains('VERNIER CALIPER')) color = const Color(0xFFE65100);
         else color = const Color(0xFF6A1B9A);
         return (name: e.key, color: color, correctItems: e.value);
       }).toList();
@@ -564,8 +563,6 @@ class _ScreenState extends State<Lesson2QuizScreen>
     }
 
     if (_q is _QFinalSequence) {
-      // Just treating it as a simple multiple choice for the first step to keep UI simple
-      // A more complex sequence could be built, but we will just use the first step for this MVP
       final q = _q as _QFinalSequence;
       final step = q.steps.first;
       return Column(
@@ -626,9 +623,9 @@ class _ScreenState extends State<Lesson2QuizScreen>
     if (_q is _QMultipleChoice) return (_q as _QMultipleChoice).explanation;
     if (_q is _QDragToTask) return (_q as _QDragToTask).explanation;
 
-    if (_q is _QSafetySort) return 'Always follow proper safety guidelines when handling measuring tools.';
-    if (_q is _QCategorySort) return 'Each tool is specialized for specific types of measurements or checks.';
-    if (_q is _QFinalSequence) return 'Carpenter challenge step complete!';
+    if (_q is _QSafetySort) return 'Great job sorting those statements!';
+    if (_q is _QCategorySort) return 'Each part belongs to its specific measuring tool.';
+    if (_q is _QFinalSequence) return 'Challenge complete!';
     return '';
   }
 
@@ -638,10 +635,10 @@ class _ScreenState extends State<Lesson2QuizScreen>
     final String msg;
     final Color msgColor;
     if (accuracy >= 90) {
-      msg = 'Excellent! You know your measuring tools. 🎉';
+      msg = 'Excellent! You know your measuring tools parts. 🎉';
       msgColor = QuizStyles.green;
     } else if (accuracy >= 70) {
-      msg = 'Good work! Review a few tools and try again. 💪';
+      msg = 'Good work! Review a few parts and try again. 💪';
       msgColor = QuizStyles.accent;
     } else {
       msg = 'Keep practicing! Review the lesson and try again. 📖';
@@ -722,7 +719,7 @@ class _ScreenState extends State<Lesson2QuizScreen>
                             Expanded(
                               child: QuizResultChip(
                                 label: 'XP Earned',
-                                value: '+10 XP', // Always 10 XP as per requirements
+                                value: '+10 XP', 
                                 color: QuizStyles.accent,
                               ),
                             ),
@@ -777,4 +774,3 @@ class _ScreenState extends State<Lesson2QuizScreen>
     );
   }
 }
-

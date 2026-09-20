@@ -1,4 +1,4 @@
-part of 'lesson2_quiz_screen.dart';
+part of 'lesson3_quiz_screen.dart';
 
 // ---------------------------------------------------------
 // REUSABLE TOOL ICONS (Procedurally drawn for simplicity)
@@ -14,18 +14,32 @@ class _ToolIcon extends StatelessWidget {
     String assetName;
     switch (toolName) {
       case 'Tape Measure':
+      case 'Hook':
+      case 'Blade (Tape)':
+      case 'Lock Button':
+      case 'Housing':
         assetName = 'lib/assets/images/tape-measure.png';
         break;
       case 'Steel Rule':
+      case 'Graduation':
+      case 'Edge':
         assetName = 'lib/assets/images/steel-rule.png';
         break;
       case 'Try Square':
+      case 'Blade (Square)':
+      case 'Stock':
+      case 'Rivets':
         assetName = 'lib/assets/images/try-square.png';
         break;
       case 'Straight Edge':
         assetName = 'lib/assets/images/straight-edge.png';
         break;
       case 'Vernier Caliper':
+      case 'Outside Jaws':
+      case 'Inside Jaws':
+      case 'Main Scale':
+      case 'Vernier Scale':
+      case 'Depth Rod':
         assetName = 'lib/assets/images/venice-caliper.png';
         break;
       case 'Folding Rule':
@@ -64,13 +78,13 @@ class _ToolIcon extends StatelessWidget {
 }
 
 // ---------------------------------------------------------
-// CONNECT DOTS ACTIVITY (Activities 1, 6, 7)
+// CONNECT DOTS ACTIVITY
 // ---------------------------------------------------------
 
 
 
 // ---------------------------------------------------------
-// DRAG TO TASK (Activity 2)
+// DRAG TO TASK
 // ---------------------------------------------------------
 
 class _DragToTaskActivity extends StatelessWidget {
@@ -152,7 +166,7 @@ class _DragToTaskActivity extends StatelessWidget {
                           )
                         : Center(
                             child: Text(
-                              'Drop correct tool here',
+                              'Drop correct part here',
                               style: TextStyle(
                                 color: QuizStyles.navy.withValues(alpha: 0.4),
                                 fontSize: 13,
@@ -213,7 +227,7 @@ class _DraggableToolCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.handyman_rounded, color: Colors.white.withValues(alpha: 0.8), size: 14),
+          Icon(Icons.precision_manufacturing_rounded, color: Colors.white.withValues(alpha: 0.8), size: 14),
           const SizedBox(width: 6),
           Text(
             toolName,
@@ -231,7 +245,7 @@ class _DraggableToolCard extends StatelessWidget {
 }
 
 // ---------------------------------------------------------
-// SORTING ACTIVITY (Activities 4 and 9)
+// SORTING ACTIVITY
 // ---------------------------------------------------------
 
 class _GenericSortActivity extends StatelessWidget {
