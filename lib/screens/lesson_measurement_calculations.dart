@@ -143,7 +143,7 @@ class _LessonsMeasurementCalculationsState
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               image: const DecorationImage(
-                image: AssetImage('assets/images/placeholder.png'),
+                image: AssetImage('lib/assets/images/learningobj.png'),
                 fit: BoxFit.cover,
               ),
             ),

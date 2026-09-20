@@ -81,66 +81,33 @@ class _LessonsUnitConversionState extends State<LessonsUnitConversion> {
   Future<void> _advance() async {
     if (_saving) return;
 
-    if (_currentTab == 0) {
+    if (_currentTab < _tabCount - 1) {
       setState(() => _saving = true);
-      await _saveProgress(2, 1);
+      final nextTab = _currentTab + 1;
+      final nextStep = _progressStep + 1;
+      await _saveProgress(nextStep, nextTab);
       if (!mounted) return;
       setState(() {
         _saving = false;
-        _currentTab = 1;
-        _progressStep = 2;
+        _currentTab = nextTab;
+        _progressStep = nextStep;
       });
       return;
     }
 
-    if (_currentTab == 1) {
-      setState(() => _saving = true);
-      await _saveProgress(3, 2);
-      if (!mounted) return;
-      setState(() {
-        _saving = false;
-        _currentTab = 2;
-        _progressStep = 3;
-      });
-      return;
-    }
-
-    if (_currentTab == 2) {
-      setState(() => _saving = true);
-      await _saveProgress(4, 3);
-      if (!mounted) return;
-      setState(() {
-        _saving = false;
-        _currentTab = 3;
-        _progressStep = 4;
-      });
-      return;
-    }
-
-    if (_currentTab == 3) {
-      setState(() => _saving = true);
-      await _saveProgress(5, 4);
-      if (!mounted) return;
-      setState(() {
-        _saving = false;
-        _currentTab = 4;
-        _progressStep = 5;
-      });
-      return;
-    }
-
-    if (_currentTab == 4) {
+    if (_currentTab == _tabCount - 1) {
       setState(() => _saving = true);
       await UserStore.mutate((user) {
         final newTabs = Map<String, int>.from(user.lessonLastTabs);
-        newTabs[_lessonTitle] = 4;
+        newTabs[_lessonTitle] = _tabCount - 1;
 
         final completed = List<String>.from(user.completedLessonsList);
         if (!completed.contains(_lessonTitle)) {
           completed.add(_lessonTitle);
         }
 
-        final tabId = 'lesson_05_tab_04';
+        final tabId =
+            'lesson_05_tab_${(_tabCount - 1).toString().padLeft(2, '0')}';
         final completedLessonTabs = List<String>.from(user.completedLessonTabs);
         int xpEarned = user.xpEarned;
         if (!completedLessonTabs.contains(tabId)) {
