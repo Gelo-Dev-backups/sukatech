@@ -1,11 +1,18 @@
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show rootBundle, AssetManifest;
 
 /// A centralized singleton service to handle audio playback for Sukatech quizzes.
 /// Uses the audioplayers package to securely load and play MP3s from assets.
 class SoundService {
-  SoundService._();
+  SoundService._() {
+    const prefix = 'lib/assets/sound_effects/';
+    AudioCache.instance.prefix = prefix;
+    _bgmPlayer.audioCache = AudioCache(prefix: prefix);
+    _sfxPlayer.audioCache = AudioCache(prefix: prefix);
+    _specialSfxPlayer.audioCache = AudioCache(prefix: prefix);
+  }
   static final SoundService instance = SoundService._();
 
   final AudioPlayer _bgmPlayer = AudioPlayer();
@@ -13,60 +20,98 @@ class SoundService {
   final AudioPlayer _specialSfxPlayer = AudioPlayer(); // For XP/Achievements so they don't get cut off
 
   bool _isInitialized = false;
+  Set<String>? _availableAssets;
 
   Future<void> init() async {
     if (_isInitialized) return;
     try {
+      const prefix = 'lib/assets/sound_effects/';
+      AudioCache.instance.prefix = prefix;
+      _bgmPlayer.audioCache.prefix = prefix;
+      _sfxPlayer.audioCache.prefix = prefix;
+      _specialSfxPlayer.audioCache.prefix = prefix;
+
       await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
       await _bgmPlayer.setVolume(0.3); // 30% volume for background music
       await _sfxPlayer.setVolume(1.0);
       await _specialSfxPlayer.setVolume(1.0);
+
+      await _loadAssetManifest();
       _isInitialized = true;
     } catch (e) {
       debugPrint('Audio initialization failed: $e');
     }
   }
 
-  Future<void> _playSfxSafe(String assetPath, {bool special = false}) async {
+  Future<void> _loadAssetManifest() async {
+    if (_availableAssets != null) return;
     try {
-      final player = special ? _specialSfxPlayer : _sfxPlayer;
-      await player.play(AssetSource(assetPath));
+      final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
+      _availableAssets = manifest.listAssets().toSet();
     } catch (e) {
-      debugPrint('Failed to play sound effect ($assetPath): $e');
+      debugPrint('Could not load AssetManifest: $e');
+      _availableAssets = {};
+    }
+  }
+
+  String _resolveFile(List<String> candidates) {
+    if (_availableAssets != null && _availableAssets!.isNotEmpty) {
+      for (final candidate in candidates) {
+        if (_availableAssets!.contains('lib/assets/sound_effects/$candidate')) {
+          return candidate;
+        }
+      }
+    }
+    // Return first candidate if manifest not loaded yet or no match
+    return candidates.first;
+  }
+
+  Future<void> _playSfxSafe(List<String> candidates, {bool special = false}) async {
+    try {
+      await init();
+      final fileName = _resolveFile(candidates);
+      final player = special ? _specialSfxPlayer : _sfxPlayer;
+      await player.play(AssetSource(fileName));
+    } catch (e) {
+      debugPrint('Failed to play sound effect ($candidates): $e');
     }
   }
 
   /// Plays the correct answer sound effect.
   void playCorrect() {
-    _playSfxSafe('sound_effects/correct.mp3');
+    _playSfxSafe(['correct.mp3']);
   }
 
   /// Plays the wrong answer sound effect.
   void playWrong() {
-    _playSfxSafe('sound_effects/wrong.mp3');
+    _playSfxSafe(['wrong.mp3']);
   }
 
   /// Plays the quiz completion sound effect.
   void playQuizComplete() {
-    _playSfxSafe('sound_effects/done-quiz.mp3', special: true);
+    _playSfxSafe(['done-quiz.mp3'], special: true);
   }
 
   /// Plays the XP gain sound effect.
+  /// Dynamically handles existing 'gain-exp.mp3' and alternate 'gain-xp.mp3'.
   void playGainXp() {
-    _playSfxSafe('sound_effects/gain-xp.mp3', special: true);
+    _playSfxSafe(['gain-exp.mp3', 'gain-xp.mp3'], special: true);
   }
 
   /// Plays the achievement unlocked sound effect.
+  /// Dynamically handles existing 'achivement-unlocked.mp3' and alternate 'achievement-unlocked.mp3'.
   void playAchievementUnlocked() {
-    _playSfxSafe('sound_effects/achievement-unlocked.mp3', special: true);
+    _playSfxSafe(['achivement-unlocked.mp3', 'achievement-unlocked.mp3'], special: true);
   }
 
   /// Starts random background music and loops it continuously.
   Future<void> playBackgroundMusic() async {
     try {
       await init(); // Ensure configured for loop
-      final bgm = Random().nextBool() ? 'bg-music1.mp3' : 'bg-music2.mp3';
-      await _bgmPlayer.play(AssetSource('sound_effects/$bgm'));
+      final bgmList = ['bg-music1.mp3', 'bg-music2.mp3'];
+      final chosen = bgmList[Random().nextInt(bgmList.length)];
+      final fileName = _resolveFile([chosen, ...bgmList]);
+      await _bgmPlayer.play(AssetSource(fileName));
     } catch (e) {
       debugPrint('Failed to start background music: $e');
     }
