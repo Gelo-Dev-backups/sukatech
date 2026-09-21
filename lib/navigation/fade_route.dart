@@ -2,49 +2,106 @@ import 'package:flutter/material.dart';
 
 import '../screens/under_development_screen.dart';
 
-/// A premium, smooth page transition used for every screen-to-screen hand-off.
-/// Combines a gentle slide up, subtle scale (0.985 -> 1.0), and curved fade
-/// for a fluid, polished native feel without abrupt cuts or jarring motion.
-Route<T> fadeRoute<T>(WidgetBuilder builder) {
+// ─── Shared curve ────────────────────────────────────────────────────────────
+
+const _kCurve    = Curves.easeOutCubic;
+const _kRevCurve = Curves.easeInCubic;
+const _kDur      = Duration(milliseconds: 320);
+const _kRevDur   = Duration(milliseconds: 260);
+
+// ─── Cross-fade route (tab / sibling navigation) ─────────────────────────────
+//
+// Used when switching top-level tabs (Home → Lessons → Practice …).
+// There is no slide or scale — the outgoing page fades out while the incoming
+// page fades in, giving a calm, non-directional feel that suits tab switching.
+
+Route<T> crossFadeRoute<T>(WidgetBuilder builder) {
   return PageRouteBuilder<T>(
-    transitionDuration: const Duration(milliseconds: 300),
-    reverseTransitionDuration: const Duration(milliseconds: 250),
+    transitionDuration:        const Duration(milliseconds: 220),
+    reverseTransitionDuration: const Duration(milliseconds: 180),
     pageBuilder: (context, _, _) => builder(context),
     transitionsBuilder: (_, animation, secondaryAnimation, child) {
-      final curvedAnimation = CurvedAnimation(
+      // Outgoing screen fades out.
+      final fadeOut = Tween<double>(begin: 1.0, end: 0.0).animate(
+        CurvedAnimation(parent: secondaryAnimation, curve: Curves.easeOut),
+      );
+      // Incoming screen fades in.
+      final fadeIn = CurvedAnimation(
         parent: animation,
-        curve: Curves.easeOutCubic,
-        reverseCurve: Curves.easeInCubic,
+        curve: Curves.easeOut,
+      );
+      return FadeTransition(
+        opacity: fadeOut,
+        child: FadeTransition(opacity: fadeIn, child: child),
+      );
+    },
+  );
+}
+
+// ─── Slide route (deep push navigation) ──────────────────────────────────────
+//
+// Used when navigating deeper: opening a lesson, starting a quiz, entering a
+// practice activity, etc. Slides in from the right (iOS-style) and slides back
+// out to the right on pop. A subtle fade accompanies the slide so it doesn't
+// look too abrupt on Android.
+
+Route<T> slideRoute<T>(WidgetBuilder builder) {
+  return PageRouteBuilder<T>(
+    transitionDuration:        _kDur,
+    reverseTransitionDuration: _kRevDur,
+    pageBuilder: (context, _, _) => builder(context),
+    transitionsBuilder: (_, animation, secondaryAnimation, child) {
+      final curved = CurvedAnimation(
+        parent: animation,
+        curve: _kCurve,
+        reverseCurve: _kRevCurve,
       );
 
-      final slide = Tween<Offset>(
-        begin: const Offset(0.0, 0.035),
+      // Incoming page slides in from the right.
+      final slideIn = Tween<Offset>(
+        begin: const Offset(1.0, 0.0),
         end: Offset.zero,
-      ).animate(curvedAnimation);
+      ).animate(curved);
 
-      final scale = Tween<double>(
-        begin: 0.985,
-        end: 1.0,
-      ).animate(curvedAnimation);
+      // Outgoing page slides slightly left as the new one arrives (parallax).
+      final slideOut = Tween<Offset>(
+        begin: Offset.zero,
+        end: const Offset(-0.25, 0.0),
+      ).animate(CurvedAnimation(parent: secondaryAnimation, curve: _kCurve));
+
+      // Subtle fade accompanies the slide.
+      final fadeIn = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+          parent: animation,
+          curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+        ),
+      );
 
       return SlideTransition(
-        position: slide,
-        child: ScaleTransition(
-          scale: scale,
-          child: FadeTransition(
-            opacity: curvedAnimation,
-            child: child,
-          ),
+        position: slideOut,
+        child: SlideTransition(
+          position: slideIn,
+          child: FadeTransition(opacity: fadeIn, child: child),
         ),
       );
     },
   );
 }
 
-/// Pushes the shared placeholder for a feature that isn't built yet, so the
-/// user can still back out to wherever they tapped from.
+// ─── Backwards-compatible alias ───────────────────────────────────────────────
+//
+// Existing call-sites that already use fadeRoute() keep working without changes.
+// They get the slide behaviour (deep push) which is appropriate for all
+// the places that were already using it.
+
+Route<T> fadeRoute<T>(WidgetBuilder builder) => slideRoute<T>(builder);
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/// Push a placeholder screen for a feature that isn't built yet.
 void pushUnderDevelopment(BuildContext context, {String title = 'No page'}) {
   Navigator.of(
     context,
-  ).push(fadeRoute((_) => UnderDevelopmentScreen(title: title)));
+  ).push(slideRoute((_) => UnderDevelopmentScreen(title: title)));
 }
+

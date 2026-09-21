@@ -34,7 +34,7 @@ class OnboardingScreen extends StatelessWidget {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(prefsKey, true);
     if (!context.mounted) return;
-    Navigator.of(context).pushReplacement(fadeRoute((_) => const HomeScreen()));
+    Navigator.of(context).pushReplacement(crossFadeRoute((_) => const HomeScreen()));
   }
 
   @override

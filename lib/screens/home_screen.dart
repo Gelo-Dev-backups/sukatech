@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _navigated = true;
     Navigator.of(
       context,
-    ).pushReplacement(fadeRoute((_) => const DashboardScreen()));
+    ).pushReplacement(crossFadeRoute((_) => const DashboardScreen()));
   }
 
   @override

@@ -9,18 +9,21 @@ import '../settings/app_settings.dart';
 /// Centralized audio service for SUKATECH.
 ///
 /// ## BGM contexts
-///   There are two contexts:
-///   - "Main" — the looping background track that plays everywhere except quizzes.
-///   - "Quiz" — the same BGM pool but started fresh when a quiz is entered.
+///   - "Main" — looping background track that plays everywhere except quizzes.
+///   - "Quiz" — same BGM pool but started fresh when a quiz is entered.
 ///
-///   Transitioning between them uses a crossfade so there is never an abrupt
-///   stop.  Use [enterQuizMusic] / [exitQuizMusic] from quiz screens instead of
-///   the raw play/stop calls.
+///   Use [enterQuizMusic] / [exitQuizMusic] from quiz screens.
 ///
 /// ## Audio ducking
 ///   While any SFX is active the BGM fades to 25 % of its normal volume and
-///   restores once all active SFX finish.  A _duckCount reference-counter
-///   handles overlapping clips correctly.
+///   restores once all active SFX finish.
+///
+///   ROOT CAUSE FIX: SFX players are configured with AndroidAudioFocus.none so
+///   Android's audio session manager never steals focus from the BGM player.
+///   Without this, every SFX play() call on Android triggered an OS-level focus
+///   grab that paused/silenced the BGM entirely, bypassing all our Dart logic.
+///   Additionally, a generation counter prevents concurrent Dart-level fades
+///   from racing and driving the volume to 0.
 ///
 /// ## Volume control
 ///   AppSettings.musicVolume (0–1) sets the BGM "normal" volume.
@@ -55,8 +58,7 @@ class SoundService {
 
   void _onMusicVolumeChanged() {
     if (_duckCount == 0 && _bgmPlayer.state == PlayerState.playing) {
-      _bgmCurrentVolume = _bgmNormalVolume;
-      _bgmPlayer.setVolume(_bgmNormalVolume);
+      _startFade(to: _bgmNormalVolume);
     }
   }
 
@@ -83,6 +85,37 @@ class SoundService {
       _bgmPlayer.audioCache.prefix = prefix;
       for (var p in _sfxPlayers) { p.audioCache.prefix = prefix; }
       _specialSfxPlayer.audioCache.prefix = prefix;
+
+      // BGM player: request persistent music focus so Android keeps it alive.
+      await _bgmPlayer.setAudioContext(AudioContext(
+        android: AudioContextAndroid(
+          audioFocus: AndroidAudioFocus.gain,
+          contentType: AndroidContentType.music,
+          usageType: AndroidUsageType.media,
+          stayAwake: false,
+        ),
+        iOS: AudioContextIOS(
+          category: AVAudioSessionCategory.playback,
+          options: {AVAudioSessionOptions.mixWithOthers},
+        ),
+      ));
+
+      // SFX players: request NO audio focus — the OS must not interfere with BGM.
+      // We handle volume ducking ourselves in Dart.
+      final sfxContext = AudioContext(
+        android: AudioContextAndroid(
+          audioFocus: AndroidAudioFocus.none,
+          contentType: AndroidContentType.sonification,
+          usageType: AndroidUsageType.game,
+          stayAwake: false,
+        ),
+        iOS: AudioContextIOS(
+          category: AVAudioSessionCategory.playback,
+          options: {AVAudioSessionOptions.mixWithOthers},
+        ),
+      );
+      for (var p in _sfxPlayers) { await p.setAudioContext(sfxContext); }
+      await _specialSfxPlayer.setAudioContext(sfxContext);
 
       await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
       await _bgmPlayer.setVolume(_bgmNormalVolume);
@@ -120,54 +153,90 @@ class SoundService {
     return candidates.first;
   }
 
-  // ── Audio ducking ──────────────────────────────────────────────────────────
+  // ── Fade engine (generation-based cancellation) ────────────────────────────
 
-  static const Duration _fadeDuration    = Duration(milliseconds: 300);
-  static const Duration _crossfadeDur    = Duration(milliseconds: 700);
-  static const int      _fadeSteps       = 12;
-  static const int      _crossfadeSteps  = 20;
+  static const Duration _fadeDuration   = Duration(milliseconds: 250);
+  static const Duration _crossfadeDur   = Duration(milliseconds: 700);
+  static const int      _fadeSteps      = 10;
+  static const int      _crossfadeSteps = 20;
 
-  int    _duckCount         = 0;
+  /// Incremented every time a new fade is requested.
+  /// Any in-progress fade that sees a mismatched generation aborts instantly.
+  int    _fadeGen           = 0;
   double _bgmCurrentVolume  = 0.5;
-  Timer? _unduckTimer;
 
-  Future<void> _duck() async {
-    _duckCount++;
-    _unduckTimer?.cancel();
-    _unduckTimer = null;
-    await _fadeBgmVolume(to: _bgmDuckedVolume, steps: _fadeSteps, dur: _fadeDuration);
+  /// Request a BGM volume fade. Cancels any previously running fade.
+  Future<void> _startFade({
+    required double to,
+    int? steps,
+    Duration? dur,
+  }) {
+    _fadeGen++;
+    final myGen = _fadeGen;
+    return _runFade(
+      to: to,
+      steps: steps ?? _fadeSteps,
+      dur: dur ?? _fadeDuration,
+      gen: myGen,
+    );
   }
 
-  Future<void> _unduck() async {
-    if (_duckCount > 0) _duckCount--;
-    if (_duckCount > 0) return;
-    _unduckTimer = Timer(const Duration(milliseconds: 150), () async {
-      if (_duckCount == 0) {
-        await _fadeBgmVolume(to: _bgmNormalVolume, steps: _fadeSteps, dur: _fadeDuration);
-      }
-    });
-  }
-
-  /// Generic BGM volume fade from the current tracked level to [to].
-  Future<void> _fadeBgmVolume({
+  Future<void> _runFade({
     required double to,
     required int steps,
     required Duration dur,
+    required int gen,
   }) async {
-    if (_bgmPlayer.state != PlayerState.playing) return;
+    if (_bgmPlayer.state != PlayerState.playing) {
+      // Not playing — just remember the target volume for when it restarts.
+      _bgmCurrentVolume = to;
+      return;
+    }
     try {
       final double from = _bgmCurrentVolume;
-      if ((from - to).abs() < 0.005) return;
+      if ((from - to).abs() < 0.005) {
+        _bgmCurrentVolume = to;
+        return;
+      }
       final stepDelay = dur ~/ steps;
       final double step = (to - from) / steps;
       for (int i = 1; i <= steps; i++) {
+        if (_fadeGen != gen) return; // superseded — abort without changing vol
         final double v = (from + step * i).clamp(0.0, 1.0);
         _bgmCurrentVolume = v;
         await _bgmPlayer.setVolume(v);
         await Future.delayed(stepDelay);
       }
-      _bgmCurrentVolume = to;
-    } catch (_) { /* stopped mid-fade */ }
+      if (_fadeGen == gen) {
+        _bgmCurrentVolume = to;
+        await _bgmPlayer.setVolume(to);
+      }
+    } catch (_) { /* player stopped mid-fade — that's fine */ }
+  }
+
+  // ── Audio ducking ──────────────────────────────────────────────────────────
+
+  int    _duckCount  = 0;
+  Timer? _unduckTimer;
+
+  void _duck() {
+    _duckCount++;
+    _unduckTimer?.cancel();
+    _unduckTimer = null;
+    _startFade(to: _bgmDuckedVolume); // fire-and-forget; generation ensures no conflict
+  }
+
+  void _unduck() {
+    if (_duckCount > 0) _duckCount--;
+    if (_duckCount > 0) return; // other SFX still active
+
+    // Small delay so rapid successive SFX don't cause audible volume pumping.
+    _unduckTimer?.cancel();
+    _unduckTimer = Timer(const Duration(milliseconds: 200), () {
+      if (_duckCount == 0) {
+        _startFade(to: _bgmNormalVolume);
+      }
+    });
   }
 
   // ── SFX playback ───────────────────────────────────────────────────────────
@@ -184,16 +253,20 @@ class SoundService {
         player = _sfxPlayers[_currentSfxIndex];
         _currentSfxIndex = (_currentSfxIndex + 1) % _sfxPlayers.length;
       }
-      if (player.state == PlayerState.playing) await player.stop();
+      // If this slot was already playing, stop it and balance the duck counter.
+      if (player.state == PlayerState.playing) {
+        await player.stop();
+        _unduck(); // the interrupted SFX won't fire onPlayerComplete
+      }
       await player.setVolume(_sfxVol);
-      await _duck();
+      _duck();
       await player.play(AssetSource(fileName));
       player.onPlayerComplete.first
           .then((_) => _unduck())
-          .catchError((_) => _unduck());
+          .catchError((_) { _unduck(); return null; });
     } catch (e) {
       debugPrint('Failed to play SFX ($candidates): $e');
-      _unduck();
+      _unduck(); // keep duck count balanced even on error
     }
   }
 
@@ -208,12 +281,8 @@ class SoundService {
 
   // ── BGM — main context ─────────────────────────────────────────────────────
 
-  /// The file name of the currently playing main BGM track, so we can
-  /// resume the same track when returning from a quiz.
   String? _currentMainTrack;
 
-  /// Start the main background music (called once from HomeScreen).
-  /// No-op if already playing. Respects the music volume setting.
   Future<void> playBackgroundMusic() async {
     if (_bgmNormalVolume == 0) return;
     try {
@@ -233,10 +302,9 @@ class SoundService {
     }
   }
 
-  /// Stop BGM completely (e.g. music volume slider dragged to 0).
   Future<void> stopBackgroundMusic() async {
     try {
-      await _fadeBgmVolume(to: 0, steps: _crossfadeSteps, dur: _crossfadeDur);
+      await _startFade(to: 0, steps: _crossfadeSteps, dur: _crossfadeDur);
       await _bgmPlayer.stop();
       _bgmCurrentVolume = 0;
     } catch (e) {
@@ -246,60 +314,54 @@ class SoundService {
 
   // ── BGM — quiz context ─────────────────────────────────────────────────────
 
-  /// Called by a quiz screen in initState / _restart.
-  ///
-  /// Crossfades the current BGM out, then starts a fresh quiz track
-  /// (same pool, but re-randomised so it feels different from the main music).
   Future<void> enterQuizMusic() async {
     if (_bgmNormalVolume == 0) return;
     try {
       await init();
-      // Fade current track to silence.
-      await _fadeBgmVolume(to: 0, steps: _crossfadeSteps, dur: _crossfadeDur);
+      // Clear duck state — quiz manages its own BGM lifecycle.
+      _duckCount = 0;
+      _unduckTimer?.cancel();
+      _unduckTimer = null;
+
+      await _startFade(to: 0, steps: _crossfadeSteps, dur: _crossfadeDur);
       await _bgmPlayer.stop();
 
-      // Pick a quiz track — prefer a different one from the main track.
       final bgmList = ['bg-music1.mp3', 'bg-music2.mp3'];
       final others  = bgmList.where((f) => f != _currentMainTrack).toList();
       final pool    = others.isNotEmpty ? others : bgmList;
       final chosen  = pool[Random().nextInt(pool.length)];
       final fileName = _resolveFile([chosen, ...bgmList]);
 
-      // Fade in the quiz track from silence.
       _bgmCurrentVolume = 0;
       await _bgmPlayer.setVolume(0);
       await _bgmPlayer.play(AssetSource(fileName));
-      await _fadeBgmVolume(
-          to: _bgmNormalVolume, steps: _crossfadeSteps, dur: _crossfadeDur);
+      await _startFade(to: _bgmNormalVolume, steps: _crossfadeSteps, dur: _crossfadeDur);
     } catch (e) {
       debugPrint('Failed to enter quiz music: $e');
     }
   }
 
-  /// Called by a quiz screen in dispose.
-  ///
-  /// Crossfades the quiz track out, then resumes (or restarts) the main BGM.
   Future<void> exitQuizMusic() async {
     try {
-      // Fade quiz track to silence.
-      await _fadeBgmVolume(to: 0, steps: _crossfadeSteps, dur: _crossfadeDur);
+      // Clear duck state before transitioning back.
+      _duckCount = 0;
+      _unduckTimer?.cancel();
+      _unduckTimer = null;
+
+      await _startFade(to: 0, steps: _crossfadeSteps, dur: _crossfadeDur);
       await _bgmPlayer.stop();
       _bgmCurrentVolume = 0;
 
-      // Resume main BGM if music is not muted.
       if (_bgmNormalVolume == 0) return;
       final bgmList = ['bg-music1.mp3', 'bg-music2.mp3'];
-      // Re-use the same main track if we know it, otherwise pick randomly.
       final fileName = _currentMainTrack != null
           ? _resolveFile([_currentMainTrack!, ...bgmList])
           : _resolveFile(bgmList);
       _currentMainTrack ??= fileName;
 
-      // Fade main BGM back in from silence.
       await _bgmPlayer.setVolume(0);
       await _bgmPlayer.play(AssetSource(fileName));
-      await _fadeBgmVolume(
-          to: _bgmNormalVolume, steps: _crossfadeSteps, dur: _crossfadeDur);
+      await _startFade(to: _bgmNormalVolume, steps: _crossfadeSteps, dur: _crossfadeDur);
     } catch (e) {
       debugPrint('Failed to exit quiz music: $e');
     }

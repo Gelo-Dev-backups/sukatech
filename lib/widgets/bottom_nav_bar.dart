@@ -181,7 +181,7 @@ class DashboardBottomNavBar extends StatelessWidget {
     if (tab == currentTab) return;
     final destination = _screenFor(tab);
     if (destination != null) {
-      Navigator.of(context).pushReplacement(fadeRoute(destination));
+      Navigator.of(context).pushReplacement(crossFadeRoute(destination));
     } else {
       pushUnderDevelopment(context, title: tab.name);
     }

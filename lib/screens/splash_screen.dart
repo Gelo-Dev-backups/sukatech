@@ -82,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _maybeGoNext() {
     if (!mounted || _navigated || !_videoReady || !_nextScreenReady) return;
     _navigated = true;
-    Navigator.of(context).pushReplacement(fadeRoute(_nextScreenBuilder!));
+    Navigator.of(context).pushReplacement(crossFadeRoute(_nextScreenBuilder!));
   }
 
   @override
