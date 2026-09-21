@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../navigation/fade_route.dart';
 import '../widgets/design_canvas.dart';
+import 'about_screen.dart';
 import 'home_screen.dart';
 
 // First-run intro screen. Shown once; SplashScreen decides whether to route
@@ -34,52 +35,6 @@ class OnboardingScreen extends StatelessWidget {
     await prefs.setBool(prefsKey, true);
     if (!context.mounted) return;
     Navigator.of(context).pushReplacement(fadeRoute((_) => const HomeScreen()));
-  }
-
-  static Future<void> _showUnderConstructionDialog(BuildContext context) async {
-    if (!context.mounted) return;
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(color: _navy, width: 1),
-            borderRadius: BorderRadius.circular(50),
-          ),
-          backgroundColor: Colors.white,
-          content: SizedBox(
-            width: 351,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Under Construction',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: _navy,
-                    fontSize: 24,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _navy,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Back'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 
   @override
@@ -264,7 +219,9 @@ class OnboardingScreen extends StatelessWidget {
           top: 645,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: () => _showUnderConstructionDialog(context),
+            onTap: () => Navigator.of(context).push(
+              fadeRoute((_) => const AboutScreen()),
+            ),
             child: Container(
               width: 351,
               decoration: BoxDecoration(
