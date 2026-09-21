@@ -7,13 +7,13 @@ import '../widgets/design_canvas.dart';
 // Conversion categories and data
 // ---------------------------------------------------------------------------
 
-enum _ConvertCategory { length, area, volume, weight, nailScrew, lumber, angle }
+enum _ConvertCategory { length, volume, weight, nailScrew, lumber, angle }
 
 class _Unit {
   const _Unit(this.label, this.symbol, this.toBase);
   final String label;
   final String symbol;
-  final double toBase; // multiply to get base SI unit
+  final double toBase; // multiply to get base unit
 }
 
 class _Category {
@@ -42,36 +42,26 @@ const _categories = <_ConvertCategory, _Category>{
       _Unit('Inch', 'in', 0.0254),
       _Unit('Foot', 'ft', 0.3048),
       _Unit('Yard', 'yd', 0.9144),
-      _Unit('Board Foot (length)', 'bd ft', 0.3048),
-    ],
-  ),
-  _ConvertCategory.area: _Category(
-    name: 'Area',
-    icon: Icons.crop_square_rounded,
-    baseLabel: 'Square Meter (m²)',
-    units: [
-      _Unit('Square Millimeter', 'mm²', 0.000001),
-      _Unit('Square Centimeter', 'cm²', 0.0001),
-      _Unit('Square Meter', 'm²', 1.0),
-      _Unit('Square Kilometer', 'km²', 1000000.0),
-      _Unit('Square Inch', 'in²', 0.00064516),
-      _Unit('Square Foot', 'ft²', 0.092903),
-      _Unit('Square Yard', 'yd²', 0.836127),
     ],
   ),
   _ConvertCategory.volume: _Category(
     name: 'Volume',
     icon: Icons.view_in_ar_rounded,
-    baseLabel: 'Cubic Meter (m³)',
+    baseLabel: 'Liter (L)',
     units: [
-      _Unit('Cubic Millimeter', 'mm³', 1e-9),
-      _Unit('Cubic Centimeter', 'cm³', 1e-6),
-      _Unit('Cubic Meter', 'm³', 1.0),
-      _Unit('Cubic Inch', 'in³', 0.0000163871),
-      _Unit('Cubic Foot', 'ft³', 0.0283168),
-      _Unit('Cubic Yard', 'yd³', 0.764555),
-      _Unit('Liter', 'L', 0.001),
-      _Unit('Milliliter', 'mL', 0.000001),
+      _Unit('Milliliter', 'mL', 0.001),
+      _Unit('Liter', 'L', 1.0),
+      _Unit('Fluid Ounce', 'fl oz', 0.02957353),
+      _Unit('Cup', 'cup', 0.23658824),
+      _Unit('Pint', 'pt', 0.47317647),
+      _Unit('Quart', 'qt', 0.94635295),
+      _Unit('Gallon', 'gal', 3.78541178),
+      _Unit('Cubic Centimeter', 'cm³', 0.001),
+      _Unit('Cubic Meter', 'm³', 1000.0),
+      _Unit('Cubic Inch', 'in³', 0.016387064),
+      _Unit('Cubic Foot', 'ft³', 28.316846592),
+      _Unit('Cubic Yard', 'yd³', 764.554857984),
+      _Unit('Board Foot', 'BF', 2.359737216),
     ],
   ),
   _ConvertCategory.weight: _Category(
@@ -143,7 +133,7 @@ class _UnitConverterScreenState extends State<UnitConverterScreen> {
 
   _ConvertCategory _selectedCategory = _ConvertCategory.length;
   int _fromIndex = 0;
-  int _toIndex = 4; // default: m → in for length
+  int _toIndex = 4; // default: mm → in for length
   final _controller = TextEditingController(text: '1');
   String _result = '';
 
@@ -583,8 +573,35 @@ class _UnitDropdown extends StatelessWidget {
           fontSize: 14,
         ),
         icon: const Icon(Icons.arrow_drop_down, color: _accent),
+        selectedItemBuilder: (BuildContext context) {
+          return List.generate(units.length, (i) {
+            return Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                units[i].symbol,
+                style: const TextStyle(
+                  color: _accent,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                ),
+              ),
+            );
+          });
+        },
         items: List.generate(units.length, (i) {
-          return DropdownMenuItem<int>(value: i, child: Text(units[i].symbol));
+          return DropdownMenuItem<int>(
+            value: i,
+            child: Text(
+              '${units[i].label} (${units[i].symbol})',
+              style: const TextStyle(
+                color: Colors.white,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
+            ),
+          );
         }),
         onChanged: (i) {
           if (i != null) onChanged(i);
@@ -610,15 +627,19 @@ class _QuickReferenceCard extends StatelessWidget {
     'Length': [
       ('1 ft', '= 12 in  /  30.48 cm'),
       ('1 in', '= 25.4 mm'),
-      ('1 m', '≈ 3.281 ft'),
+      ('1 m', '≈ 3.281 ft  /  100 cm'),
       ('1 yd', '= 3 ft  /  0.9144 m'),
     ],
-    'Area': [
-      ('1 ft²', '= 144 in²  /  929 cm²'),
-      ('1 m²', '≈ 10.764 ft²'),
-      ('1 yd²', '= 9 ft²'),
+    'Volume': [
+      ('1 gal', '= 4 qt  /  3.785 L'),
+      ('1 qt', '= 2 pt  /  4 cups  /  0.946 L'),
+      ('1 pt', '= 2 cups  /  16 fl oz'),
+      ('1 cup', '= 8 fl oz  /  236.6 mL'),
+      ('1 L', '= 1,000 mL  /  1,000 cm³'),
+      ('1 ft³', '= 1,728 in³  /  28.32 L'),
+      ('1 m³', '= 1,000 L  /  35.31 ft³'),
+      ('1 BF', '= 144 in³  /  2.36 L'),
     ],
-    'Volume': [('1 ft³', '= 1,728 in³  /  28.32 L'), ('1 m³', '≈ 35.31 ft³')],
     'Weight': [
       ('1 kg', '≈ 2.205 lb'),
       ('1 lb', '= 16 oz  /  453.6 g'),

@@ -4,8 +4,12 @@ import '../data/user_store.dart';
 import '../navigation/fade_route.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
+import 'practice_challenge_screen.dart';
+import 'practice_choose_tool_screen.dart';
 import 'practice_find_measurement_screen.dart';
+import 'practice_measure_wood_screen.dart';
 import 'practice_read_tape_screen.dart';
+import 'practice_unit_conversion_screen.dart';
 
 class PracticeScreen extends StatelessWidget {
   const PracticeScreen({super.key});
@@ -148,6 +152,34 @@ class PracticeScreen extends StatelessWidget {
             if (index == 1) {
               Navigator.of(context).push(
                 fadeRoute((_) => const FindTheMeasurementPracticeScreen()),
+              );
+              return;
+            }
+
+            if (index == 2) {
+              Navigator.of(context).push(
+                fadeRoute((_) => const MeasureTheWoodPracticeScreen()),
+              );
+              return;
+            }
+
+            if (index == 3) {
+              Navigator.of(context).push(
+                fadeRoute((_) => const UnitConversionPracticeScreen()),
+              );
+              return;
+            }
+
+            if (index == 4) {
+              Navigator.of(context).push(
+                fadeRoute((_) => const ChooseTheRightToolPracticeScreen()),
+              );
+              return;
+            }
+
+            if (index == 5) {
+              Navigator.of(context).push(
+                fadeRoute((_) => const MeasurementChallengePracticeScreen()),
               );
               return;
             }
