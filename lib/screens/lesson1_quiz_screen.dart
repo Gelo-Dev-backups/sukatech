@@ -310,15 +310,11 @@ class _ScreenState extends State<Lesson1QuizScreen>
                         ],
                       ),
                       const SizedBox(height: 5),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: LinearProgressIndicator(
-                          value: progress,
-                          minHeight: 6,
-                          backgroundColor: Colors.white24,
-                          valueColor:
-                              const AlwaysStoppedAnimation<Color>(_green),
-                        ),
+                      AnimatedProgressBar(
+                        value: progress,
+                        minHeight: 6,
+                        backgroundColor: Colors.white24,
+                        progressColor: _green,
                       ),
                     ],
                   ),

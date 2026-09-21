@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+export 'animated_progress_bar.dart';
+
 class QuizStyles {
   static const navy = Color(0xFF061D3F);
   static const accent = Color(0xFFFFA500);

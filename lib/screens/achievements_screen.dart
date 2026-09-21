@@ -4,6 +4,7 @@ import '../data/achievement_manager.dart';
 import '../data/user_store.dart';
 import '../models/achievement.dart';
 import '../models/user.dart';
+import '../widgets/animated_progress_bar.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
 
@@ -88,14 +89,13 @@ class AchievementsScreen extends StatelessWidget {
               left: 20,
               right: 20,
               top: 136,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: progressPercent,
-                  backgroundColor: Colors.white.withValues(alpha: 0.2),
-                  color: const Color(0xFF05831C),
-                  minHeight: 6,
-                ),
+              child: AnimatedProgressBar(
+                value: progressPercent,
+                backgroundColor: Colors.white.withValues(alpha: 0.2),
+                progressColor: const Color(0xFF05831C),
+                minHeight: 6,
+                borderRadius: 4,
+                duration: const Duration(milliseconds: 500),
               ),
             ),
             // Achievements List

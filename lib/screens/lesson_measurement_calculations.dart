@@ -2214,7 +2214,10 @@ class _LessonsMeasurementCalculationsState
             ),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: FractionallySizedBox(
+              child: AnimatedFractionallySizedBox(
+                duration: const Duration(milliseconds: 350),
+                curve: Curves.easeOutCubic,
+                alignment: Alignment.centerLeft,
                 widthFactor: _progressStep / _tabCount,
                 child: Container(
                   height: 11,
