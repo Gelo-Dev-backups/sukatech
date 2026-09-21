@@ -4,6 +4,8 @@ import '../data/user_store.dart';
 import '../navigation/fade_route.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
+import 'practice_find_measurement_screen.dart';
+import 'practice_read_tape_screen.dart';
 
 class PracticeScreen extends StatelessWidget {
   const PracticeScreen({super.key});
@@ -12,12 +14,42 @@ class PracticeScreen extends StatelessWidget {
   static const _accent = Color(0xFFFFA500);
 
   static const _practices = [
-    (title: 'Introduction to\nMeasurement', icon: Icons.menu_book_rounded),
-    (title: 'Measuring Tools', icon: Icons.square_foot_rounded),
-    (title: 'Parts and\nFunctions', icon: Icons.widgets_rounded),
-    (title: 'Reading\nMeasurements', icon: Icons.straighten_rounded),
-    (title: 'Unit\nConversion', icon: Icons.sync_alt_rounded),
-    (title: 'Measurement\nCalculations', icon: Icons.functions_rounded),
+    (
+      number: 1,
+      title: 'Read the Tape',
+      subtitle: 'Identify the measurement shown on the tape measure.',
+      icon: Icons.straighten_rounded,
+    ),
+    (
+      number: 2,
+      title: 'Find the Measurement',
+      subtitle: 'Locate the correct point on the tape measure.',
+      icon: Icons.square_foot_rounded,
+    ),
+    (
+      number: 3,
+      title: 'Measure the Wood',
+      subtitle: 'Read the length and mark the correct measurement.',
+      icon: Icons.carpenter_rounded,
+    ),
+    (
+      number: 4,
+      title: 'Unit Conversion',
+      subtitle: 'Convert between inches, feet and more.',
+      icon: Icons.sync_alt_rounded,
+    ),
+    (
+      number: 5,
+      title: 'Choose the Right Tool',
+      subtitle: 'Select the best measuring tool for the given task.',
+      icon: Icons.handyman_rounded,
+    ),
+    (
+      number: 6,
+      title: 'Measurement Challenge',
+      subtitle: 'Use multiple skills in one task.',
+      icon: Icons.track_changes_rounded,
+    ),
   ];
 
   @override
@@ -62,7 +94,7 @@ class PracticeScreen extends StatelessWidget {
           right: 0,
           top: 68,
           child: Text(
-            'Practice',
+            'Practice Activities',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
@@ -88,7 +120,7 @@ class PracticeScreen extends StatelessWidget {
   Widget _practiceCard(
     BuildContext context,
     int index,
-    ({String title, IconData icon}) practice,
+    ({int number, String title, String subtitle, IconData icon}) practice,
   ) {
     final top = 142.0 + (index * 102.0);
 
@@ -97,16 +129,30 @@ class PracticeScreen extends StatelessWidget {
       top: top,
       child: Semantics(
         button: true,
-        label: 'Open ${practice.title.replaceAll('\n', ' ')} Practice',
+        label: 'Open ${practice.title} Practice',
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () {
-            final flatTitle = practice.title.replaceAll('\n', ' ');
+            final flatTitle = practice.title;
             UserStore.mutate(
-              (user) => user.copyWith(currentLessonTitle: flatTitle),
+              (user) => user.copyWith(currentLessonTitle: '$flatTitle Practice'),
             );
 
-            // TODO: Route other practice screens once implemented
+            if (index == 0) {
+              Navigator.of(context).push(
+                fadeRoute((_) => const ReadTheTapePracticeScreen()),
+              );
+              return;
+            }
+
+            if (index == 1) {
+              Navigator.of(context).push(
+                fadeRoute((_) => const FindTheMeasurementPracticeScreen()),
+              );
+              return;
+            }
+
+            // Route other practice screens once implemented
             pushUnderDevelopment(context, title: "$flatTitle Practice");
           },
           child: Container(
@@ -166,15 +212,55 @@ class PracticeScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF05831C),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${practice.number}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 7),
+                          Expanded(
+                            child: Text(
+                              practice.title,
+                              style: const TextStyle(
+                                color: _navy,
+                                fontSize: 15,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w700,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
                       Text(
-                        practice.title,
-                        style: const TextStyle(
-                          color: _navy,
-                          fontSize: 16,
+                        practice.subtitle,
+                        style: TextStyle(
+                          color: _navy.withValues(alpha: 0.65),
+                          fontSize: 11,
                           fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w700,
-                          height: 1.12,
+                          fontWeight: FontWeight.w500,
+                          height: 1.25,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
