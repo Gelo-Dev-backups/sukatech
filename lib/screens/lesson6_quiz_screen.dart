@@ -76,6 +76,7 @@ class _ScreenState extends State<Lesson6QuizScreen>
   }
 
   void _handleResult(bool isCorrect) {
+    UserStore.recordAnswer(isCorrect);
     if (isCorrect) {
       SoundService.instance.playCorrect();
       _score += 10;
@@ -105,19 +106,22 @@ class _ScreenState extends State<Lesson6QuizScreen>
 
   Future<void> _finish() async {
     setState(() => _done = true);
+    final maxScore = _questions.length * 10;
+    final perfect = _score == maxScore;
     SoundService.instance.playQuizComplete();
     
     await UserStore.mutate((user) {
       final tabs = List<String>.from(user.completedLessonTabs);
       int xp = user.xpEarned;
-      int practiced = user.practiceCompleted;
       
       bool gainedXp = false;
       if (!tabs.contains(_practiceXpKey)) {
         tabs.add(_practiceXpKey);
         xp += 10;
-        practiced++;
         gainedXp = true;
+      }
+      if (perfect && !tabs.contains('perfect_measurement')) {
+        tabs.add('perfect_measurement');
       }
       
       if (gainedXp) {
@@ -127,14 +131,14 @@ class _ScreenState extends State<Lesson6QuizScreen>
           ? _consecutive
           : user.maxConsecutiveCorrectAnswers;
       final newTabs = Map<String, int>.from(user.lessonLastTabs);
-      final prevHigh = newTabs['quiz_high_score_5'] ?? 0;
+      final prevHigh = newTabs['quiz_high_score_5'] ?? -1;
       if (_score > prevHigh) {
         newTabs['quiz_high_score_5'] = _score;
       }
       return user.copyWith(
         completedLessonTabs: tabs,
         xpEarned: xp,
-        practiceCompleted: practiced,
+        quizzesTaken: user.quizzesTaken + 1,
         maxConsecutiveCorrectAnswers: maxC,
         lessonLastTabs: newTabs,
       );

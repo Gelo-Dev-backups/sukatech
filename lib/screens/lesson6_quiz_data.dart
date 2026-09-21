@@ -20,13 +20,12 @@ class _QMultipleChoice extends _Q {
     required this.choices,
     required this.correctIndex,
     required this.explanation,
-    this.visualKey,
   });
   final String prompt;
   final List<String> choices;
   final int correctIndex;
   final String explanation;
-  final String? visualKey;
+  final String? visualKey = null;
 }
 
 // ---------------------------------------------------------

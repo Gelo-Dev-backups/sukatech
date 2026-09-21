@@ -112,6 +112,22 @@ class QuizScreen extends StatelessWidget {
                 ),
               ),
             ),
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 94,
+              child: Text(
+                '${user?.quizzesPassed ?? 0} of ${_quizzes.length} Quizzes Passed',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: _accent,
+                  fontSize: 11,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.33,
+                ),
+              ),
+            ),
             const Positioned(
               right: 28,
               top: 62,
@@ -122,7 +138,7 @@ class QuizScreen extends StatelessWidget {
                 context,
                 index,
                 _quizzes[index],
-                user?.lessonLastTabs['quiz_high_score_$index'] ?? 0,
+                user?.lessonLastTabs['quiz_high_score_$index'],
               ),
             const DashboardBottomNavBar(currentTab: DashboardTab.quiz),
           ],
@@ -135,7 +151,7 @@ class QuizScreen extends StatelessWidget {
     BuildContext context,
     int index,
     ({String title, String items, String difficulty, IconData icon}) quiz,
-    int highScore,
+    int? highScore,
   ) {
     final top = 142.0 + (index * 102.0);
     final difficultyColor = quiz.difficulty == 'Easy'
@@ -285,14 +301,14 @@ class QuizScreen extends StatelessWidget {
                             Icon(
                               Icons.emoji_events_rounded,
                               size: 13,
-                              color: highScore > 0 ? _accent : const Color(0xFF8B9BB4),
+                              color: highScore != null && highScore > 0 ? _accent : const Color(0xFF8B9BB4),
                             ),
                             const SizedBox(width: 3),
                             Text(
-                              highScore > 0 ? 'High: $highScore%' : 'High: --',
+                              highScore != null ? 'High: $highScore%' : 'High: --',
                               style: _metadataStyle.copyWith(
-                                color: highScore > 0 ? _navy : const Color(0xFF8B9BB4),
-                                fontWeight: highScore > 0
+                                color: highScore != null && highScore > 0 ? _navy : const Color(0xFF8B9BB4),
+                                fontWeight: highScore != null && highScore > 0
                                     ? FontWeight.w700
                                     : FontWeight.w600,
                               ),
@@ -303,7 +319,7 @@ class QuizScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (highScore > 0)
+                if (highScore != null)
                   Container(
                     margin: const EdgeInsets.only(right: 8),
                     padding: const EdgeInsets.symmetric(
@@ -326,7 +342,9 @@ class QuizScreen extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.emoji_events_rounded,
+                          highScore >= 70
+                              ? Icons.check_circle_rounded
+                              : Icons.emoji_events_rounded,
                           size: 12,
                           color: highScore >= 70
                               ? const Color(0xFF2E7D32)
@@ -334,7 +352,7 @@ class QuizScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 3),
                         Text(
-                          '$highScore%',
+                          highScore >= 70 ? 'Passed $highScore%' : '$highScore%',
                           style: TextStyle(
                             fontSize: 10,
                             fontFamily: 'Montserrat',

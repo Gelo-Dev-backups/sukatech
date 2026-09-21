@@ -150,5 +150,67 @@ void main() {
       expect(reset.correctMetricEnglishConversions, original.correctMetricEnglishConversions);
       expect(reset.correctMeasurementBasics, original.correctMeasurementBasics);
     });
+
+    test('quizzesPassed counts quizzes with high score >= 70%', () {
+      const user = AppUser(
+        id: 1,
+        name: 'Learner',
+        title: 'Beginner',
+        lessonsCompleted: 0,
+        quizzesTaken: 4,
+        practiceCompleted: 0,
+        xpEarned: 0,
+        overallProgressPercent: 0,
+        currentLessonTitle: '',
+        currentLessonProgressPercent: 0,
+        completedLessonsList: [],
+        lessonLastTabs: {
+          'quiz_high_score_0': 80, // passed
+          'quiz_high_score_1': 70, // passed
+          'quiz_high_score_2': 60, // failed (< 70)
+          'quiz_high_score_3': 100, // passed
+          'quiz_high_score_4': 0, // failed
+        },
+        completedLessonTabs: [],
+        unlockedAchievements: [],
+        maxConsecutiveCorrectAnswers: 0,
+        currentConsecutiveCorrectAnswers: 0,
+        uniqueToolsSelected: [],
+        correctMetricEnglishConversions: 0,
+        correctMeasurementBasics: 0,
+      );
+
+      expect(user.quizzesPassed, 3);
+      expect(user.uniqueQuizzesTaken, 5);
+    });
+
+    test('fromMap heals quizzesTaken if less than uniqueQuizzesTaken', () {
+      final user = AppUser.fromMap({
+        'id': 1,
+        'name': 'Learner',
+        'title': 'Beginner',
+        'lessons_completed': 0,
+        'quizzes_taken': 1, // stored as 1 due to previous bug
+        'practice_completed': 5,
+        'xp_earned': 0,
+        'overall_progress_percent': 0,
+        'current_lesson_title': '',
+        'current_lesson_progress_percent': 0,
+        'completed_lessons': '[]',
+        'lesson_last_tabs': '{"quiz_high_score_0": 90, "quiz_high_score_1": 80, "quiz_high_score_2": 70}',
+        'completed_lesson_tabs': '[]',
+        'unlocked_achievements': '[]',
+        'max_consecutive_correct_answers': 0,
+        'current_consecutive_correct_answers': 0,
+        'unique_tools_selected': '[]',
+        'correct_metric_english_conversions': 0,
+        'correct_measurement_basics': 0,
+      });
+
+      // Automatically healed from 1 to 3
+      expect(user.quizzesTaken, 3);
+      expect(user.uniqueQuizzesTaken, 3);
+      expect(user.quizzesPassed, 3);
+    });
   });
 }

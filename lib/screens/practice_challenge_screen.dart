@@ -396,6 +396,7 @@ class _MeasurementChallengePracticeScreenState
     final choices = _sessionChoices[_currentIndex];
     final isCorrect = choices[_selectedChoiceIndex!] == currentQ.correctAnswer;
 
+    UserStore.recordAnswer(isCorrect);
     setState(() {
       _answered = true;
       _skillResults.add(isCorrect);
@@ -427,10 +428,18 @@ class _MeasurementChallengePracticeScreenState
             ? _score * 6
             : _score * 5;
 
-    UserStore.mutate((user) => user.copyWith(
-      xpEarned: user.xpEarned + xpEarned,
-      practiceCompleted: user.practiceCompleted + 1,
-    ));
+    final isPerfect = _score == 5;
+    UserStore.mutate((user) {
+      final tabs = List<String>.from(user.completedLessonTabs);
+      if (isPerfect && !tabs.contains('perfect_measurement')) {
+        tabs.add('perfect_measurement');
+      }
+      return user.copyWith(
+        xpEarned: user.xpEarned + xpEarned,
+        practiceCompleted: user.practiceCompleted + 1,
+        completedLessonTabs: tabs,
+      );
+    });
     SoundService.instance.playQuizComplete();
     if (xpEarned > 0) {
       SoundService.instance.playGainXp();

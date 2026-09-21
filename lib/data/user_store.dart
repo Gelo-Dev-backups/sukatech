@@ -16,7 +16,26 @@ class UserStore {
   static final ValueNotifier<AppUser?> current = ValueNotifier(null);
 
   static Future<void> load() async {
-    current.value = await UserRepository.instance.getOrCreateUser();
+    final user = await UserRepository.instance.getOrCreateUser();
+    final evaluated = AchievementManager.instance.evaluate(user);
+    if (evaluated != user) {
+      await UserRepository.instance.update(evaluated);
+    }
+    current.value = evaluated;
+  }
+
+  /// Records an answer as correct or wrong, updating ongoing and best streaks.
+  static Future<void> recordAnswer(bool isCorrect) async {
+    await mutate((user) {
+      final current = isCorrect ? user.currentConsecutiveCorrectAnswers + 1 : 0;
+      final maxC = current > user.maxConsecutiveCorrectAnswers
+          ? current
+          : user.maxConsecutiveCorrectAnswers;
+      return user.copyWith(
+        currentConsecutiveCorrectAnswers: current,
+        maxConsecutiveCorrectAnswers: maxC,
+      );
+    });
   }
 
   static int getQuizHighScore(int quizIndex) {

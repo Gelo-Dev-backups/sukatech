@@ -126,6 +126,7 @@ class QuizChoices extends StatelessWidget {
                           ),
                         ),
                       ),
+                      // ignore: use_null_aware_elements
                       if (trail != null) trail,
                     ],
                   ),

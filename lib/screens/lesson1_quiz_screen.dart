@@ -80,6 +80,7 @@ class _ScreenState extends State<Lesson1QuizScreen>
     final ok = idx == _q.correctIndex;
     setState(() => _selected = idx);
     _fbCtrl.forward(from: 0);
+    UserStore.recordAnswer(ok);
     if (ok) {
       SoundService.instance.playCorrect();
       _score += 10;
@@ -109,6 +110,7 @@ class _ScreenState extends State<Lesson1QuizScreen>
     if (!_sortState!.isComplete) return;
     setState(() => _sortSubmitted = true);
     _fbCtrl.forward(from: 0);
+    UserStore.recordAnswer(_sortState!.isAllCorrect);
     if (_sortState!.isAllCorrect) {
       SoundService.instance.playCorrect();
       _score += 10;
@@ -140,19 +142,20 @@ class _ScreenState extends State<Lesson1QuizScreen>
     await UserStore.mutate((user) {
       final tabs = List<String>.from(user.completedLessonTabs);
       int xp = user.xpEarned;
-      int quizzes = user.quizzesTaken;
       
       bool gainedXp = false;
       if (!tabs.contains(_practiceXpKey)) {
         tabs.add(_practiceXpKey);
         xp += 10;
-        quizzes++;
         gainedXp = true;
       }
       if (perfect && !tabs.contains(_practicePerfectKey)) {
         tabs.add(_practicePerfectKey);
         xp += 10;
         gainedXp = true;
+      }
+      if (perfect && !tabs.contains('perfect_measurement')) {
+        tabs.add('perfect_measurement');
       }
       int basics = user.correctMeasurementBasics;
       for (final d in _dimAnswers) {
@@ -171,14 +174,14 @@ class _ScreenState extends State<Lesson1QuizScreen>
           ? _consecutive
           : user.maxConsecutiveCorrectAnswers;
       final newTabs = Map<String, int>.from(user.lessonLastTabs);
-      final prevHigh = newTabs['quiz_high_score_0'] ?? 0;
+      final prevHigh = newTabs['quiz_high_score_0'] ?? -1;
       if (_score > prevHigh) {
         newTabs['quiz_high_score_0'] = _score;
       }
       return user.copyWith(
         completedLessonTabs: tabs,
         xpEarned: xp,
-        quizzesTaken: quizzes,
+        quizzesTaken: user.quizzesTaken + 1,
         correctMeasurementBasics: basics,
         maxConsecutiveCorrectAnswers: maxC,
         lessonLastTabs: newTabs,

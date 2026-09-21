@@ -155,7 +155,7 @@ class DashboardScreen extends StatelessWidget {
     final double partialLesson = currentAlreadyDone ? 0 : (user.currentLessonProgressPercent / 100.0);
 
     final double lessonsScore = ((user.completedLessonsList.length + partialLesson) / totalLessons) * 50;
-    final double quizzesScore = (user.quizzesTaken / totalQuizzes) * 40;
+    final double quizzesScore = (user.quizzesPassed / totalQuizzes) * 40;
     final double achievementsScore = (user.unlockedAchievements.length / totalAchievements) * 10;
 
     final int calculatedProgress = (lessonsScore + quizzesScore + achievementsScore).clamp(0, 100).toInt();
@@ -293,7 +293,7 @@ class DashboardScreen extends StatelessWidget {
       circleLeft: 182,
       circleColor: const Color(0xFF4369B2),
       icon: Icons.fact_check_rounded,
-      value: '${user.quizzesTaken}',
+      value: '${user.quizzesPassed}',
       valueLeft: 197,
       label: 'Quizzes Passed',
       labelLeft: 168,
@@ -376,14 +376,16 @@ class DashboardScreen extends StatelessWidget {
         child: Icon(icon, color: Colors.white, size: iconSize),
       ),
       Positioned(
-        left: valueLeft,
+        left: cardLeft,
+        width: cardSize,
         top: 367,
-        child: Text(value, style: _valueStyle),
+        child: Text(value, textAlign: TextAlign.center, style: _valueStyle),
       ),
       Positioned(
-        left: labelLeft,
+        left: cardLeft,
+        width: cardSize,
         top: 392,
-        child: Text(label, style: _statLabelStyle),
+        child: Text(label, textAlign: TextAlign.center, style: _statLabelStyle),
       ),
       Positioned(
         left: cardLeft,

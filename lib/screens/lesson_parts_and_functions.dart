@@ -1123,6 +1123,7 @@ class _LessonsPartsAndFunctionsState extends State<LessonsPartsAndFunctions> {
           top: 219,
           child: Container(
             transform: Matrix4.identity()
+              // ignore: deprecated_member_use
               ..translate(0.0, 0.0)
               ..rotateZ(0.03),
             width: 223,

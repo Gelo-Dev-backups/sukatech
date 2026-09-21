@@ -157,11 +157,19 @@ class _ScreenState extends State<Lesson2QuizScreen>
     _handleResult(allCorrect);
   }
 
+  final Set<String> _correctToolScenarios = {};
+
   void _handleResult(bool isCorrect) {
+    UserStore.recordAnswer(isCorrect);
     if (isCorrect) {
       SoundService.instance.playCorrect();
       _score += 10;
       _consecutive++;
+      if (_q is _QMultipleChoice) {
+        _correctToolScenarios.add((_q as _QMultipleChoice).prompt);
+      } else if (_q is _QDragToTask) {
+        _correctToolScenarios.add((_q as _QDragToTask).task);
+      }
     } else {
       SoundService.instance.playWrong();
       _consecutive = 0;
@@ -223,16 +231,19 @@ class _ScreenState extends State<Lesson2QuizScreen>
     await UserStore.mutate((user) {
       final tabs = List<String>.from(user.completedLessonTabs);
       int xp = user.xpEarned;
-      int practiced = user.practiceCompleted;
       
       bool gainedXp = false;
       if (!tabs.contains(_practiceXpKey)) {
         tabs.add(_practiceXpKey);
         xp += 10;
-        practiced++;
         gainedXp = true;
       }
       
+      final isPerfect = _score == 100;
+      if (isPerfect && !tabs.contains('perfect_measurement')) {
+        tabs.add('perfect_measurement');
+      }
+
       if (gainedXp) {
         SoundService.instance.playGainXp();
       }
@@ -240,16 +251,19 @@ class _ScreenState extends State<Lesson2QuizScreen>
           ? _consecutive
           : user.maxConsecutiveCorrectAnswers;
       final newTabs = Map<String, int>.from(user.lessonLastTabs);
-      final prevHigh = newTabs['quiz_high_score_1'] ?? 0;
+      final prevHigh = newTabs['quiz_high_score_1'] ?? -1;
       if (_score > prevHigh) {
         newTabs['quiz_high_score_1'] = _score;
       }
+      final tools = Set<String>.from(user.uniqueToolsSelected)
+        ..addAll(_correctToolScenarios);
       return user.copyWith(
         completedLessonTabs: tabs,
         xpEarned: xp,
-        practiceCompleted: practiced,
+        quizzesTaken: user.quizzesTaken + 1,
         maxConsecutiveCorrectAnswers: maxC,
         lessonLastTabs: newTabs,
+        uniqueToolsSelected: tools.toList(),
       );
     });
   }
@@ -261,6 +275,7 @@ class _ScreenState extends State<Lesson2QuizScreen>
       _score = 0;
       _done = false;
       _consecutive = 0;
+      _correctToolScenarios.clear();
     });
     _fbCtrl.reset();
     _prepQ();

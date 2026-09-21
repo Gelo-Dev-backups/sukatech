@@ -213,15 +213,24 @@ class AchievementManager {
       case 'right_tool_right_job':
         return user.uniqueToolsSelected.length >= ach.requirementValue;
       case 'tool_anatomy':
-        // Need specific logic later, but for now we'll assume there is a property or it's manual
-        // Actually, we don't have a counter for this yet. We'll leave it returning false until implemented.
-        return false;
+        return (user.lessonLastTabs['quiz_high_score_2'] ?? 0) >= 70 ||
+            user.completedLessonTabs.contains('lesson_03_practice_parts_functions_xp') ||
+            user.completedLessonTabs.contains('tool_anatomy');
       case 'unit_converter':
         return user.correctMetricEnglishConversions >= ach.requirementValue;
       case 'perfect_measurement':
-        return user.completedLessonTabs.contains(
-          'lesson_01_practice_intro_measurement_perfect',
-        );
+        if (user.completedLessonTabs.contains('perfect_measurement') ||
+            user.completedLessonTabs.contains(
+              'lesson_01_practice_intro_measurement_perfect',
+            )) {
+          return true;
+        }
+        for (int i = 0; i < 6; i++) {
+          if ((user.lessonLastTabs['quiz_high_score_$i'] ?? 0) >= 100) {
+            return true;
+          }
+        }
+        return false;
       case 'sharp_mind':
         return user.maxConsecutiveCorrectAnswers >= ach.requirementValue;
       case 'xp_collector':

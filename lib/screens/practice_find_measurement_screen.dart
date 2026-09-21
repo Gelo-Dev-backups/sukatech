@@ -185,6 +185,7 @@ class _FindTheMeasurementPracticeScreenState
     final target = _sessionTargetTicks[_currentIndex];
     final isCorrect = _currentMarkerTick == target;
 
+    UserStore.recordAnswer(isCorrect);
     setState(() {
       _answered = true;
       if (isCorrect) {
@@ -210,10 +211,18 @@ class _FindTheMeasurementPracticeScreenState
 
   void _onCompleteSession() {
     final xpEarned = _score * 5;
-    UserStore.mutate((user) => user.copyWith(
-      xpEarned: user.xpEarned + xpEarned,
-      practiceCompleted: user.practiceCompleted + 1,
-    ));
+    final isPerfect = _score == 5;
+    UserStore.mutate((user) {
+      final tabs = List<String>.from(user.completedLessonTabs);
+      if (isPerfect && !tabs.contains('perfect_measurement')) {
+        tabs.add('perfect_measurement');
+      }
+      return user.copyWith(
+        xpEarned: user.xpEarned + xpEarned,
+        practiceCompleted: user.practiceCompleted + 1,
+        completedLessonTabs: tabs,
+      );
+    });
     SoundService.instance.playQuizComplete();
     if (xpEarned > 0) {
       SoundService.instance.playGainXp();

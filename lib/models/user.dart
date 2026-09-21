@@ -44,20 +44,54 @@ class AppUser {
   final int correctMetricEnglishConversions;
   final int correctMeasurementBasics;
 
+  /// Total number of unique quizzes passed (high score >= 70%).
+  int get quizzesPassed {
+    int count = 0;
+    for (int i = 0; i < 6; i++) {
+      if ((lessonLastTabs['quiz_high_score_$i'] ?? 0) >= 70) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  /// Total number of unique quizzes attempted at least once.
+  int get uniqueQuizzesTaken {
+    int count = 0;
+    for (int i = 0; i < 6; i++) {
+      if (lessonLastTabs.containsKey('quiz_high_score_$i')) {
+        count++;
+      }
+    }
+    return count;
+  }
+
   factory AppUser.fromMap(Map<String, Object?> map) {
+    final lessonLastTabs = Map<String, int>.from(
+      jsonDecode(map['lesson_last_tabs'] as String),
+    );
+    int uniqueQuizzes = 0;
+    for (int i = 0; i < 6; i++) {
+      if (lessonLastTabs.containsKey('quiz_high_score_$i')) {
+        uniqueQuizzes++;
+      }
+    }
+    final rawQuizzesTaken = map['quizzes_taken'] as int;
+    final quizzesTaken = rawQuizzesTaken < uniqueQuizzes ? uniqueQuizzes : rawQuizzesTaken;
+
     return AppUser(
       id: map['id'] as int,
       name: map['name'] as String,
       title: map['title'] as String,
       lessonsCompleted: map['lessons_completed'] as int,
-      quizzesTaken: map['quizzes_taken'] as int,
+      quizzesTaken: quizzesTaken,
       practiceCompleted: map['practice_completed'] as int,
       xpEarned: map['xp_earned'] as int,
       overallProgressPercent: map['overall_progress_percent'] as int,
       currentLessonTitle: map['current_lesson_title'] as String,
       currentLessonProgressPercent: map['current_lesson_progress_percent'] as int,
       completedLessonsList: List<String>.from(jsonDecode(map['completed_lessons'] as String)),
-      lessonLastTabs: Map<String, int>.from(jsonDecode(map['lesson_last_tabs'] as String)),
+      lessonLastTabs: lessonLastTabs,
       completedLessonTabs: List<String>.from(jsonDecode(map['completed_lesson_tabs'] as String)),
       unlockedAchievements: List<String>.from(jsonDecode(map['unlocked_achievements'] as String)),
       maxConsecutiveCorrectAnswers: map['max_consecutive_correct_answers'] as int,

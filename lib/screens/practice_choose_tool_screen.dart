@@ -178,6 +178,7 @@ class _ChooseTheRightToolPracticeScreenState
   int? _selectedChoiceIndex;
   int _score = 0;
   bool _answered = false;
+  final Set<String> _sessionCorrectScenarios = {};
 
   @override
   void initState() {
@@ -199,6 +200,7 @@ class _ChooseTheRightToolPracticeScreenState
     _selectedChoiceIndex = null;
     _score = 0;
     _answered = false;
+    _sessionCorrectScenarios.clear();
   }
 
   void _onSelectChoice(int index) {
@@ -215,6 +217,11 @@ class _ChooseTheRightToolPracticeScreenState
     final choices = _sessionChoices[_currentIndex];
     final isCorrect =
         choices[_selectedChoiceIndex!].name == currentQ.correctTool.name;
+
+    UserStore.recordAnswer(isCorrect);
+    if (isCorrect) {
+      _sessionCorrectScenarios.add(currentQ.scenario);
+    }
 
     setState(() {
       _answered = true;
@@ -241,10 +248,21 @@ class _ChooseTheRightToolPracticeScreenState
 
   void _onCompleteSession() {
     final xpEarned = _score * 5;
-    UserStore.mutate((user) => user.copyWith(
-      xpEarned: user.xpEarned + xpEarned,
-      practiceCompleted: user.practiceCompleted + 1,
-    ));
+    final isPerfect = _score == 5;
+    UserStore.mutate((user) {
+      final tools = Set<String>.from(user.uniqueToolsSelected)
+        ..addAll(_sessionCorrectScenarios);
+      final tabs = List<String>.from(user.completedLessonTabs);
+      if (isPerfect && !tabs.contains('perfect_measurement')) {
+        tabs.add('perfect_measurement');
+      }
+      return user.copyWith(
+        xpEarned: user.xpEarned + xpEarned,
+        practiceCompleted: user.practiceCompleted + 1,
+        uniqueToolsSelected: tools.toList(),
+        completedLessonTabs: tabs,
+      );
+    });
     SoundService.instance.playQuizComplete();
     if (xpEarned > 0) {
       SoundService.instance.playGainXp();
