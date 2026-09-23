@@ -171,7 +171,10 @@ class QuizScreen extends StatelessWidget {
           onTap: () {
             final flatTitle = quiz.title.replaceAll('\n', ' ');
             UserStore.mutate(
-              (user) => user.copyWith(currentLessonTitle: flatTitle),
+              (user) => user.copyWith(
+                currentLessonTitle: '$flatTitle Quiz',
+                currentLessonProgressPercent: 0,
+              ),
             );
 
             if (index == 0) {

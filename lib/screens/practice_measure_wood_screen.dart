@@ -159,6 +159,10 @@ class _MeasureTheWoodPracticeScreenState
     final isCorrect = _currentMark == currentQ;
 
     UserStore.recordAnswer(isCorrect);
+    UserStore.mutate((user) => user.copyWith(
+      currentLessonTitle: 'Measure the Wood Practice',
+      currentLessonProgressPercent: ((_currentIndex + 1) * 20).clamp(0, 100),
+    ));
     setState(() {
       _answered = true;
       if (isCorrect) {
@@ -194,6 +198,8 @@ class _MeasureTheWoodPracticeScreenState
         xpEarned: user.xpEarned + xpEarned,
         practiceCompleted: user.practiceCompleted + 1,
         completedLessonTabs: tabs,
+        currentLessonTitle: 'Measure the Wood Practice',
+        currentLessonProgressPercent: 100,
       );
     });
     SoundService.instance.playQuizComplete();

@@ -219,6 +219,10 @@ class _ChooseTheRightToolPracticeScreenState
         choices[_selectedChoiceIndex!].name == currentQ.correctTool.name;
 
     UserStore.recordAnswer(isCorrect);
+    UserStore.mutate((user) => user.copyWith(
+      currentLessonTitle: 'Choose the Right Tool Practice',
+      currentLessonProgressPercent: ((_currentIndex + 1) * 20).clamp(0, 100),
+    ));
     if (isCorrect) {
       _sessionCorrectScenarios.add(currentQ.scenario);
     }
@@ -261,6 +265,8 @@ class _ChooseTheRightToolPracticeScreenState
         practiceCompleted: user.practiceCompleted + 1,
         uniqueToolsSelected: tools.toList(),
         completedLessonTabs: tabs,
+        currentLessonTitle: 'Choose the Right Tool Practice',
+        currentLessonProgressPercent: 100,
       );
     });
     SoundService.instance.playQuizComplete();

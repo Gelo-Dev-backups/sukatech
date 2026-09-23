@@ -505,6 +505,10 @@ class _UnitConversionPracticeScreenState
     final isCorrect = choices[_selectedChoiceIndex!] == currentQ.correctChoice;
 
     UserStore.recordAnswer(isCorrect);
+    UserStore.mutate((user) => user.copyWith(
+      currentLessonTitle: 'Unit Conversion Practice',
+      currentLessonProgressPercent: ((_currentIndex + 1) * 20).clamp(0, 100),
+    ));
     setState(() {
       _answered = true;
       if (isCorrect) {
@@ -542,6 +546,8 @@ class _UnitConversionPracticeScreenState
         correctMetricEnglishConversions:
             user.correctMetricEnglishConversions + _score,
         completedLessonTabs: tabs,
+        currentLessonTitle: 'Unit Conversion Practice',
+        currentLessonProgressPercent: 100,
       );
     });
     SoundService.instance.playQuizComplete();

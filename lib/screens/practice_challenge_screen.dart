@@ -397,6 +397,10 @@ class _MeasurementChallengePracticeScreenState
     final isCorrect = choices[_selectedChoiceIndex!] == currentQ.correctAnswer;
 
     UserStore.recordAnswer(isCorrect);
+    UserStore.mutate((user) => user.copyWith(
+      currentLessonTitle: 'Measurement Challenge Practice',
+      currentLessonProgressPercent: ((_currentIndex + 1) * 20).clamp(0, 100),
+    ));
     setState(() {
       _answered = true;
       _skillResults.add(isCorrect);
@@ -438,6 +442,8 @@ class _MeasurementChallengePracticeScreenState
         xpEarned: user.xpEarned + xpEarned,
         practiceCompleted: user.practiceCompleted + 1,
         completedLessonTabs: tabs,
+        currentLessonTitle: 'Measurement Challenge Practice',
+        currentLessonProgressPercent: 100,
       );
     });
     SoundService.instance.playQuizComplete();

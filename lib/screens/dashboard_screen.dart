@@ -9,10 +9,26 @@ import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
 import '../widgets/skeleton.dart';
 import 'achievements_screen.dart';
+import 'lesson1_quiz_screen.dart';
+import 'lesson2_quiz_screen.dart';
+import 'lesson3_quiz_screen.dart';
+import 'lesson4_quiz_screen.dart';
+import 'lesson5_quiz_screen.dart';
+import 'lesson6_quiz_screen.dart';
+import 'lesson_measurement_calculations.dart';
 import 'lesson_measurement_tools.dart';
+import 'lesson_parts_and_functions.dart';
+import 'lesson_reading_measurements.dart';
+import 'lesson_unit_conversion.dart';
 import 'lessons_introduction_screen.dart';
 import 'lessons_screen.dart';
+import 'practice_challenge_screen.dart';
+import 'practice_choose_tool_screen.dart';
+import 'practice_find_measurement_screen.dart';
+import 'practice_measure_wood_screen.dart';
+import 'practice_read_tape_screen.dart';
 import 'practice_screen.dart';
+import 'practice_unit_conversion_screen.dart';
 import 'profile_screen.dart';
 import 'quiz_screen.dart';
 import 'unit_converter_screen.dart';
@@ -151,8 +167,9 @@ class DashboardScreen extends StatelessWidget {
     const totalQuizzes = 6;
     final totalAchievements = AchievementManager.allAchievements.length;
 
+    final bool isLesson = !user.currentLessonTitle.contains('Practice') && !user.currentLessonTitle.contains('Quiz');
     final bool currentAlreadyDone = user.completedLessonsList.contains(user.currentLessonTitle);
-    final double partialLesson = currentAlreadyDone ? 0 : (user.currentLessonProgressPercent / 100.0);
+    final double partialLesson = (isLesson && !currentAlreadyDone) ? (user.currentLessonProgressPercent / 100.0) : 0;
 
     final double lessonsScore = ((user.completedLessonsList.length + partialLesson) / totalLessons) * 50;
     final double quizzesScore = (user.quizzesPassed / totalQuizzes) * 40;
@@ -410,16 +427,31 @@ class DashboardScreen extends StatelessWidget {
     AppUser user,
   ) {
     IconData lessonIcon = Icons.menu_book_rounded;
-    if (user.currentLessonTitle.contains('Measuring Tools')) {
-      lessonIcon = Icons.square_foot_rounded;
-    } else if (user.currentLessonTitle.contains('Parts')) {
-      lessonIcon = Icons.widgets_rounded;
-    } else if (user.currentLessonTitle.contains('Reading')) {
+    final title = user.currentLessonTitle;
+    if (title.contains('Read the Tape')) {
       lessonIcon = Icons.straighten_rounded;
-    } else if (user.currentLessonTitle.contains('Marking')) {
+    } else if (title.contains('Find the Measurement')) {
+      lessonIcon = Icons.square_foot_rounded;
+    } else if (title.contains('Measure the Wood')) {
+      lessonIcon = Icons.carpenter_rounded;
+    } else if (title.contains('Choose the Right Tool')) {
+      lessonIcon = Icons.handyman_rounded;
+    } else if (title.contains('Measurement Challenge')) {
+      lessonIcon = Icons.track_changes_rounded;
+    } else if (title.contains('Measuring Tools')) {
+      lessonIcon = Icons.square_foot_rounded;
+    } else if (title.contains('Parts')) {
+      lessonIcon = Icons.widgets_rounded;
+    } else if (title.contains('Reading')) {
+      lessonIcon = Icons.straighten_rounded;
+    } else if (title.contains('Marking')) {
       lessonIcon = Icons.draw_rounded;
-    } else if (user.currentLessonTitle.contains('Calculation')) {
+    } else if (title.contains('Unit Conversion') || title.contains('Conversion')) {
+      lessonIcon = Icons.sync_alt_rounded;
+    } else if (title.contains('Calculation')) {
       lessonIcon = Icons.calculate_rounded;
+    } else if (title.contains('Quiz')) {
+      lessonIcon = Icons.fact_check_rounded;
     }
 
     return [
@@ -558,18 +590,59 @@ class DashboardScreen extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
+            key: const ValueKey('continue_learning_inkwell'),
             borderRadius: BorderRadius.circular(20),
             onTap: () {
-              if (user.currentLessonTitle.contains('Measuring Tools')) {
-                Navigator.of(
-                  context,
-                ).push(fadeRoute((_) => const LessonsMeasurementTools()));
-              } else if (user.currentLessonTitle.contains('Introduction')) {
-                Navigator.of(
-                  context,
-                ).push(fadeRoute((_) => const LessonsIntroScreen()));
+              final title = user.currentLessonTitle;
+              // --- Practice Activities ---
+              if (title.contains('Read the Tape')) {
+                Navigator.of(context).push(fadeRoute((_) => const ReadTheTapePracticeScreen()));
+              } else if (title.contains('Find the Measurement')) {
+                Navigator.of(context).push(fadeRoute((_) => const FindTheMeasurementPracticeScreen()));
+              } else if (title.contains('Measure the Wood')) {
+                Navigator.of(context).push(fadeRoute((_) => const MeasureTheWoodPracticeScreen()));
+              } else if (title.contains('Choose the Right Tool')) {
+                Navigator.of(context).push(fadeRoute((_) => const ChooseTheRightToolPracticeScreen()));
+              } else if (title.contains('Measurement Challenge')) {
+                Navigator.of(context).push(fadeRoute((_) => const MeasurementChallengePracticeScreen()));
+              } else if (title.contains('Unit Conversion') && title.contains('Practice')) {
+                Navigator.of(context).push(fadeRoute((_) => const UnitConversionPracticeScreen()));
+              } else if (title.contains('Practice')) {
+                Navigator.of(context).push(fadeRoute((_) => const PracticeScreen()));
+              }
+              // --- Quizzes ---
+              else if (title.contains('Quiz')) {
+                if (title.contains('Introduction') || title.contains('Lesson 1')) {
+                  Navigator.of(context).push(fadeRoute((_) => const Lesson1QuizScreen()));
+                } else if (title.contains('Measuring Tools') || title.contains('Lesson 2')) {
+                  Navigator.of(context).push(fadeRoute((_) => const Lesson2QuizScreen()));
+                } else if (title.contains('Parts') || title.contains('Lesson 3')) {
+                  Navigator.of(context).push(fadeRoute((_) => const Lesson3QuizScreen()));
+                } else if (title.contains('Reading') || title.contains('Lesson 4')) {
+                  Navigator.of(context).push(fadeRoute((_) => const Lesson4QuizScreen()));
+                } else if (title.contains('Unit Conversion') || title.contains('Conversion') || title.contains('Lesson 5')) {
+                  Navigator.of(context).push(fadeRoute((_) => const Lesson5QuizScreen()));
+                } else if (title.contains('Calculation') || title.contains('Lesson 6')) {
+                  Navigator.of(context).push(fadeRoute((_) => const Lesson6QuizScreen()));
+                } else {
+                  Navigator.of(context).push(fadeRoute((_) => const QuizScreen()));
+                }
+              }
+              // --- Lessons ---
+              else if (title.contains('Measuring Tools')) {
+                Navigator.of(context).push(fadeRoute((_) => const LessonsMeasurementTools()));
+              } else if (title.contains('Introduction')) {
+                Navigator.of(context).push(fadeRoute((_) => const LessonsIntroScreen()));
+              } else if (title.contains('Parts')) {
+                Navigator.of(context).push(fadeRoute((_) => const LessonsPartsAndFunctions()));
+              } else if (title.contains('Reading')) {
+                Navigator.of(context).push(fadeRoute((_) => const LessonsReadingMeasurements()));
+              } else if (title.contains('Unit Conversion') || title.contains('Conversion')) {
+                Navigator.of(context).push(fadeRoute((_) => const LessonsUnitConversion()));
+              } else if (title.contains('Calculation')) {
+                Navigator.of(context).push(fadeRoute((_) => const LessonsMeasurementCalculations()));
               } else {
-                pushUnderDevelopment(context, title: user.currentLessonTitle);
+                pushUnderDevelopment(context, title: title.isEmpty ? 'Continue Learning' : title);
               }
             },
           ),

@@ -186,6 +186,10 @@ class _FindTheMeasurementPracticeScreenState
     final isCorrect = _currentMarkerTick == target;
 
     UserStore.recordAnswer(isCorrect);
+    UserStore.mutate((user) => user.copyWith(
+      currentLessonTitle: 'Find the Measurement Practice',
+      currentLessonProgressPercent: ((_currentIndex + 1) * 20).clamp(0, 100),
+    ));
     setState(() {
       _answered = true;
       if (isCorrect) {
@@ -221,6 +225,8 @@ class _FindTheMeasurementPracticeScreenState
         xpEarned: user.xpEarned + xpEarned,
         practiceCompleted: user.practiceCompleted + 1,
         completedLessonTabs: tabs,
+        currentLessonTitle: 'Find the Measurement Practice',
+        currentLessonProgressPercent: 100,
       );
     });
     SoundService.instance.playQuizComplete();

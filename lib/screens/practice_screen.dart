@@ -139,7 +139,10 @@ class PracticeScreen extends StatelessWidget {
           onTap: () {
             final flatTitle = practice.title;
             UserStore.mutate(
-              (user) => user.copyWith(currentLessonTitle: '$flatTitle Practice'),
+              (user) => user.copyWith(
+                currentLessonTitle: '$flatTitle Practice',
+                currentLessonProgressPercent: 0,
+              ),
             );
 
             if (index == 0) {

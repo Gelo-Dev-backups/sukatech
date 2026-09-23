@@ -364,6 +364,10 @@ class _ReadTheTapePracticeScreenState extends State<ReadTheTapePracticeScreen> {
     final isCorrect = choices[index] == currentQ.targetLabel;
 
     UserStore.recordAnswer(isCorrect);
+    UserStore.mutate((user) => user.copyWith(
+      currentLessonTitle: 'Read the Tape Practice',
+      currentLessonProgressPercent: ((_currentIndex + 1) * 20).clamp(0, 100),
+    ));
     setState(() {
       _selectedChoice = index;
       _answered = true;
@@ -400,6 +404,8 @@ class _ReadTheTapePracticeScreenState extends State<ReadTheTapePracticeScreen> {
         xpEarned: user.xpEarned + xpEarned,
         practiceCompleted: user.practiceCompleted + 1,
         completedLessonTabs: tabs,
+        currentLessonTitle: 'Read the Tape Practice',
+        currentLessonProgressPercent: 100,
       );
     });
     SoundService.instance.playQuizComplete();
