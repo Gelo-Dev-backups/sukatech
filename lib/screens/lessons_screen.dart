@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../data/tutorial_steps_data.dart';
 import '../data/user_store.dart';
 import '../navigation/fade_route.dart';
+import '../services/tutorial_service.dart';
+import '../widgets/tutorial_overlay.dart';
 import 'lesson_measurement_tools.dart';
 import 'lesson_parts_and_functions.dart';
 import 'lesson_reading_measurements.dart';
@@ -11,11 +14,44 @@ import 'lessons_introduction_screen.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
 
-class LessonsScreen extends StatelessWidget {
-  const LessonsScreen({super.key});
+class LessonsScreen extends StatefulWidget {
+  const LessonsScreen({super.key, this.autoStartTutorial = true});
+
+  final bool autoStartTutorial;
+
+  @override
+  State<LessonsScreen> createState() => _LessonsScreenState();
+}
+
+class _LessonsScreenState extends State<LessonsScreen> {
+  bool _showTutorial = false;
 
   static const _navy = Color(0xFF061D3F);
   static const _accent = Color(0xFFFFA500);
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.autoStartTutorial) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final completed = await TutorialService.instance.isCompleted(TutorialPage.lessons);
+        if (!completed && mounted) {
+          setState(() {
+            _showTutorial = true;
+          });
+        }
+      });
+    }
+  }
+
+  void _finishTutorial() {
+    TutorialService.instance.markCompleted(TutorialPage.lessons);
+    if (mounted) {
+      setState(() {
+        _showTutorial = false;
+      });
+    }
+  }
 
   static const _lessons = [
     (
@@ -118,6 +154,26 @@ class LessonsScreen extends StatelessWidget {
                 ),
               ),
             ),
+            Positioned(
+              right: 66,
+              top: 62,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () => setState(() => _showTutorial = true),
+                  child: const SizedBox(
+                    width: 32,
+                    height: 32,
+                    child: Icon(
+                      Icons.help_outline_rounded,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             const Positioned(
               right: 28,
               top: 62,
@@ -136,6 +192,12 @@ class LessonsScreen extends StatelessWidget {
                     false,
               ),
             const DashboardBottomNavBar(currentTab: DashboardTab.lesson),
+            if (_showTutorial)
+              TutorialOverlay(
+                steps: TutorialStepsData.getStepsFor(TutorialPage.lessons),
+                onFinish: _finishTutorial,
+                onSkip: _finishTutorial,
+              ),
           ],
         );
       },

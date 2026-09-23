@@ -33,13 +33,26 @@ import 'profile_screen.dart';
 import 'quiz_screen.dart';
 import 'unit_converter_screen.dart';
 
+import '../data/tutorial_steps_data.dart';
+import '../services/tutorial_service.dart';
+import '../widgets/tutorial_overlay.dart';
+
 /// Main app landing page, shown after HomeScreen's loading animation.
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key, this.autoStartTutorial = true});
+
+  final bool autoStartTutorial;
 
   static const List<String> assetPaths = [
     'lib/assets/images/mountaine wf;ag.svg',
   ];
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  bool _showTutorial = false;
 
   static const _navy = Color(0xFF061D3F);
   static const _progressGreen = Color(0xFF05831C);
@@ -62,6 +75,30 @@ class DashboardScreen extends StatelessWidget {
   );
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.autoStartTutorial) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final completed = await TutorialService.instance.isCompleted(TutorialPage.dashboard);
+        if (!completed && mounted) {
+          setState(() {
+            _showTutorial = true;
+          });
+        }
+      });
+    }
+  }
+
+  void _finishTutorial() {
+    TutorialService.instance.markCompleted(TutorialPage.dashboard);
+    if (mounted) {
+      setState(() {
+        _showTutorial = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<AppUser?>(
       valueListenable: UserStore.current,
@@ -74,7 +111,11 @@ class DashboardScreen extends StatelessWidget {
           height: 849,
           backgroundColor: Colors.white,
           children: [
-            ..._header(context, currentUser),
+            ..._header(context, currentUser, () {
+              setState(() {
+                _showTutorial = true;
+              });
+            }),
             ..._progressCard(currentUser),
             const Positioned(
               left: 26,
@@ -94,6 +135,12 @@ class DashboardScreen extends StatelessWidget {
             ..._continueLearningCard(context, currentUser),
             ..._categoryGrid(context),
             const DashboardBottomNavBar(currentTab: DashboardTab.home),
+            if (_showTutorial)
+              TutorialOverlay(
+                steps: TutorialStepsData.getStepsFor(TutorialPage.dashboard),
+                onFinish: _finishTutorial,
+                onSkip: _finishTutorial,
+              ),
           ],
         );
       },
@@ -102,7 +149,11 @@ class DashboardScreen extends StatelessWidget {
 
   // --- Header -------------------------------------------------------
 
-  static List<Widget> _header(BuildContext context, AppUser user) => [
+  static List<Widget> _header(
+    BuildContext context,
+    AppUser user,
+    VoidCallback onHelpTap,
+  ) => [
     Positioned(
       left: 0,
       top: 0,
@@ -128,7 +179,7 @@ class DashboardScreen extends StatelessWidget {
       ),
     ),
     Positioned(
-      left: 100,
+      left: 72,
       top: 70,
       child: Text(
         'Welcome, ${user.name}! 👋',
@@ -139,6 +190,22 @@ class DashboardScreen extends StatelessWidget {
           fontFamily: 'Montserrat',
           fontWeight: FontWeight.w700,
           letterSpacing: 0.54,
+        ),
+      ),
+    ),
+    Positioned(
+      left: 304,
+      top: 64,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(17),
+          onTap: onHelpTap,
+          child: const SizedBox(
+            width: 34,
+            height: 34,
+            child: Icon(Icons.help_outline_rounded, color: Colors.white, size: 26),
+          ),
         ),
       ),
     ),

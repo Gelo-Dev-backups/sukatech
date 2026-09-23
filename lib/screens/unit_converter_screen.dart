@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../data/tutorial_steps_data.dart';
+import '../services/tutorial_service.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
+import '../widgets/tutorial_overlay.dart';
 
 // ---------------------------------------------------------------------------
 // Conversion categories and data
@@ -121,13 +124,17 @@ const _categories = <_ConvertCategory, _Category>{
 // ---------------------------------------------------------------------------
 
 class UnitConverterScreen extends StatefulWidget {
-  const UnitConverterScreen({super.key});
+  const UnitConverterScreen({super.key, this.autoStartTutorial = true});
+
+  final bool autoStartTutorial;
 
   @override
   State<UnitConverterScreen> createState() => _UnitConverterScreenState();
 }
 
 class _UnitConverterScreenState extends State<UnitConverterScreen> {
+  bool _showTutorial = false;
+
   static const _navy = Color(0xFF061D3F);
   static const _accent = Color(0xFFFFA500);
 
@@ -190,6 +197,25 @@ class _UnitConverterScreenState extends State<UnitConverterScreen> {
   void initState() {
     super.initState();
     _calculate();
+    if (widget.autoStartTutorial) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final completed = await TutorialService.instance.isCompleted(TutorialPage.converter);
+        if (!completed && mounted) {
+          setState(() {
+            _showTutorial = true;
+          });
+        }
+      });
+    }
+  }
+
+  void _finishTutorial() {
+    TutorialService.instance.markCompleted(TutorialPage.converter);
+    if (mounted) {
+      setState(() {
+        _showTutorial = false;
+      });
+    }
   }
 
   @override
@@ -249,6 +275,26 @@ class _UnitConverterScreenState extends State<UnitConverterScreen> {
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.w700,
               letterSpacing: 0.60,
+            ),
+          ),
+        ),
+        Positioned(
+          right: 66,
+          top: 62,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () => setState(() => _showTutorial = true),
+              child: const SizedBox(
+                width: 32,
+                height: 32,
+                child: Icon(
+                  Icons.help_outline_rounded,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
             ),
           ),
         ),
@@ -347,6 +393,12 @@ class _UnitConverterScreenState extends State<UnitConverterScreen> {
         ),
 
         const DashboardBottomNavBar(currentTab: DashboardTab.converter),
+        if (_showTutorial)
+          TutorialOverlay(
+            steps: TutorialStepsData.getStepsFor(TutorialPage.converter),
+            onFinish: _finishTutorial,
+            onSkip: _finishTutorial,
+          ),
       ],
     );
   }

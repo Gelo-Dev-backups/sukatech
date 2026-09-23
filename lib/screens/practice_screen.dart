@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../data/tutorial_steps_data.dart';
 import '../data/user_store.dart';
 import '../navigation/fade_route.dart';
+import '../services/tutorial_service.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/design_canvas.dart';
+import '../widgets/tutorial_overlay.dart';
 import 'practice_challenge_screen.dart';
 import 'practice_choose_tool_screen.dart';
 import 'practice_find_measurement_screen.dart';
@@ -11,11 +14,44 @@ import 'practice_measure_wood_screen.dart';
 import 'practice_read_tape_screen.dart';
 import 'practice_unit_conversion_screen.dart';
 
-class PracticeScreen extends StatelessWidget {
-  const PracticeScreen({super.key});
+class PracticeScreen extends StatefulWidget {
+  const PracticeScreen({super.key, this.autoStartTutorial = true});
+
+  final bool autoStartTutorial;
+
+  @override
+  State<PracticeScreen> createState() => _PracticeScreenState();
+}
+
+class _PracticeScreenState extends State<PracticeScreen> {
+  bool _showTutorial = false;
 
   static const _navy = Color(0xFF061D3F);
   static const _accent = Color(0xFFFFA500);
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.autoStartTutorial) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final completed = await TutorialService.instance.isCompleted(TutorialPage.practice);
+        if (!completed && mounted) {
+          setState(() {
+            _showTutorial = true;
+          });
+        }
+      });
+    }
+  }
+
+  void _finishTutorial() {
+    TutorialService.instance.markCompleted(TutorialPage.practice);
+    if (mounted) {
+      setState(() {
+        _showTutorial = false;
+      });
+    }
+  }
 
   static const _practices = [
     (
@@ -109,6 +145,26 @@ class PracticeScreen extends StatelessWidget {
             ),
           ),
         ),
+        Positioned(
+          right: 66,
+          top: 62,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () => setState(() => _showTutorial = true),
+              child: const SizedBox(
+                width: 32,
+                height: 32,
+                child: Icon(
+                  Icons.help_outline_rounded,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+        ),
         const Positioned(
           right: 28,
           top: 62,
@@ -117,6 +173,12 @@ class PracticeScreen extends StatelessWidget {
         for (var index = 0; index < _practices.length; index++)
           _practiceCard(context, index, _practices[index]),
         const DashboardBottomNavBar(currentTab: DashboardTab.practice),
+        if (_showTutorial)
+          TutorialOverlay(
+            steps: TutorialStepsData.getStepsFor(TutorialPage.practice),
+            onFinish: _finishTutorial,
+            onSkip: _finishTutorial,
+          ),
       ],
     );
   }

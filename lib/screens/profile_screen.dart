@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../data/tutorial_steps_data.dart';
 import '../data/user_store.dart';
 import '../models/user.dart';
 import '../navigation/fade_route.dart';
+import '../services/tutorial_service.dart';
 import '../settings/app_settings.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/confirmation_modal.dart';
 import '../widgets/design_canvas.dart';
 import '../widgets/skeleton.dart';
+import '../widgets/tutorial_overlay.dart';
 import 'about_screen.dart';
 import 'edit_profile_screen.dart';
 
@@ -15,10 +18,19 @@ import 'edit_profile_screen.dart';
 // musicVolume and sfxVolume read/write AppSettings, so the sliders are real
 // and persist across restarts. Reset Progress is fully functional: it zeroes
 // the on-device user's stats in SQLite behind a confirmation dialog.
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key, this.autoStartTutorial = true});
+
+  final bool autoStartTutorial;
 
   static const List<String> assetPaths = ['lib/assets/images/prof hereo.png'];
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  bool _showTutorial = false;
 
   static const _navy = Color(0xFF061D3F);
   static const _dividerColor = Color(0x3D000000);
@@ -49,6 +61,30 @@ class ProfileScreen extends StatelessWidget {
   );
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.autoStartTutorial) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final completed = await TutorialService.instance.isCompleted(TutorialPage.profile);
+        if (!completed && mounted) {
+          setState(() {
+            _showTutorial = true;
+          });
+        }
+      });
+    }
+  }
+
+  void _finishTutorial() {
+    TutorialService.instance.markCompleted(TutorialPage.profile);
+    if (mounted) {
+      setState(() {
+        _showTutorial = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<AppUser?>(
       valueListenable: UserStore.current,
@@ -65,6 +101,12 @@ class ProfileScreen extends StatelessWidget {
             ..._statsCard(currentUser),
             ..._settingsList(context),
             const DashboardBottomNavBar(currentTab: DashboardTab.profile),
+            if (_showTutorial)
+              TutorialOverlay(
+                steps: TutorialStepsData.getStepsFor(TutorialPage.profile),
+                onFinish: _finishTutorial,
+                onSkip: _finishTutorial,
+              ),
           ],
         );
       },
@@ -85,6 +127,26 @@ class ProfileScreen extends StatelessWidget {
             begin: Alignment(0.50, 0.46),
             end: Alignment(0.50, 1.30),
             colors: [_navy, Colors.white, Colors.white],
+          ),
+        ),
+      ),
+    ),
+    Positioned(
+      right: 20,
+      top: 56,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () => setState(() => _showTutorial = true),
+          child: const SizedBox(
+            width: 34,
+            height: 34,
+            child: Icon(
+              Icons.help_outline_rounded,
+              color: Colors.white,
+              size: 26,
+            ),
           ),
         ),
       ),
@@ -303,6 +365,17 @@ class ProfileScreen extends StatelessWidget {
             ),
             onTap: () => _confirmResetProgress(context),
           ),
+          // Replay App Tutorials
+          _settingsRow(
+            icon: Icons.tour_rounded,
+            label: 'Replay App Tutorials',
+            trailing: const Icon(
+              Icons.restart_alt_rounded,
+              color: Color(0xFFFFA500),
+              size: 22,
+            ),
+            onTap: () => _replayTutorials(context),
+          ),
           // About SUKATECH
           _settingsRow(
             icon: Icons.info_outline_rounded,
@@ -367,6 +440,38 @@ class ProfileScreen extends StatelessWidget {
         correctMeasurementBasics: 0,
       ),
     );
+  }
+
+  void _replayTutorials(BuildContext context) async {
+    await TutorialService.instance.resetAll();
+    if (!mounted || !context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Row(
+          children: [
+            Icon(Icons.check_circle_rounded, color: Color(0xFFFBC235)),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'Tutorials reset! Tours will now show again when visiting pages.',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: _navy,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+    setState(() {
+      _showTutorial = true;
+    });
   }
 
   /// A single settings row: icon bubble + label + trailing control.
