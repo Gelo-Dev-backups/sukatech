@@ -99,14 +99,19 @@ class _SplashScreenState extends State<SplashScreen> {
       extendBodyBehindAppBar: true,
       body: SizedBox.expand(
         child: _controller.value.isInitialized
-            ? FittedBox(
-                fit: BoxFit.cover,
-                clipBehavior: Clip.hardEdge,
-                child: SizedBox(
-                  width: _controller.value.size.width,
-                  height: _controller.value.size.height,
-                  child: VideoPlayer(_controller),
-                ),
+            ? LayoutBuilder(
+                builder: (context, constraints) {
+                  final isWide = constraints.maxWidth > constraints.maxHeight;
+                  return FittedBox(
+                    fit: isWide ? BoxFit.contain : BoxFit.cover,
+                    clipBehavior: Clip.hardEdge,
+                    child: SizedBox(
+                      width: _controller.value.size.width,
+                      height: _controller.value.size.height,
+                      child: VideoPlayer(_controller),
+                    ),
+                  );
+                },
               )
             : const SizedBox.shrink(),
       ),

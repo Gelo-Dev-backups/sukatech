@@ -774,11 +774,11 @@ class _MeasurementChallengePracticeScreenState
               ),
             ),
 
-            // ── Main Content Area ──────────────────────────────────────────
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
-                child: Column(
+        // ── Main Content Area ──────────────────────────────────────────
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
+            child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Skill Category Badge

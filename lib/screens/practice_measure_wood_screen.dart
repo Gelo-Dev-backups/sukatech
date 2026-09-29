@@ -358,109 +358,109 @@ class _MeasureTheWoodPracticeScreenState
               child: SafeArea(
                 bottom: false,
                 child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 6, 16, 6),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            icon: const Icon(
-                              Icons.arrow_back_ios_new_rounded,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          const Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Measure the Wood',
-                                  style: TextStyle(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(8, 6, 16, 6),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                icon: const Icon(
+                                  Icons.arrow_back_ios_new_rounded,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              const Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Measure the Wood',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontFamily: _montserrat,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Practice Activity (Metric cm)',
+                                      style: TextStyle(
+                                        color: _accent,
+                                        fontSize: 11,
+                                        fontFamily: _montserrat,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  '${_currentIndex + 1}/5',
+                                  style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 16,
+                                    fontSize: 13,
                                     fontFamily: _montserrat,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                                Text(
-                                  'Practice Activity (Metric cm)',
-                                  style: TextStyle(
-                                    color: _accent,
-                                    fontSize: 11,
-                                    fontFamily: _montserrat,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              '${_currentIndex + 1}/5',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontFamily: _montserrat,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Question ${_currentIndex + 1} of 5',
-                                style: const TextStyle(
-                                  color: Colors.white60,
-                                  fontSize: 10.5,
-                                  fontFamily: _montserrat,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                '${(progress * 100).round()}%',
-                                style: const TextStyle(
-                                  color: Colors.white60,
-                                  fontSize: 10.5,
-                                  fontFamily: _montserrat,
-                                  fontWeight: FontWeight.w600,
-                                ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 5),
-                          AnimatedProgressBar(
-                            value: progress,
-                            minHeight: 6,
-                            backgroundColor: Colors.white24,
-                            progressColor: _green,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Question ${_currentIndex + 1} of 5',
+                                    style: const TextStyle(
+                                      color: Colors.white60,
+                                      fontSize: 10.5,
+                                      fontFamily: _montserrat,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${(progress * 100).round()}%',
+                                    style: const TextStyle(
+                                      color: Colors.white60,
+                                      fontSize: 10.5,
+                                      fontFamily: _montserrat,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              AnimatedProgressBar(
+                                value: progress,
+                                minHeight: 6,
+                                backgroundColor: Colors.white24,
+                                progressColor: _green,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
 
             // ── Main Content Area ──────────────────────────────────────────
             Expanded(
